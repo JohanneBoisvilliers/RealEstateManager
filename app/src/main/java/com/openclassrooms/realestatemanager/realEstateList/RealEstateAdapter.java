@@ -40,6 +40,10 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         return this.mRealEstateList.size();
     }
 
+    public RealEstate getRealEstate(int position){
+        return this.mRealEstateList.get(position);
+    }
+
     public void updateData(List<RealEstate> realEstateList){
         this.mRealEstateList = realEstateList;
         this.notifyDataSetChanged();

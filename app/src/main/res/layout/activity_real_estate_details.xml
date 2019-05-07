@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".controllers.RealEstateDetailsActivity">
     <FrameLayout
-        android:id="@+id/frame_layout_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:id="@+id/container_real_estate_detail"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,13 +14,14 @@ import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealEstateListFragment.OnItemClickedListener{
 
     @BindView(R.id.activity_main_toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
@@ -97,4 +100,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
+
+    @Override
+    public void onRecyclerViewClicked(RealEstate realEstate) {
+        Intent intent = new Intent(this,RealEstateDetailsActivity.class);
+        intent.putExtra("realEstate",realEstate);
+        startActivity(intent);
+    }
+
 }

@@ -15,6 +15,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.image_cardview) ImageView mRealEstatePhoto;
     @BindView(R.id.type_cardview) TextView mRealEstateType;
+    @BindView(R.id.price_cardview) TextView mPriceEstateType;
 
     public RealEstateViewHolder(View itemView) {
         super(itemView);
@@ -23,6 +24,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
 
     public void updateRealEstateCardView(RealEstate realEstate){
         this.mRealEstateType.setText(realEstate.getCategory());
+//        this.mPriceEstateType.setText(realEstate.getPrice());
     }
 
 }

@@ -2,6 +2,8 @@ package com.openclassrooms.realestatemanager.realEstateList;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controllers.RealEstateDetailsActivity;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +36,14 @@ public class RealEstateListFragment extends Fragment {
     private RealEstateAdapter mRealEstateAdapter;
     private List<RealEstate> mRealEstateList = new ArrayList<>();
     private ListItemViewModel mRealEstateViewModel;
+    private OnItemClickedListener mCallback;
 
     public RealEstateListFragment() {}
+
+    //interface that will be implemented by any container activity
+    public interface OnItemClickedListener {
+        public void onRecyclerViewClicked(RealEstate realEstate);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +59,12 @@ public class RealEstateListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.createCallbackToParentActivity();
+    }
+
     private void configureRecyclerView(){
         //Create adapter passing the list of restaurant
         this.mRealEstateAdapter = new RealEstateAdapter(this.mRealEstateList);
@@ -56,6 +72,8 @@ public class RealEstateListFragment extends Fragment {
         this.mRealEstateRecyclerView.setAdapter(this.mRealEstateAdapter);
         //Set layout manager to position the items
         this.mRealEstateRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
+                .setOnItemClickListener((recyclerView1, position, v) -> this.mCallback.onRecyclerViewClicked(this.mRealEstateAdapter.getRealEstate(position)));
     }
 
     private void configureViewModel(){
@@ -69,5 +87,14 @@ public class RealEstateListFragment extends Fragment {
 
     private void updateItemsList(List<RealEstate> realEstateList){
         this.mRealEstateAdapter.updateData(realEstateList);
+    }
+    //Create callback to parent activity
+    private void createCallbackToParentActivity(){
+        try {
+            //Parent activity will automatically subscribe to callback
+            mCallback = (OnItemClickedListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnItemClickedListener");
+        }
     }
 }
