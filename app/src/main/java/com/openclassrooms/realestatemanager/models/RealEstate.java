@@ -10,22 +10,23 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-@Entity/*(foreignKeys = @ForeignKey(entity = User.class,
+@Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
-        childColumns = "userId"))*/
+        childColumns = "userId"))
 public class RealEstate implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
-    @Ignore private long userId;
+    private long userId;
 
     private String category;
-    @Ignore private int price;
+    private int price;
     @Ignore private Boolean isSold;
-    @Ignore private int surface;
-    @Ignore private int nbreOfRoom;
-    @Ignore private String description;
+    private int surface;
+    private int nbreOfRoom;
+    private String description;
     @Ignore private String address;
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public RealEstate createFromParcel(Parcel in) {
             return new RealEstate(in);
@@ -41,6 +42,19 @@ public class RealEstate implements Parcelable {
 
     public RealEstate(Parcel in) {
         this.category = in.readString();
+        this.price = in.readInt();
+        this.description = in.readString();
+        this.surface = in.readInt();
+        this.nbreOfRoom = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.category);
+        dest.writeInt(this.price);
+        dest.writeString(this.description);
+        dest.writeInt(this.surface);
+        dest.writeInt(this.nbreOfRoom);
     }
 
     public RealEstate(long id, long userId, String category, int price, Boolean isSold, int surface, int nbreOfRoom, String description, String address) {
@@ -116,10 +130,5 @@ public class RealEstate implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.category);
     }
 }

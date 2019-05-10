@@ -41,9 +41,9 @@ public class RealEstateTest {
     }
 
 
-    private static RealEstate NEW_ITEM_PLACE_TO_VISIT = new RealEstate("House");
-    private static RealEstate NEW_ITEM_IDEA = new RealEstate("Loft");
-    private static RealEstate NEW_ITEM_RESTAURANTS = new RealEstate("Building");
+    private static RealEstate NEW_ITEM_PLACE_TO_VISIT = new RealEstate();
+    private static RealEstate NEW_ITEM_IDEA = new RealEstate();
+    private static RealEstate NEW_ITEM_RESTAURANTS = new RealEstate();
 
 
     @Test

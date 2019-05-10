@@ -45,10 +45,20 @@ public abstract class RealEstateDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("category", "Loft");
+                ContentValues realEstateTest = new ContentValues();
+                realEstateTest.put("category", "Loft");
+                realEstateTest.put("price",200000);
+                realEstateTest.put("description","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+                realEstateTest.put("surface",120);
+                realEstateTest.put("nbreOfRoom",10);
+                realEstateTest.put("userId",1);
+                db.insert("RealEstate", OnConflictStrategy.IGNORE, realEstateTest);
 
-                db.insert("RealEstate", OnConflictStrategy.IGNORE, contentValues);
+                ContentValues userTest = new ContentValues();
+                userTest.put("id",1);
+                userTest.put("username","Johanne Boisvilliers");
+                userTest.put("password","utilisateurDeBase");
+                db.insert("User",OnConflictStrategy.IGNORE, userTest);
             }
         };
     }

@@ -32,7 +32,7 @@ public class RealEstateDetailsActivity extends AppCompatActivity {
             // B - Create new main fragment
             mRealEstateDetailsFragment = new RealEstateDetailsFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("test",mRealEstate.getCategory());
+            bundle.putParcelable("realEstate",this.getRealEstateFromIntent());
             mRealEstateDetailsFragment.setArguments(bundle);
             // C - Add it to FrameLayout container
             getSupportFragmentManager().beginTransaction()

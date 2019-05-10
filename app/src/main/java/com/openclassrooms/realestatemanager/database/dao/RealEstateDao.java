@@ -12,7 +12,8 @@ import java.util.List;
 
 @Dao
 public interface RealEstateDao {
-    @Query("SELECT * FROM RealEstate")
+    @Query("SELECT * FROM RealEstate" +
+            " LEFT JOIN User ON User.id = RealEstate.userId ")
     LiveData<List<RealEstate>> getRealEstates();
 
     @Insert
