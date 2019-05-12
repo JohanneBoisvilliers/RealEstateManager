@@ -2,4 +2,10 @@
 <resources>
     <!-- Default NavigationView Header height -->
     <dimen name="nav_header_height">176dp</dimen>
+    <!--Fragment Details-->
+    <dimen name="FAB_elevation_55">55dp</dimen>
+    <dimen name="FAB_elevation_105">105dp</dimen>
+    <dimen name="FAB_elevation_155">155dp</dimen>
+    <dimen name="big_FAB">56dp</dimen>
+    <dimen name="big_FAB_min_menu">40dp</dimen>
 </resources>

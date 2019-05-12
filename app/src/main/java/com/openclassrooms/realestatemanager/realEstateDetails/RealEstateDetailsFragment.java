@@ -2,11 +2,15 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
@@ -30,8 +34,15 @@ public class RealEstateDetailsFragment extends Fragment {
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
+    @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
+    @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
+    @BindView(R.id.main_fab) FloatingActionButton mMainFAB;
+    @BindView(R.id.status_fab) FloatingActionButton mStatusFAB;
+    @BindView(R.id.modify_real_estate_fab) FloatingActionButton mModifyEstate;
+    @BindView(R.id.add_photo_fab) FloatingActionButton mAddPhoto;
 
     private int mNumberOfLine;
+    private Boolean isFABOpen = false;
 
     public RealEstateDetailsFragment() {
     }
@@ -43,12 +54,45 @@ public class RealEstateDetailsFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         this.configureDetails();
+        this.configureViewPager();
+        this.configureFABMenu();
         this.configureExpandDescription();
         this.configureExpandLocation();
 
         return view;
     }
-
+    //configure viewpager which contain photos
+    private void configureViewPager(){
+        mPhotoViewpager.setAdapter(new PhotoViewpagerAdapter(getChildFragmentManager(),getResources().getIntArray(R.array.colorPagesViewPager)));
+        mDotIndicator.setupWithViewPager(mPhotoViewpager,true);
+    }
+    //set a click listener to open FAB menu
+    private void configureFABMenu(){
+        mMainFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
+            }
+        });
+    }
+    //show FAB menu
+    private void showFABMenu(){
+        isFABOpen=true;
+        mStatusFAB.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_55));
+        mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
+        mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
+    }
+    //hide FAB menu
+    private void closeFABMenu(){
+        isFABOpen=false;
+        mStatusFAB.animate().translationY(0);
+        mModifyEstate.animate().translationY(0);
+        mAddPhoto.animate().translationY(0);
+    }
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(){
         RealEstate realestatetoshow = getArguments().getParcelable("realEstate");

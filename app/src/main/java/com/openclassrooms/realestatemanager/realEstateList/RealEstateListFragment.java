@@ -71,7 +71,7 @@ public class RealEstateListFragment extends Fragment {
         //Attach the adapter to the recyclerview to populate items
         this.mRealEstateRecyclerView.setAdapter(this.mRealEstateAdapter);
         //Set layout manager to position the items
-        this.mRealEstateRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        this.mRealEstateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
                 .setOnItemClickListener((recyclerView1, position, v) -> this.mCallback.onRecyclerViewClicked(this.mRealEstateAdapter.getRealEstate(position)));
     }

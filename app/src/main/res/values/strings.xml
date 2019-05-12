@@ -24,4 +24,7 @@
     <string name="real_estate_starting_date">For sale since : %s</string>
     <string name="real_estate_not_sold">Not sold yet</string>
     <string name="real_estate_sold">Sold since : %s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
