@@ -9,12 +9,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
 
     private RealEstateListFragment mRealEstateListFragment;
+    private RealEstateDetailsFragment mRealEstateDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView(){
         mNavigationView.setNavigationItemSelectedListener(this);
     }
-
+    //configure recyclerview fragment for one pane layout
     private void configureRealEstateListFragment(){
         // A - Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
         mRealEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
@@ -100,12 +103,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
-
+    //callback method to know what to do when user cliked on recyclerview
     @Override
     public void onRecyclerViewClicked(RealEstate realEstate) {
-        Intent intent = new Intent(this,RealEstateDetailsActivity.class);
-        intent.putExtra("realEstate",realEstate);
-        startActivity(intent);
+        Log.i("DEBUG_FRAG",String.valueOf(mRealEstateDetailsFragment == null));
+        mRealEstateDetailsFragment = (RealEstateDetailsFragment)getSupportFragmentManager().findFragmentById(R.id.container_real_estate_detail);
+        if (mRealEstateDetailsFragment != null){
+            this.configureRealEstateDetailsFragment();
+        }else{
+            Intent intent = new Intent(this,RealEstateDetailsActivity.class);
+            intent.putExtra("realEstate",realEstate);
+            startActivity(intent);
+        }
     }
+    //configure the detail fragment for two panes layout
+    private void configureRealEstateDetailsFragment(){
+        // Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
+        mRealEstateDetailsFragment = (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_detail);
 
+        if (mRealEstateDetailsFragment == null && findViewById(R.id.container_real_estate_detail) != null) {
+            mRealEstateDetailsFragment = new RealEstateDetailsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("realEstate",this.getRealEstateFromIntent());
+            mRealEstateDetailsFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+    //extrude real estate from recyclerview click
+    private RealEstate getRealEstateFromIntent(){
+        Intent intent = getIntent();
+        RealEstate realEstate = intent.getParcelableExtra("realEstate");
+        return realEstate;
+    }
 }

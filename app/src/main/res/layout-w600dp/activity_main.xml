@@ -25,11 +25,24 @@
         android:elevation="2dp"
         app:title="@string/app_name"/>
 
-        <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/container_real_estate_recycler_view"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/container_real_estate_recycler_view"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+            <FrameLayout
+                android:id="@+id/container_real_estate_detail"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="3"/>
+
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

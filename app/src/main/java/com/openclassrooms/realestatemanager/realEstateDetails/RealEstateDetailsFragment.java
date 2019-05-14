@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +96,16 @@ public class RealEstateDetailsFragment extends Fragment {
     }
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(){
-        RealEstate realestatetoshow = getArguments().getParcelable("realEstate");
+        RealEstate realestatetoshow;
+
+        //try{
+            realestatetoshow = getArguments().getParcelable("realEstate");
+        //}catch (NullPointerException e){
+            Log.e("ERREUR RECYCLERVIEW","PARCELABLE NULL");
+        //}finally {
+           // realestatetoshow = new RealEstate();
+        //}
+
         mRealEstateCategory.setText(realestatetoshow.getCategory());
         mRealEstatePrice.setText(String.valueOf(realestatetoshow.getPrice()));
         mRealEstateDescription.setText(realestatetoshow.getDescription());
