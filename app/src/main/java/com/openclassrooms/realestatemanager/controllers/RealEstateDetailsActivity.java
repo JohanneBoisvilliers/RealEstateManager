@@ -26,17 +26,15 @@ public class RealEstateDetailsActivity extends AppCompatActivity {
         // A - Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
         mRealEstateDetailsFragment = (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_detail);
 
-
-
         if (mRealEstateDetailsFragment == null) {
             // B - Create new main fragment
             mRealEstateDetailsFragment = new RealEstateDetailsFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("realEstate",this.getRealEstateFromIntent());
+            bundle.putParcelable("realEstate",mRealEstate);
             mRealEstateDetailsFragment.setArguments(bundle);
             // C - Add it to FrameLayout container
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
+                    .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
                     .commit();
         }
     }

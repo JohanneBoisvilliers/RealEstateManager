@@ -23,7 +23,7 @@ import com.openclassrooms.realestatemanager.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealEstateListFragment.OnItemClickedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @BindView(R.id.activity_main_toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureRealEstateListFragment();
+        this.configureRealEstateDetailsFragment();
     }
 
     private void configureToolbar(){
@@ -103,19 +104,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
-    //callback method to know what to do when user cliked on recyclerview
-    @Override
-    public void onRecyclerViewClicked(RealEstate realEstate) {
-        Log.i("DEBUG_FRAG",String.valueOf(mRealEstateDetailsFragment == null));
-        mRealEstateDetailsFragment = (RealEstateDetailsFragment)getSupportFragmentManager().findFragmentById(R.id.container_real_estate_detail);
-        if (mRealEstateDetailsFragment != null){
-            this.configureRealEstateDetailsFragment();
-        }else{
-            Intent intent = new Intent(this,RealEstateDetailsActivity.class);
-            intent.putExtra("realEstate",realEstate);
-            startActivity(intent);
-        }
-    }
     //configure the detail fragment for two panes layout
     private void configureRealEstateDetailsFragment(){
         // Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
@@ -123,19 +111,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (mRealEstateDetailsFragment == null && findViewById(R.id.container_real_estate_detail) != null) {
             mRealEstateDetailsFragment = new RealEstateDetailsFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("realEstate",this.getRealEstateFromIntent());
-            mRealEstateDetailsFragment.setArguments(bundle);
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
-                    .addToBackStack(null)
                     .commit();
         }
-    }
-    //extrude real estate from recyclerview click
-    private RealEstate getRealEstateFromIntent(){
-        Intent intent = getIntent();
-        RealEstate realEstate = intent.getParcelableExtra("realEstate");
-        return realEstate;
     }
 }

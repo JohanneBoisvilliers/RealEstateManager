@@ -1,11 +1,15 @@
 package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +19,12 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.SharedViewModel;
+import com.openclassrooms.realestatemanager.injections.Injections;
+import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.realEstateList.ListItemViewModel;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,8 +50,11 @@ public class RealEstateDetailsFragment extends Fragment {
     @BindView(R.id.status_fab) FloatingActionButton mStatusFAB;
     @BindView(R.id.modify_real_estate_fab) FloatingActionButton mModifyEstate;
     @BindView(R.id.add_photo_fab) FloatingActionButton mAddPhoto;
+    @Nullable
+    @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
 
     private int mNumberOfLine;
+    private RealEstate mRealEstate;
     private Boolean isFABOpen = false;
 
     public RealEstateDetailsFragment() {
@@ -54,7 +66,7 @@ public class RealEstateDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_real_estate_details, container, false);
         ButterKnife.bind(this,view);
 
-        this.configureDetails();
+        this.getRealEstateToConfigure();
         this.configureViewPager();
         this.configureFABMenu();
         this.configureExpandDescription();
@@ -95,24 +107,33 @@ public class RealEstateDetailsFragment extends Fragment {
         mAddPhoto.animate().translationY(0);
     }
     //get RealEstate from Activity and configure view details in fragment
-    private void configureDetails(){
-        RealEstate realestatetoshow;
+    private void configureDetails(RealEstate realEstate){
+        mRealEstateCategory.setText(realEstate.getCategory());
+        mRealEstatePrice.setText(String.valueOf(realEstate.getPrice()));
+        mRealEstateDescription.setText(realEstate.getDescription());
+        mRealEstateDescriptionFade.setText(realEstate.getDescription());
+        mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
+        mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
+    }
+    private void getRealEstateToConfigure(){
+        mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
+        if(mRealEstateRecyclerView == null){//one pane layout
+            Log.d("DEBGU", "one pane layout");
+            Intent intent = getActivity().getIntent();
+            mRealEstate = intent.getParcelableExtra("realEstate");
+            configureDetails(mRealEstate);
+        }else{//two panes layout
+            Log.d("DEBGU", "two panes layout");
+            SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+            model.getSelected().observe(this,  item -> {
+                mRealEstate = item;
+                if (mRealEstate==null) {
+                    mRealEstate = ((RealEstateAdapter)mRealEstateRecyclerView.getAdapter()).getRealEstate(0);
+                }
+                configureDetails(mRealEstate);
+            });
 
-        //try{
-            realestatetoshow = getArguments().getParcelable("realEstate");
-        //}catch (NullPointerException e){
-            Log.e("ERREUR RECYCLERVIEW","PARCELABLE NULL");
-        //}finally {
-           // realestatetoshow = new RealEstate();
-        //}
-
-        mRealEstateCategory.setText(realestatetoshow.getCategory());
-        mRealEstatePrice.setText(String.valueOf(realestatetoshow.getPrice()));
-        mRealEstateDescription.setText(realestatetoshow.getDescription());
-        mRealEstateDescriptionFade.setText(realestatetoshow.getDescription());
-        mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realestatetoshow.getSurface()));
-        mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realestatetoshow.getNbreOfRoom()));
-        //mInformationRoom.setText(getResources().getString((R.string.real_estate_agent),realestatetoshow.getUsername()));
+        }
     }
     //add a button to open description when it's longer than 3 lines
     private void configureExpandDescription(){
@@ -162,5 +183,4 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
-
 }
