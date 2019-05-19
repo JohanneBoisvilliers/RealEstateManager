@@ -4,26 +4,26 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.TableLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.SharedViewModel;
-import com.openclassrooms.realestatemanager.injections.Injections;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
-import com.openclassrooms.realestatemanager.realEstateList.ListItemViewModel;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateAdapter;
 
 import butterknife.BindView;
@@ -50,12 +50,21 @@ public class RealEstateDetailsFragment extends Fragment {
     @BindView(R.id.status_fab) FloatingActionButton mStatusFAB;
     @BindView(R.id.modify_real_estate_fab) FloatingActionButton mModifyEstate;
     @BindView(R.id.add_photo_fab) FloatingActionButton mAddPhoto;
+    @BindView(R.id.recyclerView_details_tablet) RecyclerView mRecyclerViewForPhotos;
     @Nullable
     @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
+    @Nullable
+    @BindView(R.id.show_background_start) View mEntireView;
+    @Nullable
+    @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
 
+
+    private static final String TAG = "DEBUG";
     private int mNumberOfLine;
     private RealEstate mRealEstate;
+    private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
     private Boolean isFABOpen = false;
+    private Boolean isTwoPanesLayout = false;
 
     public RealEstateDetailsFragment() {
     }
@@ -67,8 +76,12 @@ public class RealEstateDetailsFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         this.getRealEstateToConfigure();
-        this.configureViewPager();
-        this.configureFABMenu();
+        if (isTwoPanesLayout) {
+            configureRecyclerView();
+        }else{
+            this.configureViewPager();
+            this.configureFABMenu();
+        }
         this.configureExpandDescription();
         this.configureExpandLocation();
 
@@ -78,6 +91,15 @@ public class RealEstateDetailsFragment extends Fragment {
     private void configureViewPager(){
         mPhotoViewpager.setAdapter(new PhotoViewpagerAdapter(getChildFragmentManager(),getResources().getIntArray(R.array.colorPagesViewPager)));
         mDotIndicator.setupWithViewPager(mPhotoViewpager,true);
+    }
+    //configure recyclerview for two panes layout case
+    private void configureRecyclerView(){
+        //Create adapter passing the list of restaurant
+        this.mRecyclerViewPhotoAdapter = new RecyclerViewDetailsPhotoAdapter(getResources().getIntArray(R.array.colorPagesViewPager));
+        //Attach the adapter to the recyclerview to populate items
+        this.mRecyclerViewForPhotos.setAdapter(this.mRecyclerViewPhotoAdapter);
+        //Set layout manager to position the items
+        this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
     //set a click listener to open FAB menu
     private void configureFABMenu(){
@@ -109,28 +131,35 @@ public class RealEstateDetailsFragment extends Fragment {
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstate realEstate){
         mRealEstateCategory.setText(realEstate.getCategory());
-        mRealEstatePrice.setText(String.valueOf(realEstate.getPrice()));
+        mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getPrice(),getResources().getString((R.string.real_estate_price_euro))));
         mRealEstateDescription.setText(realEstate.getDescription());
         mRealEstateDescriptionFade.setText(realEstate.getDescription());
         mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
         mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
     }
     private void getRealEstateToConfigure(){
+        Log.d(TAG, "getRealEstateToConfigure");
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView == null){//one pane layout
-            Log.d("DEBGU", "one pane layout");
             Intent intent = getActivity().getIntent();
             mRealEstate = intent.getParcelableExtra("realEstate");
             configureDetails(mRealEstate);
         }else{//two panes layout
-            Log.d("DEBGU", "two panes layout");
+            Log.d(TAG, "two panes layout");
+            isTwoPanesLayout = true;
             SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
             model.getSelected().observe(this,  item -> {
                 mRealEstate = item;
+                Log.d(TAG, "getRealEstateToConfigure: "+String.valueOf(mRealEstate));
                 if (mRealEstate==null) {
-                    mRealEstate = ((RealEstateAdapter)mRealEstateRecyclerView.getAdapter()).getRealEstate(0);
+                    mBackgroundWhenStarting.setVisibility(View.VISIBLE);
+                    mEntireView.setVisibility(View.INVISIBLE);
+                }else{
+                    mBackgroundWhenStarting.setVisibility(View.GONE);
+                    mEntireView.setVisibility(View.VISIBLE);
+                    configureDetails(mRealEstate);
                 }
-                configureDetails(mRealEstate);
+
             });
 
         }
@@ -141,11 +170,10 @@ public class RealEstateDetailsFragment extends Fragment {
             @Override
             public void run() {
                 mNumberOfLine = mRealEstateDescription.getLineCount();
-                if (mNumberOfLine>2){
+                if (mNumberOfLine>= 2){
                     mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             if (mButtonMoreDescription.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more)))
                             {
                                 mRealEstateDescription.setMaxLines(Integer.MAX_VALUE);

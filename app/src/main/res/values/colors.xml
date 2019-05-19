@@ -8,6 +8,7 @@
   <color name="colorAccentDark">#005662</color>
   <color name="primaryTextColor">#fafafa</color>
   <color name="secondaryTextColor">#fafafa</color>
+  <color name="background_sold_out">#FF6262</color>
 
   <array name="colorPagesViewPager">
     <item>#EDD9CF</item>
@@ -15,5 +16,10 @@
     <item>#ADCEB7</item>
     <item>#F7CF8B</item>
     <item>#FD96A2</item>
+    <item>#EDD9CF</item>
+    <item>#BED4D6</item>
+    <item>#ADCEB7</item>
+    <item>#F7CF8B</item>
+    <item>#81424A</item>
   </array>
 </resources>

@@ -24,7 +24,9 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
 
     public void updateRealEstateCardView(RealEstate realEstate){
         this.mRealEstateType.setText(realEstate.getCategory());
-        this.mRealEstatePrice.setText(String.valueOf(realEstate.getPrice()));
+        this.mRealEstatePrice.setText(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price),
+                        realEstate.getPrice(),
+                        mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro))));
     }
 
 }

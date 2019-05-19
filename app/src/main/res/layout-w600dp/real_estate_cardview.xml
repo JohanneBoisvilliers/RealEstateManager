@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
 
 
@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -36,33 +37,32 @@
                     android:src="@drawable/sold_out" />
             </FrameLayout>
         </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/type_cardview"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="5dp"
+                tools:text="Loft"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="25dp" />
+            <TextView
+                android:id="@+id/price_cardview"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                tools:text="200000"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/type_cardview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingStart="15dp"
-            android:paddingBottom="10dp"
-            tools:text="Loft"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
-        <View
-            android:layout_width="330dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="0.1dp"
-            android:background="@color/colorPrimaryLight"/>
-        <TextView
-            android:id="@+id/price_cardview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingStart="15dp"
-            android:paddingBottom="8dp"
-            tools:text="200000"
-            android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
