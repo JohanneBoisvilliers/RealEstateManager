@@ -10,7 +10,7 @@ import com.openclassrooms.realestatemanager.models.RealEstate;
 public class SharedViewModel extends ViewModel {
     private final MutableLiveData<RealEstate> selected = new MutableLiveData<RealEstate>();
 
-    public void select(@Nullable RealEstate item) {
+    public void select(RealEstate item) {
         selected.setValue(item);
     }
 

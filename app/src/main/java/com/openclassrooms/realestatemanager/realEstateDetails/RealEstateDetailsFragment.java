@@ -25,6 +25,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.SharedViewModel;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateAdapter;
+import com.openclassrooms.realestatemanager.utils.MyApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,30 +139,27 @@ public class RealEstateDetailsFragment extends Fragment {
         mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
     }
     private void getRealEstateToConfigure(){
-        Log.d(TAG, "getRealEstateToConfigure");
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView == null){//one pane layout
             Intent intent = getActivity().getIntent();
             mRealEstate = intent.getParcelableExtra("realEstate");
             configureDetails(mRealEstate);
         }else{//two panes layout
-            Log.d(TAG, "two panes layout");
             isTwoPanesLayout = true;
+            if (!MyApp.isInit) {
+                mBackgroundWhenStarting.setVisibility(View.VISIBLE);
+                mEntireView.setVisibility(View.INVISIBLE);
+            }
             SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
             model.getSelected().observe(this,  item -> {
                 mRealEstate = item;
-                Log.d(TAG, "getRealEstateToConfigure: "+String.valueOf(mRealEstate));
-                if (mRealEstate==null) {
-                    mBackgroundWhenStarting.setVisibility(View.VISIBLE);
-                    mEntireView.setVisibility(View.INVISIBLE);
-                }else{
-                    mBackgroundWhenStarting.setVisibility(View.GONE);
-                    mEntireView.setVisibility(View.VISIBLE);
+                MyApp.isInit=true;
+                mBackgroundWhenStarting.setVisibility(View.GONE);
+                mEntireView.setVisibility(View.VISIBLE);
+                if (mRealEstate!=null) {
                     configureDetails(mRealEstate);
                 }
-
             });
-
         }
     }
     //add a button to open description when it's longer than 3 lines

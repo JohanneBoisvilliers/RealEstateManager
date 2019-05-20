@@ -59,7 +59,6 @@ public class RealEstateListFragment extends Fragment {
         //Set layout manager to position the items
         this.mRealEstateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mSharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        this.mSharedViewModel.select(null);
         ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
                 .setOnItemClickListener((recyclerView1, position, v) -> {
                             this.mSharedViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
