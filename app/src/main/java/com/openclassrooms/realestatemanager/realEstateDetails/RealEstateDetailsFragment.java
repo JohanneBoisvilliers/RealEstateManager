@@ -23,7 +23,10 @@ import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.SharedViewModel;
+import com.openclassrooms.realestatemanager.injections.Injections;
+import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.realEstateList.ListItemViewModel;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateAdapter;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
@@ -58,6 +61,8 @@ public class RealEstateDetailsFragment extends Fragment {
     @BindView(R.id.show_background_start) View mEntireView;
     @Nullable
     @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
+    @Nullable
+    @BindView(R.id.sold_out_img) View mSoldOut;
 
 
     private static final String TAG = "DEBUG";
@@ -66,6 +71,8 @@ public class RealEstateDetailsFragment extends Fragment {
     private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
     private Boolean isFABOpen = false;
     private Boolean isTwoPanesLayout = false;
+    private ListItemViewModel mRealEstateViewModel;
+
 
     public RealEstateDetailsFragment() {
     }
@@ -76,6 +83,7 @@ public class RealEstateDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_real_estate_details, container, false);
         ButterKnife.bind(this,view);
 
+        this.configureViewModel();
         this.getRealEstateToConfigure();
         if (isTwoPanesLayout) {
             configureRecyclerView();
@@ -109,9 +117,23 @@ public class RealEstateDetailsFragment extends Fragment {
             public void onClick(View view) {
                 if(!isFABOpen){
                     showFABMenu();
+                    configureFABchangeStatus();
                 }else{
                     closeFABMenu();
                 }
+            }
+        });
+    }
+    private void configureFABchangeStatus(){
+        mStatusFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean isSold = mRealEstate.getSold();
+                isSold = !isSold;
+                mRealEstate.setSold(isSold);
+                Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getSold()));
+                Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getId()));
+                mRealEstateViewModel.updateItem(mRealEstate);
             }
         });
     }
@@ -137,6 +159,13 @@ public class RealEstateDetailsFragment extends Fragment {
         mRealEstateDescriptionFade.setText(realEstate.getDescription());
         mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
         mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
+        if (mSoldOut!=null) {
+            if (realEstate.getSold()) {
+                mSoldOut.setVisibility(View.VISIBLE);
+            }else{
+                mSoldOut.setVisibility(View.INVISIBLE);
+            }
+        }
     }
     private void getRealEstateToConfigure(){
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
@@ -208,5 +237,10 @@ public class RealEstateDetailsFragment extends Fragment {
                 }
             }
         });
+    }
+    //configure viewmodel
+    private void configureViewModel(){
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ListItemViewModel.class);
     }
 }

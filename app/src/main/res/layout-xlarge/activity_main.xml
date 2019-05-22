@@ -34,7 +34,7 @@
                 android:id="@+id/container_real_estate_recycler_view"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1.5"/>
 
             <FrameLayout
                 android:id="@+id/container_real_estate_detail"

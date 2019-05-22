@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.repositories;
 
 import android.arch.lifecycle.LiveData;
+import android.util.Log;
 
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.models.RealEstate;

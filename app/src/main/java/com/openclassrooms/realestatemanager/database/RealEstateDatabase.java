@@ -52,6 +52,7 @@ public abstract class RealEstateDatabase extends RoomDatabase {
                 realEstateTest.put("surface",120);
                 realEstateTest.put("nbreOfRoom",10);
                 realEstateTest.put("userId",1);
+                realEstateTest.put("isSold",false);
                 db.insert("RealEstate", OnConflictStrategy.IGNORE, realEstateTest);
 
                 ContentValues userTest = new ContentValues();

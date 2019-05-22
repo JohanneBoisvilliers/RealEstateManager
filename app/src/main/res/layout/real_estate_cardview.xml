@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/image_cardview"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/header_height"
                 android:scaleType="centerCrop"
                 android:background="@color/colorPrimaryLight"/>
             <FrameLayout
@@ -48,7 +48,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
         <View
-            android:layout_width="330dp"
+            android:layout_width="@dimen/line_footer"
             android:layout_gravity="center_horizontal"
             android:layout_height="0.1dp"
             android:background="@color/colorPrimaryLight"/>

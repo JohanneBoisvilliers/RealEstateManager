@@ -46,4 +46,5 @@ public class ListItemViewModel extends ViewModel {
             mRealEstateDataSource.updateRealEstate(realEstate);
         });
     }
+
 }

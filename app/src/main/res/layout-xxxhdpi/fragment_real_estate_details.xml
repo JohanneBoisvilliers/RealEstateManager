@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".realEstateDetails.RealEstateDetailsFragment">
+    <FrameLayout
+    android:id="@+id/anchor_FAB"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <android.support.design.widget.CoordinatorLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_details_tablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/real_estate_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/dot_indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        app:tabBackground="@drawable/viewpager_tab_selector"
+                        app:tabGravity="center"
+                        app:tabIndicatorHeight="0dp" />
+
+                    <FrameLayout
+                        android:id="@+id/sold_out_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/background_sold_out">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/sold_out" />
+                    </FrameLayout>
+
+                </FrameLayout>
+
+
+                <!--container under photo -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/real_estate_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:text="Type de bien"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_type" />
+
+                    <TextView
+                        android:id="@+id/real_estate_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:paddingStart="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Prix du bien"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_description" />
+
+                </LinearLayout>
+                <!--container description -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/description_detail"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title_desciption" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/real_estate_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:maxLines="2"
+                            android:paddingStart="10dp"
+                            android:text="description du bien"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_description" />
+
+                        <com.openclassrooms.realestatemanager.utils.FadingTextView
+                            android:id="@+id/real_estate_description_fade"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="sans-serif"
+                            android:maxLines="3"
+                            android:paddingStart="10dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_description" />
+                    </FrameLayout>
+
+                    <Button
+                        android:id="@+id/btShowmore"
+                        android:layout_width="match_parent"
+                        android:layout_height="21dp"
+                        android:background="@android:color/transparent"
+                        android:gravity="top|end"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/button_more"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorAccentDark" />
+                </LinearLayout>
+                <!--container details -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <!--surface informations-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_settings_overscan_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_surface"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/real_estate_surface"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+                        </LinearLayout>
+                        <!--room informations-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_hotel_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_room"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/real_estate_room"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+                        </LinearLayout>
+                        <!--agent informations-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_face_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_agent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/real_estate_agent"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+                        </LinearLayout>
+                        <!--location informations-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_location_on_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:maxLines="1"
+                                android:text="@string/real_estate_location"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+
+                            <Button
+                                android:id="@+id/btnLocationMore"
+                                android:layout_width="wrap_content"
+                                android:layout_height="21dp"
+                                android:background="@android:color/transparent"
+                                android:text="@string/button_more"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorAccentDark" />
+                        </LinearLayout>
+                        <!--For sale informations-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_date_range_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_starting_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:maxLines="1"
+                                android:text="@string/real_estate_starting_date"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+
+                        </LinearLayout>
+                        <!--sold information-->
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/baseline_attach_money_black_18"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/information_sold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:maxLines="1"
+                                android:text="@string/real_estate_sold"
+                                android:textSize="@dimen/text_informations"
+                                android:textColor="@color/colorPrimary" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimary" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_photo_fab"
+                android:layout_width="@dimen/big_FAB_min_menu"
+                android:layout_height="@dimen/big_FAB_min_menu"
+                android:layout_marginEnd="24dp"
+                android:clickable="true"
+                android:scaleType="center"
+                app:backgroundTint="@color/colorAccentDark"
+                android:tint="@color/primaryTextColor"
+                app:layout_anchor="@id/real_estate_photo"
+                app:layout_anchorGravity="bottom|right|end"
+                android:src="@drawable/baseline_add_a_photo_black_24"
+                android:focusable="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/modify_real_estate_fab"
+                android:layout_width="@dimen/big_FAB_min_menu"
+                android:layout_height="@dimen/big_FAB_min_menu"
+                android:layout_marginEnd="24dp"
+                android:clickable="true"
+                android:scaleType="center"
+                app:backgroundTint="@color/colorAccentDark"
+                android:tint="@color/primaryTextColor"
+                app:layout_anchor="@id/real_estate_photo"
+                app:layout_anchorGravity="bottom|right|end"
+                android:src="@drawable/baseline_create_black_24"
+                android:focusable="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/status_fab"
+                android:layout_width="@dimen/big_FAB_min_menu"
+                android:layout_height="@dimen/big_FAB_min_menu"
+                android:layout_marginEnd="24dp"
+                android:clickable="true"
+                android:scaleType="center"
+                app:backgroundTint="@color/colorAccentDark"
+                android:tint="@color/primaryTextColor"
+                app:layout_anchor="@id/real_estate_photo"
+                app:layout_anchorGravity="bottom|right|end"
+                android:src="@drawable/baseline_attach_money_black_24"
+                android:focusable="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/main_fab"
+                android:layout_width="@dimen/big_FAB"
+                android:layout_height="@dimen/big_FAB"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:scaleType="center"
+                app:backgroundTint="@color/colorAccentDark"
+                android:tint="@color/primaryTextColor"
+                app:layout_anchor="@id/real_estate_photo"
+                app:layout_anchorGravity="bottom|right|end"
+                android:src="@drawable/baseline_add_24"
+                android:focusable="true" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+    </FrameLayout>
+</ScrollView>

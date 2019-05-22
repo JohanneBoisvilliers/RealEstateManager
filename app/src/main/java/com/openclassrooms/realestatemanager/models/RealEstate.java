@@ -21,7 +21,7 @@ public class RealEstate implements Parcelable {
 
     private String category;
     private int price;
-    @Ignore private Boolean isSold;
+    private Boolean isSold;
     private int surface;
     private int nbreOfRoom;
     private String description;
@@ -41,20 +41,26 @@ public class RealEstate implements Parcelable {
     }
 
     public RealEstate(Parcel in) {
+        this.id = in.readLong();
+        this.userId = in.readLong();
         this.category = in.readString();
         this.price = in.readInt();
         this.description = in.readString();
         this.surface = in.readInt();
         this.nbreOfRoom = in.readInt();
+        this.isSold = in.readInt() == 1;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeLong(this.userId);
         dest.writeString(this.category);
         dest.writeInt(this.price);
         dest.writeString(this.description);
         dest.writeInt(this.surface);
         dest.writeInt(this.nbreOfRoom);
+        dest.writeValue(this.isSold);
     }
 
     public RealEstate(long id, long userId, String category, int price, Boolean isSold, int surface, int nbreOfRoom, String description, String address) {
