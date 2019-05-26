@@ -26,7 +26,8 @@
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/background_start"
-                android:background="@color/colorPrimaryLight"/>
+                android:background="@color/colorPrimaryLight"
+                app:layout_constraintTop_toTopOf="parent"/>
             <!-- transparent footer -->
             <ImageView
                 android:id="@+id/fond_transparent"

@@ -20,8 +20,6 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.price_cardview) TextView mRealEstatePrice;
     @Nullable
     @BindView(R.id.sold_out_bg) View mSoldOut;
-    @Nullable
-    @BindView(R.id.boutton_test) Button mButton;
 
     public RealEstateViewHolder(View itemView) {
         super(itemView);

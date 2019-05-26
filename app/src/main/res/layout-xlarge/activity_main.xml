@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         app:titleTextColor="@android:color/white"
         android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
         android:elevation="2dp"
         app:title="@string/app_name"/>
 

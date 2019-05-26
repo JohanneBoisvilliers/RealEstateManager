@@ -1,4 +1,6 @@
+
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 27
@@ -50,3 +52,5 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
 }
+
+

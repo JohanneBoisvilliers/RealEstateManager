@@ -26,7 +26,8 @@
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/background_start"
-                android:background="@color/colorPrimaryLight"/>
+                android:background="@color/colorPrimaryLight"
+                app:layout_constraintTop_toTopOf="parent"/>
             <!-- transparent footer -->
             <ImageView
                 android:id="@+id/fond_transparent"
@@ -69,10 +70,6 @@
                     tools:text="200000"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
-                <Button
-                    android:id="@+id/boutton_test"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
             </LinearLayout>
             <FrameLayout
                 android:id="@+id/sold_out_bg"
