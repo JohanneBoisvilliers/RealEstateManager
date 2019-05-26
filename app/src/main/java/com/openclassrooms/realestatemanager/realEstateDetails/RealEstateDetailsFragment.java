@@ -62,7 +62,7 @@ public class RealEstateDetailsFragment extends Fragment {
     @Nullable
     @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
     @Nullable
-    @BindView(R.id.sold_out_img) View mSoldOut;
+    @BindView(R.id.sold_out_bg) View mSoldOut;
 
 
     private static final String TAG = "DEBUG";

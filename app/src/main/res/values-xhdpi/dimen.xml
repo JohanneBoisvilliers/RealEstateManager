@@ -18,10 +18,11 @@
 
     <!--CardView-->
         <!--_DESIGN_-->
-    <dimen name="line_footer">370dp</dimen>
-    <dimen name="header_height">340dp</dimen>
+    <dimen name="line_footer">340dp</dimen>
+    <dimen name="header_height">220dp</dimen>
 
         <!--_TEXT_-->
-    <dimen name="type_line">24sp</dimen>
-    <dimen name="price_line">20sp</dimen>
+    <dimen name="type_line">20sp</dimen>
+    <dimen name="price_line">16sp</dimen>
+
 </resources>

@@ -30,6 +30,7 @@
                 android:background="@color/background_sold_out"
                 android:layout_gravity="center_vertical">
                 <ImageView
+                    android:adjustViewBounds="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -46,7 +47,7 @@
             android:paddingBottom="10dp"
             tools:text="Loft"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="@dimen/type_line" />
         <View
             android:layout_width="@dimen/line_footer"
             android:layout_gravity="center_horizontal"
@@ -62,7 +63,7 @@
             android:paddingBottom="8dp"
             tools:text="200000"
             android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            android:textSize="@dimen/price_line" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

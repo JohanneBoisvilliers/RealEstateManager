@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.database.dao.UserDao;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.User;
 
+
 @Database(entities = {RealEstate.class, User.class}, version = 1, exportSchema = false)
 public abstract class RealEstateDatabase extends RoomDatabase {
     // SINGLETON

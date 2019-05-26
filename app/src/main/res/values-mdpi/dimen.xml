@@ -11,17 +11,18 @@
     <dimen name="big_FAB_min_menu">40dp</dimen>
 
         <!--_TEXT_-->
-    <dimen name="text_description">16sp</dimen>
-    <dimen name="title_desciption">20sp</dimen>
-    <dimen name="text_informations">16sp</dimen>
-    <dimen name="text_type">22sp</dimen>
+    <dimen name="text_description">12sp</dimen>
+    <dimen name="title_desciption">16sp</dimen>
+    <dimen name="text_informations">12sp</dimen>
+    <dimen name="text_type">18sp</dimen>
 
     <!--CardView-->
         <!--_DESIGN_-->
-    <dimen name="line_footer">370dp</dimen>
-    <dimen name="header_height">340dp</dimen>
+    <dimen name="line_footer">280dp</dimen>
+    <dimen name="header_height">220dp</dimen>
 
         <!--_TEXT_-->
-    <dimen name="type_line">24sp</dimen>
-    <dimen name="price_line">20sp</dimen>
+    <dimen name="type_line">18sp</dimen>
+    <dimen name="price_line">14sp</dimen>
+
 </resources>
