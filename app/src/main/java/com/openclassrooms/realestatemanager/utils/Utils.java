@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
@@ -48,17 +50,6 @@ public class Utils {
      * @param
      * @return
      */
-    public static boolean isOnline() {
-        try {
-            int timeoutMs = 1500;
-            Socket sock = new Socket();
-            SocketAddress sockaddr = new InetSocketAddress("8.8.8.8", 53);
-
-            sock.connect(sockaddr, timeoutMs);
-            sock.close();
-
-            return true;
-        } catch (IOException e) {
-            Log.d("DEBUG", "isOnline :"+e);return false; }
-    }
+    //public static boolean isOnline() {
+    //}
 }

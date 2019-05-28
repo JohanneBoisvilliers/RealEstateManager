@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.openclassrooms.go4lunch", appContext.getPackageName());
+        assertEquals("com.openclassrooms.realestatemanager", appContext.getPackageName());
     }
 }

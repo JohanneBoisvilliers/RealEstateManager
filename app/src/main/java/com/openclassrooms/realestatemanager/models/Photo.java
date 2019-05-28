@@ -8,7 +8,9 @@ public class Photo {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
+    private long realEstateId;
     private String mUrl;
+
 
     public Photo() {}
 
@@ -19,13 +21,18 @@ public class Photo {
     public String getmUrl() {
         return mUrl;
     }
+    public long getRealEstateId() {
+        return realEstateId;
+    }
 
     //SETTERS
-
     public void setId(long id) {
         this.id = id;
     }
     public void setmUrl(String mUrl) {
         this.mUrl = mUrl;
+    }
+    public void setRealEstateId(long realEstateId) {
+        this.realEstateId = realEstateId;
     }
 }
