@@ -50,6 +50,12 @@ public class Utils {
      * @param
      * @return
      */
-    //public static boolean isOnline() {
-    //}
+    public static boolean isOnline() {
+        Context context = MyApp.getContext();
+        if (Connectivity.isConnectedWifi(context)) {
+            return true;
+        }else{
+            return Connectivity.isConnectedMobile(context) && Connectivity.isConnectedFast(context);
+        }
+    }
 }

@@ -16,5 +16,5 @@ public class PhotoDataRepository {
 
     // GET
 
-    public LiveData<List<String>> getUriPhotos (Long realEstateId){return this.mPhotoDao.getUriPhotos(realEstateId);}
+    public LiveData<List<String>> getUriPhotos(long realEstateId){return this.mPhotoDao.getUriPhotos(realEstateId);}
 }

@@ -24,7 +24,7 @@ import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
-import com.openclassrooms.realestatemanager.realEstateList.ListItemViewModel;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
 import butterknife.BindView;
@@ -68,7 +68,7 @@ public class RealEstateDetailsFragment extends Fragment {
     private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
     private Boolean isFABOpen = false;
     private Boolean isTwoPanesLayout = false;
-    private ListItemViewModel mRealEstateViewModel;
+    private RealEstateViewModel mRealEstateViewModel;
 
 
     public RealEstateDetailsFragment() {
@@ -238,6 +238,6 @@ public class RealEstateDetailsFragment extends Fragment {
     //configure viewmodel
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ListItemViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
 }

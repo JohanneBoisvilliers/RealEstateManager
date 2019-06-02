@@ -1,12 +1,14 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +33,8 @@ public class RealEstateListFragment extends Fragment {
 
     private RealEstateAdapter mRealEstateAdapter;
     private List<RealEstate> mRealEstateList = new ArrayList<>();
-    private ListItemViewModel mRealEstateViewModel;
+    private List<String> mRealEstatePhoto = new ArrayList<>();
+    private RealEstateViewModel mRealEstateViewModel;
     private SharedViewModel mSharedViewModel;
 
     public RealEstateListFragment() {}
@@ -44,11 +47,12 @@ public class RealEstateListFragment extends Fragment {
 
         this.configureRecyclerView();
         this.configureViewModel();
-
+        Log.d("DEBUG", "onCreateView: "+mRealEstateList.size());
         this.getRealEstates();
 
         return view;
     }
+
 
     private void configureRecyclerView(){
         //Create adapter passing the list of restaurant
@@ -72,14 +76,27 @@ public class RealEstateListFragment extends Fragment {
 
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ListItemViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
 
     private void getRealEstates(){
         this.mRealEstateViewModel.getRealEstate().observe(this, this::updateItemsList);
     }
 
+    private void getRealEstatePhotos(RealEstate realEstate){
+        this.mRealEstateViewModel.getRealEstatePhotos(realEstate.getId()).observe(this,this::updatePhoto);
+    }
+
     private void updateItemsList(List<RealEstate> realEstateList){
+        for (RealEstate realEstate:realEstateList) {
+            this.getRealEstatePhotos(realEstate);
+            realEstate.getPhotoList().addAll(mRealEstatePhoto);
+        }
         this.mRealEstateAdapter.updateData(realEstateList);
+    }
+    private void updatePhoto(List<String> realEstateList){
+        this.mRealEstatePhoto.clear();
+        this.mRealEstatePhoto.addAll(realEstateList);
+        Log.d("DEBUG", "updatePhoto: "+mRealEstatePhoto.size());
     }
 }

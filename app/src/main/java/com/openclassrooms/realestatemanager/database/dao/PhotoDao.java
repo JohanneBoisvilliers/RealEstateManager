@@ -10,6 +10,6 @@ import java.util.List;
 
 @Dao
 public interface PhotoDao {
-    @Query("SELECT * FROM Photo WHERE Id =:realEstateId")
+    @Query("SELECT url FROM Photo WHERE realEstateId =:realEstateId")
     LiveData<List<String>> getUriPhotos(long realEstateId);
 }

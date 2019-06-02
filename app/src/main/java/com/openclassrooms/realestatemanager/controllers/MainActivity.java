@@ -1,7 +1,11 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
+    private static final int WRITE_PERMISSION = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        this.requestWritePermission();
         Stetho.initializeWithDefaults(this);
         this.configureToolbar();
         this.configureDrawerLayout();
@@ -115,6 +122,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
                     .commit();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if(requestCode == WRITE_PERMISSION){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "You must allow permission write external storage to your mobile device.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    private void requestWritePermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERMISSION);
+            }
         }
     }
 }

@@ -5,19 +5,22 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class ListItemViewModel extends ViewModel {
+public class RealEstateViewModel extends ViewModel {
 
     // REPOSITORIES
     private final RealEstateDataRepository mRealEstateDataSource;
+    private final PhotoDataRepository mPhotoDataSource;
     private final Executor executor;
 
-    public ListItemViewModel(RealEstateDataRepository realEstateDataSource,Executor executor) {
+    public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,PhotoDataRepository photoDataSource, Executor executor) {
         this.mRealEstateDataSource = realEstateDataSource;
+        this.mPhotoDataSource = photoDataSource;
         this.executor = executor;
     }
 
@@ -35,9 +38,9 @@ public class ListItemViewModel extends ViewModel {
         });
     }
 
-    public void deleteItem(long itemId) {
+    public void deleteItem(long realEstateId) {
         executor.execute(() -> {
-            mRealEstateDataSource.deleteRealEstate(itemId);
+            mRealEstateDataSource.deleteRealEstate(realEstateId);
         });
     }
 
@@ -47,4 +50,11 @@ public class ListItemViewModel extends ViewModel {
         });
     }
 
+    // -------------
+    // FOR PHOTOS
+    // -------------
+
+    public LiveData<List<String>> getRealEstatePhotos(long realEstateId) {
+        return mPhotoDataSource.getUriPhotos(realEstateId);
+    }
 }

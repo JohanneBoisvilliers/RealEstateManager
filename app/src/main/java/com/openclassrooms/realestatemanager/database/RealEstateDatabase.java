@@ -9,19 +9,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.openclassrooms.realestatemanager.database.dao.PhotoDao;
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.database.dao.UserDao;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.User;
 
 
-@Database(entities = {RealEstate.class, User.class}, version = 1, exportSchema = false)
+@Database(entities = {RealEstate.class, User.class, Photo.class}, version = 1, exportSchema = false)
 public abstract class RealEstateDatabase extends RoomDatabase {
     // SINGLETON
     private static volatile RealEstateDatabase INSTANCE;
 
     //DAO
     public abstract RealEstateDao realEstateDao();
+    public abstract PhotoDao photoDao();
     public abstract UserDao userDao();
 
     // --- INSTANCE ---
@@ -61,6 +64,12 @@ public abstract class RealEstateDatabase extends RoomDatabase {
                 userTest.put("username","Johanne Boisvilliers");
                 userTest.put("password","utilisateurDeBase");
                 db.insert("User",OnConflictStrategy.IGNORE, userTest);
+
+                ContentValues photoTest = new ContentValues();
+                photoTest.put("id",1);
+                photoTest.put("realEstateId",1);
+                photoTest.put("url","/storage/emulated/0/DCIM/1.jpg");
+                db.insert("Photo",OnConflictStrategy.IGNORE, photoTest);
             }
         };
     }

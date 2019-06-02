@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
@@ -25,6 +26,7 @@ public class RealEstate implements Parcelable {
     private int surface;
     private int nbreOfRoom;
     private String description;
+    @Ignore private List<String> mPhotoList = new ArrayList<>();
     @Ignore private String address;
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -103,6 +105,9 @@ public class RealEstate implements Parcelable {
     public String getAddress() {
         return address;
     }
+    public List<String> getPhotoList() {
+        return mPhotoList;
+    }
 
     // -- SETTERS
     public void setId(long id) {
@@ -131,6 +136,9 @@ public class RealEstate implements Parcelable {
     }
     public void setAddress(String address) {
         this.address = address;
+    }
+    public void setPhotoList(List<String> mPhotoList) {
+        this.mPhotoList = mPhotoList;
     }
 
     @Override
