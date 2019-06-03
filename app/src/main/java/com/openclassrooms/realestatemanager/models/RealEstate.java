@@ -65,7 +65,7 @@ public class RealEstate implements Parcelable {
         dest.writeValue(this.isSold);
     }
 
-    public RealEstate(long id, long userId, String category, int price, Boolean isSold, int surface, int nbreOfRoom, String description, String address) {
+    public RealEstate(long id, long userId, String category, int price, Boolean isSold, int surface, int nbreOfRoom, String description,List<String> photoList, String address) {
         this.id = id;
         this.userId = userId;
         this.category = category;
@@ -74,6 +74,7 @@ public class RealEstate implements Parcelable {
         this.surface = surface;
         this.nbreOfRoom = nbreOfRoom;
         this.description = description;
+        this.mPhotoList = photoList;
         this.address = address;
     }
 

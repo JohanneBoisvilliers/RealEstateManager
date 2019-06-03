@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.POWER_SERVICE;
@@ -23,11 +26,15 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
 
-    private List<RealEstate> mRealEstateList = new ArrayList<>();
+    private Context mContext;
+    private List<RealEstate> mRealEstateList;
+    private List<String> mRealEstatePhotos;
+    public final String TAG = "DEBUG";
 
-
-    public RealEstateAdapter(List<RealEstate> mRealEstateList) {
+    public RealEstateAdapter(Context context, List<RealEstate> mRealEstateList) {
+        this.mContext = context;
         this.mRealEstateList = mRealEstateList;
+        this.mRealEstatePhotos = new ArrayList<>();
     }
 
     @Override
@@ -42,6 +49,8 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
 
     @Override
     public void onBindViewHolder(RealEstateViewHolder holder, int position) {
+        mRealEstateList.get(position).setPhotoList(mRealEstatePhotos);
+
         holder.updateRealEstateCardView(mRealEstateList.get(position));
     }
 
@@ -59,4 +68,9 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         this.notifyDataSetChanged();
     }
 
+    public void updatePhotos(List<String> listOfPhotos){
+        this.mRealEstatePhotos.clear();
+        this.mRealEstatePhotos = listOfPhotos;
+        this.notifyDataSetChanged();
+    }
 }

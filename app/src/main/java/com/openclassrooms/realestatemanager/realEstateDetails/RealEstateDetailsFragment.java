@@ -131,6 +131,7 @@ public class RealEstateDetailsFragment extends Fragment {
                 Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getSold()));
                 Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getId()));
                 mRealEstateViewModel.updateItem(mRealEstate);
+                setSoldState(mRealEstate);
             }
         });
     }
@@ -156,13 +157,7 @@ public class RealEstateDetailsFragment extends Fragment {
         mRealEstateDescriptionFade.setText(realEstate.getDescription());
         mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
         mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
-        if (mSoldOut!=null) {
-            if (realEstate.getSold()) {
-                mSoldOut.setVisibility(View.VISIBLE);
-            }else{
-                mSoldOut.setVisibility(View.INVISIBLE);
-            }
-        }
+        this.setSoldState(realEstate);
     }
     private void getRealEstateToConfigure(){
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
@@ -239,5 +234,17 @@ public class RealEstateDetailsFragment extends Fragment {
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
         this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
+    }
+
+    private void setSoldState(RealEstate realEstate){
+        if (mSoldOut!=null) {
+            if (realEstate.getSold()) {
+                Log.d(TAG, "configureDetails: show");
+                mSoldOut.setVisibility(View.VISIBLE);
+            }else{
+                Log.d(TAG, "configureDetails: hide");
+                mSoldOut.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }

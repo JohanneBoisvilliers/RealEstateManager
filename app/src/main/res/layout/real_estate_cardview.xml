@@ -24,7 +24,7 @@
                 android:scaleType="centerCrop"
                 android:background="@color/colorPrimaryLight"/>
             <FrameLayout
-                android:id="@+id/sold_out_img"
+                android:id="@+id/sold_out_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_sold_out"

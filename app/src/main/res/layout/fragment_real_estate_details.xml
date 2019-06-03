@@ -46,7 +46,7 @@
                         app:tabIndicatorHeight="0dp" />
 
                     <FrameLayout
-                        android:id="@+id/sold_out_img"
+                        android:id="@+id/sold_out_bg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
