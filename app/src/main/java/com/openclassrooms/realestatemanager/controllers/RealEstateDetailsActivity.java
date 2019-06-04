@@ -5,20 +5,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
 public class RealEstateDetailsActivity extends AppCompatActivity {
 
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
-    private RealEstate mRealEstate;
+    private long mRealEstateId;
+    private RealEstateViewModel mRealEstateViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_real_estate_details);
 
-        mRealEstate = this.getRealEstateFromIntent();
+        mRealEstateId = this.getRealEstateIdFromIntent();
         this.configureRealEstateDetailsFragment();
     }
 
@@ -30,7 +31,7 @@ public class RealEstateDetailsActivity extends AppCompatActivity {
             // B - Create new main fragment
             mRealEstateDetailsFragment = new RealEstateDetailsFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("realEstate",mRealEstate);
+            bundle.putLong("realEstate", mRealEstateId);
             mRealEstateDetailsFragment.setArguments(bundle);
             // C - Add it to FrameLayout container
             getSupportFragmentManager().beginTransaction()
@@ -39,9 +40,11 @@ public class RealEstateDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private RealEstate getRealEstateFromIntent(){
+    private long getRealEstateIdFromIntent(){
+        long id;
         Intent intent = getIntent();
-        RealEstate realEstate = intent.getParcelableExtra("realEstate");
-        return realEstate;
+        id = intent.getLongExtra("realEstate",0);
+        return id;
     }
+
 }

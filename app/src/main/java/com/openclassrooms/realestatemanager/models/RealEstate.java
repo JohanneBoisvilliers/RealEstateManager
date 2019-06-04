@@ -14,7 +14,7 @@ import java.util.List;
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
         childColumns = "userId"))
-public class RealEstate implements Parcelable {
+public class RealEstate {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -29,53 +29,7 @@ public class RealEstate implements Parcelable {
     @Ignore private List<String> mPhotoList = new ArrayList<>();
     @Ignore private String address;
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public RealEstate createFromParcel(Parcel in) {
-            return new RealEstate(in);
-        }
-
-        public RealEstate[] newArray(int size) {
-            return new RealEstate[size];
-        }
-    };
-
     public RealEstate() {
-    }
-
-    public RealEstate(Parcel in) {
-        this.id = in.readLong();
-        this.userId = in.readLong();
-        this.category = in.readString();
-        this.price = in.readInt();
-        this.description = in.readString();
-        this.surface = in.readInt();
-        this.nbreOfRoom = in.readInt();
-        this.isSold = in.readInt() == 1;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.id);
-        dest.writeLong(this.userId);
-        dest.writeString(this.category);
-        dest.writeInt(this.price);
-        dest.writeString(this.description);
-        dest.writeInt(this.surface);
-        dest.writeInt(this.nbreOfRoom);
-        dest.writeValue(this.isSold);
-    }
-
-    public RealEstate(long id, long userId, String category, int price, Boolean isSold, int surface, int nbreOfRoom, String description,List<String> photoList, String address) {
-        this.id = id;
-        this.userId = userId;
-        this.category = category;
-        this.price = price;
-        this.isSold = isSold;
-        this.surface = surface;
-        this.nbreOfRoom = nbreOfRoom;
-        this.description = description;
-        this.mPhotoList = photoList;
-        this.address = address;
     }
 
     // -- GETTERS
@@ -142,8 +96,4 @@ public class RealEstate implements Parcelable {
         this.mPhotoList = mPhotoList;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

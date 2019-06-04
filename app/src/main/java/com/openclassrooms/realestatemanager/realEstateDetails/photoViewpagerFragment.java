@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,22 +28,22 @@ public class photoViewpagerFragment extends Fragment {
     @BindView(R.id.photo_container) ImageView mPhotoContainer;
 
     private static final String KEY_POSITION="position";
-    private static final String KEY_COLOR="color";
+    private static final String KEY_URL="photoUrl";
 
     public photoViewpagerFragment() {
         // Required empty public constructor
     }
 
-    // 2 - Method that will create a new instance of PageFragment, and add data to its bundle.
-    public static photoViewpagerFragment newInstance(int position, int color) {
+    // Method that will create a new instance of PageFragment, and add data to its bundle.
+    public static photoViewpagerFragment newInstance(int position, String photoUrl) {
 
-        // 2.1 Create new fragment
+        // Create new fragment
         photoViewpagerFragment frag = new photoViewpagerFragment();
 
-        // 2.2 Create bundle and add it some data
+        // Create bundle and add it some data
         Bundle args = new Bundle();
         args.putInt(KEY_POSITION, position);
-        args.putInt(KEY_COLOR, color);
+        args.putString(KEY_URL, photoUrl);
         frag.setArguments(args);
 
         return(frag);
@@ -52,17 +53,17 @@ public class photoViewpagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // 3 - Get layout of PageFragment
+        // Get layout of PageFragment
         View result = inflater.inflate(R.layout.fragment_photo_viewpager, container, false);
 
         ButterKnife.bind(this,result);
 
-        // 5 - Get data from Bundle (created in method newInstance)
+        // Get data from Bundle (created in method newInstance)
         int position = getArguments().getInt(KEY_POSITION, -1);
-        int color = getArguments().getInt(KEY_COLOR, -1);
+        String photoUrl = (String)getArguments().get(KEY_URL);
 
         // 6 - Update widgets with it
-        mPhotoContainer.setBackgroundColor(color);
+        mPhotoContainer.setImageBitmap(BitmapFactory.decodeFile(photoUrl));
 
         return result;
     }

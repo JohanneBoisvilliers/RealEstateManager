@@ -62,6 +62,7 @@ public class RealEstateListFragment extends Fragment {
         this.mRealEstateRecyclerView.setAdapter(this.mRealEstateAdapter);
         //Set layout manager to position the items
         this.mRealEstateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //shared viewmodel for two panes layout
         mSharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
                 .setOnItemClickListener((recyclerView1, position, v) -> {
@@ -69,32 +70,32 @@ public class RealEstateListFragment extends Fragment {
                             View view = getActivity().findViewById(R.id.container_real_estate_detail);
                             if(view == null){//one pane layout
                                 Intent intent = new Intent(getContext(), RealEstateDetailsActivity.class);
-                                intent.putExtra("realEstate",this.mRealEstateAdapter.getRealEstate(position));
+                                intent.putExtra("realEstate",this.mRealEstateAdapter.getRealEstate(position).getId());
                                 startActivity(intent);
                             }
                 });
     }
-
+    //configure viewmodel for requests
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
         this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
-
+    //request all real estates from database and put an observer to update list if there is any change
     private void getRealEstates(){
         this.mRealEstateViewModel.getRealEstate().observe(this, this::updateItemsList);
     }
-
+    //request photo for a specific real estate and put an observer to update photos
     private void getRealEstatesPhotos(RealEstate realEstate){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstate.getId()).observe(this, this::updateRealEstatePhotos);
     }
-
+    //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstate> realEstateList){
         for (RealEstate realEstate:realEstateList) {
             this.getRealEstatesPhotos(realEstate);
         }
         this.mRealEstateAdapter.updateData(realEstateList);
     }
-
+    //notify adapter for the new list of photos
     private void updateRealEstatePhotos(List<String> realEstatePhotos){
         mRealEstateAdapter.updatePhotos(realEstatePhotos);
     }

@@ -17,6 +17,9 @@ public interface RealEstateDao {
             " LEFT JOIN User ON User.id = RealEstate.userId ")
     LiveData<List<RealEstate>> getRealEstates();
 
+    @Query("SELECT * FROM RealEstate WHERE id = :realEstateId")
+    LiveData<RealEstate> getSpecificRealEstate(long realEstateId);
+
     @Insert
     long insertRealEstate(RealEstate realEstate);
 

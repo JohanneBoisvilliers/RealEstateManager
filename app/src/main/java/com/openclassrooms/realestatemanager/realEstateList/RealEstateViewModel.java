@@ -32,6 +32,10 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstateDataSource.getRealEstates();
     }
 
+    public LiveData<RealEstate> getSpecificRealEstate(long id) {
+        return mRealEstateDataSource.getSpecificRealEstate(id);
+    }
+
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateDataSource.createRealEstate(realEstate);

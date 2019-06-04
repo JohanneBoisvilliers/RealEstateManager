@@ -27,6 +27,9 @@ import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -69,6 +72,8 @@ public class RealEstateDetailsFragment extends Fragment {
     private Boolean isFABOpen = false;
     private Boolean isTwoPanesLayout = false;
     private RealEstateViewModel mRealEstateViewModel;
+    private List<String> mRealEstatePhotos=new ArrayList<>();
+    private PhotoViewpagerAdapter mPhotoViewPagerAdapter;
 
 
     public RealEstateDetailsFragment() {
@@ -95,7 +100,8 @@ public class RealEstateDetailsFragment extends Fragment {
     }
     //configure viewpager which contain photos
     private void configureViewPager(){
-        mPhotoViewpager.setAdapter(new PhotoViewpagerAdapter(getChildFragmentManager(),getResources().getIntArray(R.array.colorPagesViewPager)));
+        mPhotoViewPagerAdapter =new PhotoViewpagerAdapter(getChildFragmentManager(),mRealEstatePhotos);
+        mPhotoViewpager.setAdapter(mPhotoViewPagerAdapter);
         mDotIndicator.setupWithViewPager(mPhotoViewpager,true);
     }
     //configure recyclerview for two panes layout case
@@ -121,6 +127,7 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
+    //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +135,6 @@ public class RealEstateDetailsFragment extends Fragment {
                 Boolean isSold = mRealEstate.getSold();
                 isSold = !isSold;
                 mRealEstate.setSold(isSold);
-                Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getSold()));
-                Log.d(TAG, "onClick: "+String.valueOf(mRealEstate.getId()));
                 mRealEstateViewModel.updateItem(mRealEstate);
                 setSoldState(mRealEstate);
             }
@@ -151,20 +156,39 @@ public class RealEstateDetailsFragment extends Fragment {
     }
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstate realEstate){
-        mRealEstateCategory.setText(realEstate.getCategory());
-        mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getPrice(),getResources().getString((R.string.real_estate_price_euro))));
-        mRealEstateDescription.setText(realEstate.getDescription());
-        mRealEstateDescriptionFade.setText(realEstate.getDescription());
-        mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
-        mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
-        this.setSoldState(realEstate);
+        if (realEstate!=null) {
+            this.getRealEstatesPhotos(realEstate);
+            mRealEstate = realEstate;
+            mRealEstateCategory.setText(realEstate.getCategory());
+            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getPrice(),getResources().getString((R.string.real_estate_price_euro))));
+            mRealEstateDescription.setText(realEstate.getDescription());
+            mRealEstateDescriptionFade.setText(realEstate.getDescription());
+            mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
+            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
+            this.setSoldState(realEstate);
+        }
+
     }
+    //request database to get current realEstate and observe if there are any change
+    private void getCurrentRealEstate(long id){
+        this.mRealEstateViewModel.getSpecificRealEstate(id).observe(this, this::configureDetails);
+    }
+    //request photo for a specific real estate and put an observer to update photos
+    private void getRealEstatesPhotos(RealEstate realEstate){
+        this.mRealEstateViewModel.getRealEstatePhotos(realEstate.getId()).observe(this, this::updateRealEstatePhotos);
+    }
+    //notify adapter for the new list of photos
+    private void updateRealEstatePhotos(List<String> realEstatePhotos){
+        mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
+    }
+    //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView == null){//one pane layout
+            long id;
             Intent intent = getActivity().getIntent();
-            mRealEstate = intent.getParcelableExtra("realEstate");
-            configureDetails(mRealEstate);
+            id = intent.getLongExtra("realEstate",0);
+            getCurrentRealEstate(id);
         }else{//two panes layout
             isTwoPanesLayout = true;
             if (!MyApp.isInit) {
@@ -235,7 +259,7 @@ public class RealEstateDetailsFragment extends Fragment {
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
         this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
-
+    //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate){
         if (mSoldOut!=null) {
             if (realEstate.getSold()) {

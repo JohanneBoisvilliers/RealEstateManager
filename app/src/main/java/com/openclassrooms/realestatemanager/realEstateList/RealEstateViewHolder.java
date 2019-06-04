@@ -44,6 +44,8 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
                         mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro))));
         if (realEstate.getSold()) {
             mSoldOut.setVisibility(View.VISIBLE);
+        }else{
+            mSoldOut.setVisibility(View.INVISIBLE);
         }
     }
 
