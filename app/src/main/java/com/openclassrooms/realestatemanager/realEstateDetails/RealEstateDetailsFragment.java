@@ -107,7 +107,7 @@ public class RealEstateDetailsFragment extends Fragment {
     //configure recyclerview for two panes layout case
     private void configureRecyclerView(){
         //Create adapter passing the list of restaurant
-        this.mRecyclerViewPhotoAdapter = new RecyclerViewDetailsPhotoAdapter(getResources().getIntArray(R.array.colorPagesViewPager));
+        this.mRecyclerViewPhotoAdapter = new RecyclerViewDetailsPhotoAdapter(mRealEstatePhotos);
         //Attach the adapter to the recyclerview to populate items
         this.mRecyclerViewForPhotos.setAdapter(this.mRecyclerViewPhotoAdapter);
         //Set layout manager to position the items
@@ -179,7 +179,11 @@ public class RealEstateDetailsFragment extends Fragment {
     }
     //notify adapter for the new list of photos
     private void updateRealEstatePhotos(List<String> realEstatePhotos){
-        mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
+        if (mRealEstateRecyclerView == null) {//one pane layout
+            mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
+        }else{//two panes layout
+            mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
+        }
     }
     //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
@@ -263,10 +267,8 @@ public class RealEstateDetailsFragment extends Fragment {
     private void setSoldState(RealEstate realEstate){
         if (mSoldOut!=null) {
             if (realEstate.getSold()) {
-                Log.d(TAG, "configureDetails: show");
                 mSoldOut.setVisibility(View.VISIBLE);
             }else{
-                Log.d(TAG, "configureDetails: hide");
                 mSoldOut.setVisibility(View.INVISIBLE);
             }
         }

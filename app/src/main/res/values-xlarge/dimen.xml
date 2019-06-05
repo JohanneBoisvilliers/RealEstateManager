@@ -18,6 +18,6 @@
 
     <!--CardView-->
         <!--_DESIGN_-->
-    <dimen name="line_footer">240dp</dimen>
+    <dimen name="line_footer">220dp</dimen>
 
 </resources>

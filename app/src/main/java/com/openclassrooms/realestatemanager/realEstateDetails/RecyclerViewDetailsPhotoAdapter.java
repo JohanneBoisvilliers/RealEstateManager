@@ -11,14 +11,15 @@ import android.view.ViewGroup;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewDetailsPhotoAdapter  extends RecyclerView.Adapter<RecyclerViewDetailsPhotoViewHolder>{
 
-    private int[] colors;
+    private List<String> mRealEstatePhotos = new ArrayList<>();
 
-    public RecyclerViewDetailsPhotoAdapter(int[] colors) {
-        this.colors = colors;
+    public RecyclerViewDetailsPhotoAdapter(List<String> listOfPhotos) {
+        this.mRealEstatePhotos = listOfPhotos;
     }
 
     @NonNull
@@ -33,11 +34,17 @@ public class RecyclerViewDetailsPhotoAdapter  extends RecyclerView.Adapter<Recyc
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewDetailsPhotoViewHolder holder, int position) {
-        holder.updatePhotoInRecyclerView(colors[position]);
+        holder.updatePhotoInRecyclerView(this.mRealEstatePhotos.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mRealEstatePhotos.size();
+    }
+
+    public void updatePhotos(List<String> listOfPhotos){
+        this.mRealEstatePhotos.clear();
+        this.mRealEstatePhotos = listOfPhotos;
+        this.notifyDataSetChanged();
     }
 }

@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.realEstateDetails;
 
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,7 +20,7 @@ public class RecyclerViewDetailsPhotoViewHolder extends RecyclerView.ViewHolder 
         ButterKnife.bind(this,itemView);
     }
 
-    public void updatePhotoInRecyclerView(int color){
-        mPhotoContainer.setBackgroundColor(color);
+    public void updatePhotoInRecyclerView(String photoUrl){
+        mPhotoContainer.setImageBitmap(BitmapFactory.decodeFile(photoUrl));
     }
 }

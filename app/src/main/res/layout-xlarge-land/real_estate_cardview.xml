@@ -6,82 +6,88 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="2dp"
+    app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cardview_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
             <!-- photo -->
             <ImageView
                 android:id="@+id/image_cardview"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/background_start"
                 android:background="@color/colorPrimaryLight"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="@+id/cardview_container"
+                app:layout_constraintLeft_toRightOf="@id/fond_transparent"
+                app:layout_constraintRight_toRightOf="@+id/cardview_container"/>
             <!-- transparent footer -->
             <ImageView
                 android:id="@+id/fond_transparent"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@color/primaryTextColor"
+                app:layout_constraintTop_toTopOf="@+id/cardview_container"
                 app:layout_constraintBottom_toBottomOf="@+id/cardview_container"
-                android:alpha="0.6"/>
+                app:layout_constraintLeft_toLeftOf="@+id/cardview_container"
+                app:layout_constraintRight_toLeftOf="@id/image_cardview"/>
+
             <!-- Texte transparent footer -->
-            <LinearLayout
+            <TextView
+                android:id="@+id/type_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="@id/fond_transparent"
-                app:layout_constraintBottom_toBottomOf="@id/fond_transparent">
-                <TextView
-                    android:id="@+id/type_cardview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    tools:text="Loft"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="25sp" />
+                android:paddingStart="16dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25sp"
+                app:layout_constraintTop_toTopOf="@id/cardview_container"
+                app:layout_constraintBottom_toTopOf="@id/line_separator"
+                tools:text="Loft" />
                 <View
+                    android:id="@+id/line_separator"
                     android:layout_width="@dimen/line_footer"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="0.1dp"
-                    android:background="@color/colorPrimaryLight"/>
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:layout_constraintLeft_toLeftOf="@id/type_cardview"
+                    app:layout_constraintTop_toTopOf="@id/sold_out_bg"
+                    app:layout_constraintBottom_toBottomOf="@+id/sold_out_bg"
+                    app:layout_constraintRight_toLeftOf="@id/image_cardview"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimaryDark"/>
                 <TextView
                     android:id="@+id/price_cardview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingStart="16dp"
-                    android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     tools:text="200000"
                     android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintTop_toBottomOf="@id/line_separator"
+                    app:layout_constraintBottom_toBottomOf="@id/cardview_container"
                     android:textSize="18sp" />
-            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/sold_out_bg"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                app:layout_constraintStart_toStartOf="@id/cardview_container"
-                app:layout_constraintEnd_toEndOf="@id/cardview_container"
-                app:layout_constraintTop_toTopOf="@id/cardview_container"
-                app:layout_constraintBottom_toBottomOf="@id/cardview_container"
+                app:layout_constraintStart_toStartOf="@id/image_cardview"
+                app:layout_constraintEnd_toEndOf="@id/image_cardview"
+                app:layout_constraintTop_toTopOf="@id/image_cardview"
+                app:layout_constraintBottom_toBottomOf="@id/image_cardview"
                 android:background="@color/background_sold_out"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <ImageView
                     android:adjustViewBounds="true"

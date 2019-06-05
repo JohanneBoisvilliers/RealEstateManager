@@ -35,7 +35,7 @@
                 android:layout_height="100dp"
                 android:background="@color/primaryTextColor"
                 app:layout_constraintBottom_toBottomOf="@+id/cardview_container"
-                android:alpha="0.6"/>
+                android:alpha="0.8"/>
             <!-- Texte transparent footer -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,8 +57,8 @@
                 <View
                     android:layout_width="@dimen/line_footer"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="0.1dp"
-                    android:background="@color/colorPrimaryLight"/>
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimaryDark"/>
                 <TextView
                     android:id="@+id/price_cardview"
                     android:layout_width="match_parent"
