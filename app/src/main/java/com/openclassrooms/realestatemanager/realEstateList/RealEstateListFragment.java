@@ -1,23 +1,19 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.models.Photo;
+import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
-import com.openclassrooms.realestatemanager.controllers.RealEstateDetailsActivity;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -57,7 +53,7 @@ public class RealEstateListFragment extends Fragment {
 
     private void configureRecyclerView(){
         //Create adapter passing the list of restaurant
-        this.mRealEstateAdapter = new RealEstateAdapter(getActivity(),this.mRealEstateList);
+        this.mRealEstateAdapter = new RealEstateAdapter(this.mRealEstateList,this.mRealEstatePhoto);
         //Attach the adapter to the recyclerview to populate items
         this.mRealEstateRecyclerView.setAdapter(this.mRealEstateAdapter);
         //Set layout manager to position the items
@@ -66,13 +62,11 @@ public class RealEstateListFragment extends Fragment {
         mSharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
                 .setOnItemClickListener((recyclerView1, position, v) -> {
-                            this.mSharedViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
-                            View view = getActivity().findViewById(R.id.container_real_estate_detail);
-                            if(view == null){//one pane layout
-                                Intent intent = new Intent(getContext(), RealEstateDetailsActivity.class);
-                                intent.putExtra("realEstate",this.mRealEstateAdapter.getRealEstate(position).getId());
-                                startActivity(intent);
-                            }
+                    this.mSharedViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
+                    View view = getActivity().findViewById(R.id.container_real_estate_detail);
+                    if(view == null){//one pane layout
+                        this.swapFragment();
+                    }
                 });
     }
     //configure viewmodel for requests
@@ -98,6 +92,14 @@ public class RealEstateListFragment extends Fragment {
     //notify adapter for the new list of photos
     private void updateRealEstatePhotos(List<String> realEstatePhotos){
         mRealEstateAdapter.updatePhotos(realEstatePhotos);
+    }
+    //if one pane layout, change list fragment for a detail fragment
+    private void swapFragment(){
+        RealEstateDetailsFragment realEstateDetailsFragment = new RealEstateDetailsFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container_real_estate_recycler_view, realEstateDetailsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

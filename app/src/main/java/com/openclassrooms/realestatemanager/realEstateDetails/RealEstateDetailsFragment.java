@@ -48,6 +48,7 @@ public class RealEstateDetailsFragment extends Fragment {
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
+    @Nullable
     @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
     @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
     @BindView(R.id.main_fab) FloatingActionButton mMainFAB;
@@ -188,28 +189,27 @@ public class RealEstateDetailsFragment extends Fragment {
     //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
-        if(mRealEstateRecyclerView == null){//one pane layout
-            long id;
-            Intent intent = getActivity().getIntent();
-            id = intent.getLongExtra("realEstate",0);
-            getCurrentRealEstate(id);
-        }else{//two panes layout
+        if(mRealEstateRecyclerView != null){
+            Log.d(TAG, "getRealEstateToConfigure: ");
             isTwoPanesLayout = true;
             if (!MyApp.isInit) {
                 mBackgroundWhenStarting.setVisibility(View.VISIBLE);
                 mEntireView.setVisibility(View.INVISIBLE);
             }
-            SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-            model.getSelected().observe(this,  item -> {
-                mRealEstate = item;
-                MyApp.isInit=true;
+        }
+        SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        model.getSelected().observe(this,  item -> {
+            mRealEstate = item;
+            MyApp.isInit=true;
+            if(mRealEstateRecyclerView != null){
                 mBackgroundWhenStarting.setVisibility(View.GONE);
                 mEntireView.setVisibility(View.VISIBLE);
-                if (mRealEstate!=null) {
-                    configureDetails(mRealEstate);
-                }
-            });
-        }
+            }
+
+            if (mRealEstate!=null) {
+                configureDetails(mRealEstate);
+            }
+        });
     }
     //add a button to open description when it's longer than 3 lines
     private void configureExpandDescription(){

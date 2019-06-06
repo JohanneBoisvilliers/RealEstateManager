@@ -26,15 +26,13 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
 
-    private Context mContext;
     private List<RealEstate> mRealEstateList;
     private List<String> mRealEstatePhotos;
     public final String TAG = "DEBUG";
 
-    public RealEstateAdapter(Context context, List<RealEstate> mRealEstateList) {
-        this.mContext = context;
+    public RealEstateAdapter(List<RealEstate> mRealEstateList,List<String> photoList) {
         this.mRealEstateList = mRealEstateList;
-        this.mRealEstatePhotos = new ArrayList<>();
+        this.mRealEstatePhotos = photoList;
     }
 
     @Override
@@ -64,13 +62,15 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     }
 
     public void updateData(List<RealEstate> realEstateList){
+        Log.d(TAG, "updateData: enter in "+ realEstateList.size());
         this.mRealEstateList = realEstateList;
         this.notifyDataSetChanged();
     }
 
     public void updatePhotos(List<String> listOfPhotos){
         this.mRealEstatePhotos.clear();
-        this.mRealEstatePhotos = listOfPhotos;
+        Log.d(TAG, "updatePhotos: enter in " + listOfPhotos.size());
+        this.mRealEstatePhotos.addAll(listOfPhotos);
         this.notifyDataSetChanged();
     }
 }

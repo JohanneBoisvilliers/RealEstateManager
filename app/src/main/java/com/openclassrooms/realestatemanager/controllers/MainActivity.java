@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        this.configureRealEstateListFragment();
+        if (savedInstanceState==null) {
+            this.configureRealEstateListFragment();
+        }
         this.configureRealEstateDetailsFragment();
     }
 
