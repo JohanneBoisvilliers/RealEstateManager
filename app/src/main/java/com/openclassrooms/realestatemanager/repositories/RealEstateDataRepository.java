@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class RealEstateDataRepository {
 
     public LiveData<List<RealEstate>> getRealEstates(){ return this.mRealEstateDao.getRealEstates(); }
     public LiveData<RealEstate> getSpecificRealEstate(long id){ return this.mRealEstateDao.getSpecificRealEstate(id); }
+    public LiveData<List<RealEstateWithPhotos>> getRealEstatesWithPhotos(){ return this.mRealEstateDao.getRealEstateWithPhotos(); }
 
     // --- CREATE ---
 

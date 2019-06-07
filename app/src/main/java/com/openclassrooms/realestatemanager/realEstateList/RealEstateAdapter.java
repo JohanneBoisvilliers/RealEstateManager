@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,13 +28,11 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
 
-    private List<RealEstate> mRealEstateList;
-    private List<String> mRealEstatePhotos;
+    private List<RealEstateWithPhotos> mRealEstateList;
     public final String TAG = "DEBUG";
 
-    public RealEstateAdapter(List<RealEstate> mRealEstateList,List<String> photoList) {
+    public RealEstateAdapter(List<RealEstateWithPhotos> mRealEstateList) {
         this.mRealEstateList = mRealEstateList;
-        this.mRealEstatePhotos = photoList;
     }
 
     @Override
@@ -47,8 +47,6 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
 
     @Override
     public void onBindViewHolder(RealEstateViewHolder holder, int position) {
-        mRealEstateList.get(position).setPhotoList(mRealEstatePhotos);
-
         holder.updateRealEstateCardView(mRealEstateList.get(position));
     }
 
@@ -58,19 +56,13 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     }
 
     public RealEstate getRealEstate(int position){
-        return this.mRealEstateList.get(position);
+        return this.mRealEstateList.get(position).getRealEstate();
     }
 
-    public void updateData(List<RealEstate> realEstateList){
-        Log.d(TAG, "updateData: enter in "+ realEstateList.size());
-        this.mRealEstateList = realEstateList;
-        this.notifyDataSetChanged();
-    }
-
-    public void updatePhotos(List<String> listOfPhotos){
-        this.mRealEstatePhotos.clear();
-        Log.d(TAG, "updatePhotos: enter in " + listOfPhotos.size());
-        this.mRealEstatePhotos.addAll(listOfPhotos);
+    public void updateData(List<RealEstateWithPhotos> realEstateList){
+        this.mRealEstateList.clear();
+        this.mRealEstateList.addAll(realEstateList);
+        Log.d(TAG, "updateData: "+realEstateList.size());
         this.notifyDataSetChanged();
     }
 }

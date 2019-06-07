@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
 
@@ -34,6 +36,10 @@ public class RealEstateViewModel extends ViewModel {
 
     public LiveData<RealEstate> getSpecificRealEstate(long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
+    }
+
+    public LiveData<List<RealEstateWithPhotos>> getRealEstatewithPhotos() {
+        return mRealEstateDataSource.getRealEstatesWithPhotos();
     }
 
     public void createItem(RealEstate realEstate) {

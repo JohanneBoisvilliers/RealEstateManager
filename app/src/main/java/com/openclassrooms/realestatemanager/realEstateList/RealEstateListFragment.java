@@ -7,11 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
 import com.openclassrooms.realestatemanager.injections.Injections;
@@ -30,10 +33,10 @@ public class RealEstateListFragment extends Fragment {
     @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
 
     private RealEstateAdapter mRealEstateAdapter;
-    private List<RealEstate> mRealEstateList = new ArrayList<>();
-    private List<String> mRealEstatePhoto = new ArrayList<>();
+    private List<RealEstateWithPhotos> mRealEstateList = new ArrayList<>();
     private RealEstateViewModel mRealEstateViewModel;
     private SharedViewModel mSharedViewModel;
+    public static final String TAG = "DEBUG";
 
     public RealEstateListFragment() {}
 
@@ -46,14 +49,14 @@ public class RealEstateListFragment extends Fragment {
         this.configureRecyclerView();
         this.configureViewModel();
 
-        this.getRealEstates();
+        this.getRealEstatesWithPhotos();
 
         return view;
     }
 
     private void configureRecyclerView(){
         //Create adapter passing the list of restaurant
-        this.mRealEstateAdapter = new RealEstateAdapter(this.mRealEstateList,this.mRealEstatePhoto);
+        this.mRealEstateAdapter = new RealEstateAdapter(this.mRealEstateList);
         //Attach the adapter to the recyclerview to populate items
         this.mRealEstateRecyclerView.setAdapter(this.mRealEstateAdapter);
         //Set layout manager to position the items
@@ -74,24 +77,13 @@ public class RealEstateListFragment extends Fragment {
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
         this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
-    //request all real estates from database and put an observer to update list if there is any change
-    private void getRealEstates(){
-        this.mRealEstateViewModel.getRealEstate().observe(this, this::updateItemsList);
-    }
-    //request photo for a specific real estate and put an observer to update photos
-    private void getRealEstatesPhotos(RealEstate realEstate){
-        this.mRealEstateViewModel.getRealEstatePhotos(realEstate.getId()).observe(this, this::updateRealEstatePhotos);
-    }
     //get photos for all real estates et notify adapter for new real estate list
-    private void updateItemsList(List<RealEstate> realEstateList){
-        for (RealEstate realEstate:realEstateList) {
-            this.getRealEstatesPhotos(realEstate);
-        }
+    private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
         this.mRealEstateAdapter.updateData(realEstateList);
     }
-    //notify adapter for the new list of photos
-    private void updateRealEstatePhotos(List<String> realEstatePhotos){
-        mRealEstateAdapter.updatePhotos(realEstatePhotos);
+    //request all real estates from database and put an observer to update list if there is any change
+    private void getRealEstatesWithPhotos(){
+        this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
     }
     //if one pane layout, change list fragment for a detail fragment
     private void swapFragment(){
