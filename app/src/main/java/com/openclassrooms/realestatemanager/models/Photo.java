@@ -10,7 +10,7 @@ public class Photo {
     private long id;
     private long realEstateId;
     private String url;
-
+    private String description;
 
     public Photo() {}
 
@@ -25,6 +25,10 @@ public class Photo {
         return realEstateId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     //SETTERS
     public void setId(long id) {
         this.id = id;
@@ -34,5 +38,8 @@ public class Photo {
     }
     public void setRealEstateId(long realEstateId) {
         this.realEstateId = realEstateId;
+    }
+    public void setDescription(String mDescription) {
+        this.description = mDescription;
     }
 }

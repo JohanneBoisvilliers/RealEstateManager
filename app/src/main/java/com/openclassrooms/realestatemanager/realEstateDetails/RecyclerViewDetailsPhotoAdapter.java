@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewHolder;
 
 import java.util.ArrayList;
@@ -16,9 +17,9 @@ import java.util.List;
 
 public class RecyclerViewDetailsPhotoAdapter  extends RecyclerView.Adapter<RecyclerViewDetailsPhotoViewHolder>{
 
-    private List<String> mRealEstatePhotos = new ArrayList<>();
+    private List<Photo> mRealEstatePhotos = new ArrayList<>();
 
-    public RecyclerViewDetailsPhotoAdapter(List<String> listOfPhotos) {
+    public RecyclerViewDetailsPhotoAdapter(List<Photo> listOfPhotos) {
         this.mRealEstatePhotos = listOfPhotos;
     }
 
@@ -42,7 +43,7 @@ public class RecyclerViewDetailsPhotoAdapter  extends RecyclerView.Adapter<Recyc
         return mRealEstatePhotos.size();
     }
 
-    public void updatePhotos(List<String> listOfPhotos){
+    public void updatePhotos(List<Photo> listOfPhotos){
         this.mRealEstatePhotos.clear();
         this.mRealEstatePhotos = listOfPhotos;
         this.notifyDataSetChanged();

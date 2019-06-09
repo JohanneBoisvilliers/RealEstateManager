@@ -6,15 +6,16 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 
 public class SharedViewModel extends ViewModel {
-    private final MutableLiveData<RealEstate> selected = new MutableLiveData<RealEstate>();
+    private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
 
-    public void select(RealEstate item) {
+    public void select(RealEstateWithPhotos item) {
         selected.setValue(item);
     }
 
-    public LiveData<RealEstate> getSelected() {
+    public LiveData<RealEstateWithPhotos> getSelected() {
         return selected;
     }
 }

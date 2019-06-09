@@ -58,10 +58,10 @@ public class FadingTextView extends android.support.v7.widget.AppCompatTextView 
         getLineBounds(line, b);
 
         // Adjust end bound to text length
-        final int lineStart = l.getLineStart(line);
+        final int lineStart = l.getLineStart(0);
         final int lineEnd = l.getLineEnd(line);
         final CharSequence text = getText().subSequence(lineStart, lineEnd);
-        final int measure = (int) (getPaint().measureText(text, 0, text.length()) + .5f);
+        final int measure = (int) (getPaint().measureText(text, 0, text.length()) - 3.0f);
         if (isRtl) {
             b.left = b.right - measure;
         }

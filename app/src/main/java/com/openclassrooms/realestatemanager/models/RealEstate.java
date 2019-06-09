@@ -26,7 +26,6 @@ public class RealEstate {
     private int surface;
     private int nbreOfRoom;
     private String description;
-    @Ignore private List<String> mPhotoList = new ArrayList<>();
     @Ignore private String address;
 
     public RealEstate() {
@@ -60,9 +59,6 @@ public class RealEstate {
     public String getAddress() {
         return address;
     }
-    public List<String> getPhotoList() {
-        return mPhotoList;
-    }
 
     // -- SETTERS
     public void setId(long id) {
@@ -91,9 +87,6 @@ public class RealEstate {
     }
     public void setAddress(String address) {
         this.address = address;
-    }
-    public void setPhotoList(List<String> mPhotoList) {
-        this.mPhotoList = mPhotoList;
     }
 
 }

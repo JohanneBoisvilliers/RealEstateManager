@@ -26,8 +26,9 @@ public class photoViewpagerFragment extends Fragment {
 
     @BindView(R.id.framelayout_test_viewpager) FrameLayout mFrameLayout;
     @BindView(R.id.photo_container) ImageView mPhotoContainer;
+    @BindView(R.id.viewpager_description) TextView mPhotoDescription;
 
-    private static final String KEY_POSITION="position";
+    private static final String KEY_DESCRIPTION="description";
     private static final String KEY_URL="photoUrl";
 
     public photoViewpagerFragment() {
@@ -35,14 +36,14 @@ public class photoViewpagerFragment extends Fragment {
     }
 
     // Method that will create a new instance of PageFragment, and add data to its bundle.
-    public static photoViewpagerFragment newInstance(int position, String photoUrl) {
+    public static photoViewpagerFragment newInstance(String photoUrl,String photoDescription) {
 
         // Create new fragment
         photoViewpagerFragment frag = new photoViewpagerFragment();
 
         // Create bundle and add it some data
         Bundle args = new Bundle();
-        args.putInt(KEY_POSITION, position);
+        args.putString(KEY_DESCRIPTION,photoDescription);
         args.putString(KEY_URL, photoUrl);
         frag.setArguments(args);
 
@@ -58,12 +59,12 @@ public class photoViewpagerFragment extends Fragment {
 
         ButterKnife.bind(this,result);
 
-        // Get data from Bundle (created in method newInstance)
-        int position = getArguments().getInt(KEY_POSITION, -1);
         String photoUrl = (String)getArguments().get(KEY_URL);
+        String photoDescription = (String)getArguments().get(KEY_DESCRIPTION);
 
         // 6 - Update widgets with it
         mPhotoContainer.setImageBitmap(BitmapFactory.decodeFile(photoUrl));
+        mPhotoDescription.setText(photoDescription);
 
         return result;
     }

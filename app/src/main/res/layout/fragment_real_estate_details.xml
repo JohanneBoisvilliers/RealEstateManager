@@ -148,7 +148,8 @@
                         android:paddingEnd="10dp"
                         android:text="@string/button_more"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorAccentDark" />
+                        android:textColor="@color/colorAccentDark"
+                        android:visibility="invisible"/>
                 </LinearLayout>
                 <!--container details -->
                 <LinearLayout

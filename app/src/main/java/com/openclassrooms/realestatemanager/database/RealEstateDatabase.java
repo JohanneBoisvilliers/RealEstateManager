@@ -68,6 +68,7 @@ public abstract class RealEstateDatabase extends RoomDatabase {
                 ContentValues photoTest = new ContentValues();
                 photoTest.put("id",1);
                 photoTest.put("realEstateId",1);
+                photoTest.put("description","salon");
                 photoTest.put("url","/storage/emulated/0/DCIM/bien_1_1.jpg");
                 db.insert("Photo",OnConflictStrategy.IGNORE, photoTest);
             }

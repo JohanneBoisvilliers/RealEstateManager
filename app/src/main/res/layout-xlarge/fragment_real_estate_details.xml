@@ -148,7 +148,8 @@
                         android:paddingTop="5dp"
                         android:gravity="top|end"
                         android:textColor="@color/colorAccentDark"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:visibility="invisible"/>
                 </LinearLayout>
                 <!--container details -->
                 <LinearLayout

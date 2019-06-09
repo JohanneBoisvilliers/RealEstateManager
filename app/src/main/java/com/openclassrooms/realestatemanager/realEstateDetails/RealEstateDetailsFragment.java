@@ -19,7 +19,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.stetho.common.ListUtil;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.Photo;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
@@ -68,12 +71,13 @@ public class RealEstateDetailsFragment extends Fragment {
 
     private static final String TAG = "DEBUG";
     private int mNumberOfLine;
-    private RealEstate mRealEstate;
+    private RealEstateWithPhotos mRealEstate;
     private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
     private Boolean isFABOpen = false;
     private Boolean isTwoPanesLayout = false;
     private RealEstateViewModel mRealEstateViewModel;
-    private List<String> mRealEstatePhotos=new ArrayList<>();
+    private List<Photo> mRealEstatePhotos = new ArrayList<>();
+    private List<Photo> mPhotoViewPagerDescription;
     private PhotoViewpagerAdapter mPhotoViewPagerAdapter;
 
 
@@ -133,11 +137,11 @@ public class RealEstateDetailsFragment extends Fragment {
         mStatusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean isSold = mRealEstate.getSold();
+                Boolean isSold = mRealEstate.getRealEstate().getSold();
                 isSold = !isSold;
-                mRealEstate.setSold(isSold);
-                mRealEstateViewModel.updateItem(mRealEstate);
-                setSoldState(mRealEstate);
+                mRealEstate.getRealEstate().setSold(isSold);
+                mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
+                setSoldState(mRealEstate.getRealEstate());
             }
         });
     }
@@ -156,30 +160,27 @@ public class RealEstateDetailsFragment extends Fragment {
         mAddPhoto.animate().translationY(0);
     }
     //get RealEstate from Activity and configure view details in fragment
-    private void configureDetails(RealEstate realEstate){
+    private void configureDetails(RealEstateWithPhotos realEstate){
         if (realEstate!=null) {
-            this.getRealEstatesPhotos(realEstate);
+            this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
             mRealEstate = realEstate;
-            mRealEstateCategory.setText(realEstate.getCategory());
-            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getPrice(),getResources().getString((R.string.real_estate_price_euro))));
-            mRealEstateDescription.setText(realEstate.getDescription());
-            mRealEstateDescriptionFade.setText(realEstate.getDescription());
-            mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getSurface()));
-            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getNbreOfRoom()));
-            this.setSoldState(realEstate);
+            updateRealEstatePhotos(mRealEstatePhotos);
+            mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
+            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getRealEstate().getPrice(),getResources().getString((R.string.real_estate_price_euro))));
+            mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
+            mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
+            mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getRealEstate().getSurface()));
+            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getRealEstate().getNbreOfRoom()));
+            this.setSoldState(realEstate.getRealEstate());
         }
 
     }
-    //request database to get current realEstate and observe if there are any change
-    private void getCurrentRealEstate(long id){
-        this.mRealEstateViewModel.getSpecificRealEstate(id).observe(this, this::configureDetails);
-    }
     //request photo for a specific real estate and put an observer to update photos
-    private void getRealEstatesPhotos(RealEstate realEstate){
-        this.mRealEstateViewModel.getRealEstatePhotos(realEstate.getId()).observe(this, this::updateRealEstatePhotos);
+    private void getRealEstatesPhotos(long realEstateId){
+        this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
     }
     //notify adapter for the new list of photos
-    private void updateRealEstatePhotos(List<String> realEstatePhotos){
+    private void updateRealEstatePhotos(List<Photo> realEstatePhotos){
         if (mRealEstateRecyclerView == null) {//one pane layout
             mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
         }else{//two panes layout
@@ -189,8 +190,7 @@ public class RealEstateDetailsFragment extends Fragment {
     //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
-        if(mRealEstateRecyclerView != null){
-            Log.d(TAG, "getRealEstateToConfigure: ");
+        if(mRealEstateRecyclerView != null){//two panes layout
             isTwoPanesLayout = true;
             if (!MyApp.isInit) {
                 mBackgroundWhenStarting.setVisibility(View.VISIBLE);
@@ -217,7 +217,8 @@ public class RealEstateDetailsFragment extends Fragment {
             @Override
             public void run() {
                 mNumberOfLine = mRealEstateDescription.getLineCount();
-                if (mNumberOfLine>= 2){
+                if (mNumberOfLine>=2){
+                    mButtonMoreDescription.setVisibility(View.VISIBLE);
                     mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
