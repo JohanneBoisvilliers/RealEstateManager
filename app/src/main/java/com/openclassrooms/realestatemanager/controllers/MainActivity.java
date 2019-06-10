@@ -3,6 +3,8 @@ package com.openclassrooms.realestatemanager.controllers;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +91,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //2 - Inflate the menu and add it to the Toolbar
+        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.primaryTextColor), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle actions on menu items
+        switch (item.getItemId()) {
+            case R.id.menu_activity_main_add_realestate:
+                this.startAddRealEstateActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private void startAddRealEstateActivity(){
+        Intent intent = new Intent(this,AddARealEstateActivity.class);
+        startActivity(intent);
     }
     //Configure Drawer Layout
     private void configureDrawerLayout(){
