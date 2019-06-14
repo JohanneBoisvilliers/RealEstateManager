@@ -3,7 +3,7 @@
     <!-- Default NavigationView Header height -->
     <dimen name="nav_header_height">176dp</dimen>
     <!--Fragment Details-->
-        <!--_DESIGN_-->
+    <!--_DESIGN_-->
     <dimen name="FAB_elevation_55">55dp</dimen>
     <dimen name="FAB_elevation_105">105dp</dimen>
     <dimen name="FAB_elevation_155">155dp</dimen>
@@ -12,18 +12,22 @@
     <dimen name="margin_description_viewpager">16dp</dimen>
     <dimen name="description_viewpager_background_height">25dp</dimen>
 
-        <!--_TEXT_-->
+    <!--_TEXT_-->
     <dimen name="text_description">16sp</dimen>
     <dimen name="title_desciption">20sp</dimen>
     <dimen name="text_informations">16sp</dimen>
     <dimen name="text_type">22sp</dimen>
 
     <!--CardView-->
-        <!--_DESIGN_-->
+    <!--_DESIGN_-->
     <dimen name="line_footer">320dp</dimen>
     <dimen name="header_height">220dp</dimen>
-        <!--_TEXT_-->
+    <!--_TEXT_-->
     <dimen name="type_line">22sp</dimen>
     <dimen name="price_line">18sp</dimen>
 
+    <!--Add RealEstate Activity-->
+    <dimen name="text_in_spinner">12sp</dimen>
+    <dimen name="text_info">12sp</dimen>
+    <dimen name="margin_to_border">16dp</dimen>
 </resources>
