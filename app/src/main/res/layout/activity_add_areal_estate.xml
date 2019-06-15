@@ -1,75 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.AddARealEstateActivity">
+    tools:context=".realEstateDetails.RealEstateDetailsFragment">
 
-    <ImageView
-        android:id="@+id/image_header"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/type_logo"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/baseline_add_a_photo_black_24"
-        app:layout_constraintEnd_toEndOf="@+id/type_info"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_header" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".controllers.AddARealEstateActivity">
 
-    <TextView
-        android:id="@+id/type_info"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_to_border"
-        android:gravity="center"
-        android:text="Type :"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_info"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/spinner_realestate_type"
-        app:layout_constraintTop_toBottomOf="@+id/type_logo" />
+            <!--header-->
+            <ImageView
+                android:id="@+id/image_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/image_header_height"
+                android:src="@drawable/keys"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!--user photo-->
+            <ImageView
+                android:id="@+id/user_photo"
+                android:layout_width="@dimen/user_photo_size"
+                android:layout_height="@dimen/user_photo_size"
+                android:src="@drawable/user"
+                app:layout_constraintBottom_toBottomOf="@id/image_header"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_header" />
+            <!--"button" Type-->
+            <LinearLayout
+                android:id="@+id/type_button"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_to_border"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:layout_marginEnd="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintBottom_toBottomOf="@+id/price_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/price_button"
+                app:layout_constraintTop_toBottomOf="@+id/user_photo">
 
-    <Spinner
-        android:id="@+id/spinner_realestate_type"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="@dimen/margin_to_border"
-        android:spinnerMode="dropdown"
-        android:textSize="@dimen/text_in_spinner"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/type_info"
-        app:layout_constraintTop_toBottomOf="@id/type_info" />
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_home_24"
+                    android:tint="@color/colorAccentDark" />
 
-    <TextView
-        android:id="@+id/price_info"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="Price :"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_info"
+                <TextView
+                    android:id="@+id/type_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/type_button"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
 
-        app:layout_constraintBottom_toBottomOf="@id/spinner_realestate_type"
-        app:layout_constraintLeft_toRightOf="@id/spinner_realestate_type"
-        app:layout_constraintRight_toLeftOf="@id/price_entry"
-        app:layout_constraintTop_toTopOf="@+id/spinner_realestate_type" />
+                <Spinner
+                    android:id="@+id/spinner_realestate_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spinner_margin_top"
+                    android:background="@null"
+                    android:spinnerMode="dialog"
+                    android:textSize="@dimen/text_in_spinner" />
+            </LinearLayout>
+            <!--"button" Price-->
+            <LinearLayout
+                android:id="@+id/price_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:layout_marginBottom="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toRightOf="@id/type_button"
+                app:layout_constraintRight_toLeftOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@id/user_photo">
 
-    <EditText
-        android:id="@+id/price_entry"
-        android:layout_width="150dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_to_border"
-        app:layout_constraintBottom_toBottomOf="@id/spinner_realestate_type"
-        app:layout_constraintLeft_toRightOf="@+id/price_info"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spinner_realestate_type" />
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_attach_money_24"
+                    android:tint="@color/colorAccentDark" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/price_button"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
 
-</android.support.constraint.ConstraintLayout>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:hint="@string/hint_int"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+            <!--"button" Rooms-->
+            <LinearLayout
+                android:id="@+id/room_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_to_border"
+                android:layout_marginEnd="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toRightOf="@id/price_button"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/price_button">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_hotel_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/rooms_button"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:hint="@string/hint_int"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+            <!--"button" Location-->
+            <LinearLayout
+                android:id="@+id/address_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toLeftOf="@id/type_button"
+                app:layout_constraintRight_toRightOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@id/type_button">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_location_on_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/location_button"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/hint_location"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+            <!--"button" get photos from device-->
+            <LinearLayout
+                android:id="@+id/photo_from_device"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toLeftOf="@id/type_button"
+                app:layout_constraintRight_toRightOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@id/address_button">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_create_new_folder_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/photo_from_device"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+            <!--"button" get photos from device-->
+            <LinearLayout
+                android:id="@+id/take_photo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toLeftOf="@id/type_button"
+                app:layout_constraintRight_toRightOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@id/photo_from_device">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_add_a_photo_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/take_photo"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_real_estate"
+            android:layout_width="@dimen/big_FAB"
+            android:layout_height="@dimen/big_FAB"
+            android:layout_margin="@dimen/margin_to_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/baseline_add_24"
+            android:tint="@color/primaryTextColor"
+            app:backgroundTint="@color/colorAccentDark"
+            app:layout_anchor="@id/image_header"
+            app:layout_anchorGravity="bottom|right|end" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</ScrollView>

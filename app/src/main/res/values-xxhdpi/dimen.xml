@@ -27,6 +27,14 @@
     <dimen name="price_line">18sp</dimen>
 
     <!--Add RealEstate Activity-->
+    <!--_DESIGN_-->
+    <dimen name="image_header_height">200dp</dimen>
+    <dimen name="user_photo_size">100dp</dimen>
+    <dimen name="button_padding">10dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="textview_margin">5dp</dimen>
+    <dimen name="spinner_margin_top">3dp</dimen>
+    <!--_TEXT_-->
     <dimen name="text_in_spinner">12sp</dimen>
     <dimen name="text_info">12sp</dimen>
     <dimen name="margin_to_border">16dp</dimen>
