@@ -43,8 +43,10 @@
     <string name="location_button">LOCATION</string>
     <string name="photo_from_device">GET PHOTOS FROM DEVICE</string>
     <string name="take_photo">TAKE PHOTO</string>
+    <string name="description">DESCRIPTION</string>
     <string name="hint_int">0</string>
     <string name="hint_location">Enter address here</string>
+    <string name="hint_description">Enter a description here</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>

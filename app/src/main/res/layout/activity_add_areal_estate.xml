@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/margin_to_border"
     tools:context=".realEstateDetails.RealEstateDetailsFragment">
 
     <android.support.design.widget.CoordinatorLayout
@@ -20,7 +21,6 @@
                 android:id="@+id/image_header"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/image_header_height"
-                android:src="@drawable/keys"
                 app:layout_constraintTop_toTopOf="parent" />
             <!--user photo-->
             <ImageView
@@ -105,6 +105,7 @@
                     android:textSize="@dimen/text_info" />
 
                 <EditText
+                    android:id="@+id/price_edittext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -146,6 +147,7 @@
                     android:textSize="@dimen/text_info" />
 
                 <EditText
+                    android:id="@+id/rooms_edittext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -225,7 +227,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
             <!--"button" get photos from device-->
@@ -261,6 +263,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
+            </LinearLayout>
+            <!--"button" Location-->
+            <LinearLayout
+                android:id="@+id/description_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toLeftOf="@id/type_button"
+                app:layout_constraintRight_toRightOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@id/take_photo">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_description_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/description"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/hint_description"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>

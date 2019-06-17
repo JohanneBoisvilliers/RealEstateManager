@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -339,6 +339,7 @@
                 android:id="@+id/add_photo_fab"
                 android:layout_width="@dimen/big_FAB_min_menu"
                 android:layout_height="@dimen/big_FAB_min_menu"
+                app:fabCustomSize="40dp"
                 android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:scaleType="center"
@@ -353,6 +354,7 @@
                 android:id="@+id/modify_real_estate_fab"
                 android:layout_width="@dimen/big_FAB_min_menu"
                 android:layout_height="@dimen/big_FAB_min_menu"
+                app:fabCustomSize="40dp"
                 android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:scaleType="center"
@@ -367,6 +369,7 @@
                 android:id="@+id/status_fab"
                 android:layout_width="@dimen/big_FAB_min_menu"
                 android:layout_height="@dimen/big_FAB_min_menu"
+                app:fabCustomSize="40dp"
                 android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:scaleType="center"
