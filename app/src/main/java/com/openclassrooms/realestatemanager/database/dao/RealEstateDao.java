@@ -2,14 +2,11 @@ package com.openclassrooms.realestatemanager.database.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.Update;
 
-import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 
@@ -22,12 +19,12 @@ public interface RealEstateDao {
     LiveData<List<RealEstate>> getRealEstates();
 
     @Query("SELECT * FROM RealEstate WHERE id = :realEstateId")
-    LiveData<RealEstate> getSpecificRealEstate(long realEstateId);
+    RealEstate getSpecificRealEstate(long realEstateId);
 
     @Query("SELECT * FROM RealEstate")
     LiveData<List<RealEstateWithPhotos>> getRealEstateWithPhotos();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRealEstate(RealEstate realEstate);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

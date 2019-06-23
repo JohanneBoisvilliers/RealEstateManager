@@ -7,19 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
-import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
-import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
-import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
-import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
+import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -35,7 +31,6 @@ public class RealEstateListFragment extends Fragment {
     private RealEstateAdapter mRealEstateAdapter;
     private List<RealEstateWithPhotos> mRealEstateList = new ArrayList<>();
     private RealEstateViewModel mRealEstateViewModel;
-    private SharedViewModel mSharedViewModel;
     public static final String TAG = "DEBUG";
 
     public RealEstateListFragment() {}
@@ -62,10 +57,10 @@ public class RealEstateListFragment extends Fragment {
         //Set layout manager to position the items
         this.mRealEstateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //shared viewmodel for two panes layout
-        mSharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        //mSharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         ItemClickSupport.addTo(mRealEstateRecyclerView, R.layout.fragment_real_estate_list)
                 .setOnItemClickListener((recyclerView1, position, v) -> {
-                    this.mSharedViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
+                    this.mRealEstateViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
                     View view = getActivity().findViewById(R.id.container_real_estate_detail);
                     if(view == null){//one pane layout
                         this.swapFragment();
@@ -75,7 +70,7 @@ public class RealEstateListFragment extends Fragment {
     //configure viewmodel for requests
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
     }
     //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
