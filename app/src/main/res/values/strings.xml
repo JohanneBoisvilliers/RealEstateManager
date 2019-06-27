@@ -39,6 +39,7 @@
     <!-- ADD REAL ESTATE ACTIVITY -->
     <string name="type_button">TYPE</string>
     <string name="price_button">PRICE</string>
+    <string name="surface_button">SURFACE</string>
     <string name="rooms_button">ROOMS</string>
     <string name="location_button">LOCATION</string>
     <string name="photo_from_device">GET PHOTOS FROM DEVICE</string>

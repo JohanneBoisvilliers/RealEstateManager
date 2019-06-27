@@ -33,6 +33,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
     public static final String TAG = "DEBUG";
     @BindView(R.id.price_edittext)
     EditText mPriceEditText;
+    @BindView(R.id.surface_edittext)
+    EditText mSurfaceEditText;
+    @BindView(R.id.rooms_edittext)
+    EditText mRoomsEditText;
     @BindView(R.id.spinner_realestate_type)
     Spinner mSpinner;
     @BindView(R.id.image_header)
@@ -45,6 +49,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private RealEstate mRealEstate;
     private String mSpinnerValue;
     private int mPriceValue;
+    private int mSurfaceValue;
     private int mNumberOfRooms;
     private String mDescriptionValue;
 
@@ -79,6 +84,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setUserId(1);
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
+        mRealEstate.setSurface(mSurfaceValue);
+        mRealEstate.setSold(false);
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
         mRealEstate.setDescription(mDescriptionValue);
     }
@@ -145,12 +152,24 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //listener for rooms edittext, set number of rooms in viewmodel's datas
     @OnTextChanged(value = R.id.rooms_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void numberOfRoomsChanged(CharSequence text) {
-        mPriceEditText.setSelection(mPriceEditText.getText().length());
+        mRoomsEditText.setSelection(mRoomsEditText.getText().length());
         if (text.length() < 1) {
             mNumberOfRooms = 0;
         } else {
             mRealEstateViewModel.mRooms.set(Integer.parseInt(text.toString()));
             mNumberOfRooms = Integer.parseInt(text.toString());
+        }
+    }
+
+    //listener for surface edittext, set number of rooms in viewmodel's datas
+    @OnTextChanged(value = R.id.surface_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void surfaceChanged(CharSequence text) {
+        mSurfaceEditText.setSelection(mSurfaceEditText.getText().length());
+        if (text.length() < 1) {
+            mSurfaceValue = 0;
+        } else {
+            mRealEstateViewModel.mSurface.set(Integer.parseInt(text.toString()));
+            mSurfaceValue = Integer.parseInt(text.toString());
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -10,7 +11,6 @@
     </data>
 
     <ScrollView
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/margin_to_border"
@@ -37,17 +37,17 @@
                 android:layout_width="@dimen/user_photo_size"
                 android:layout_height="@dimen/user_photo_size"
                 android:src="@drawable/user"
+                android:layout_marginStart="@dimen/margin_to_border"
                 app:layout_constraintBottom_toBottomOf="@id/image_header"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_header" />
+                app:layout_constraintTop_toTopOf="@+id/image_header" />
             <!--"button" Type-->
             <LinearLayout
                 android:id="@+id/type_button"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/margin_to_border"
                 android:layout_marginTop="@dimen/margin_to_border"
+                android:layout_marginStart="@dimen/margin_to_border"
                 android:layout_marginEnd="@dimen/margin_to_border"
                 android:background="@drawable/drawable_spinner_border"
                 android:orientation="vertical"
@@ -55,7 +55,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/price_button"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/price_button"
-                app:layout_constraintTop_toBottomOf="@+id/user_photo">
+                app:layout_constraintTop_toBottomOf="@+id/image_header">
 
                 <ImageView
                     android:layout_width="@dimen/icon_size"
@@ -80,8 +80,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spinner_margin_top"
                     android:background="@null"
-                    android:spinnerMode="dialog"
                     android:selectedItemPosition="@{viewmodel.mSpinnerPos}"
+                    android:spinnerMode="dialog"
                     android:textSize="@dimen/text_in_spinner" />
             </LinearLayout>
             <!--"button" Price-->
@@ -90,13 +90,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_to_border"
-                android:layout_marginBottom="@dimen/margin_to_border"
+                android:layout_marginEnd="@dimen/margin_to_border"
                 android:background="@drawable/drawable_spinner_border"
                 android:orientation="vertical"
                 android:padding="@dimen/button_padding"
                 app:layout_constraintLeft_toRightOf="@id/type_button"
-                app:layout_constraintRight_toLeftOf="@id/room_button"
-                app:layout_constraintTop_toBottomOf="@id/user_photo">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_header">
 
                 <ImageView
                     android:layout_width="@dimen/icon_size"
@@ -122,9 +122,53 @@
                     android:background="@android:color/transparent"
                     android:cursorVisible="false"
                     android:hint="@string/hint_int"
-                    android:text="@{String.valueOf(viewmodel.mPrice)}"
                     android:inputType="number"
                     android:maxLines="1"
+                    android:text="@{String.valueOf(viewmodel.mPrice)}"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+            <!--"button" surface-->
+            <LinearLayout
+                android:id="@+id/surface_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_to_border"
+                android:layout_marginTop="@dimen/margin_to_border"
+                android:layout_marginEnd="@dimen/margin_to_border"
+                android:background="@drawable/drawable_spinner_border"
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/room_button"
+                app:layout_constraintTop_toBottomOf="@+id/price_button">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/baseline_settings_overscan_24"
+                    android:tint="@color/colorAccentDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/textview_margin"
+                    android:text="@string/surface_button"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_info" />
+
+                <EditText
+                    android:id="@+id/surface_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:hint="@string/hint_int"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:text="@{String.valueOf(viewmodel.mSurface)}"
                     android:textColor="@color/colorPrimary" />
             </LinearLayout>
             <!--"button" Rooms-->
@@ -132,14 +176,14 @@
                 android:id="@+id/room_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_to_border"
+                android:layout_marginTop="@dimen/margin_to_border"
                 android:layout_marginEnd="@dimen/margin_to_border"
                 android:background="@drawable/drawable_spinner_border"
                 android:orientation="vertical"
                 android:padding="@dimen/button_padding"
-                app:layout_constraintLeft_toRightOf="@id/price_button"
+                app:layout_constraintLeft_toLeftOf="@id/price_button"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/price_button">
+                app:layout_constraintTop_toBottomOf="@+id/price_button">
 
                 <ImageView
                     android:layout_width="@dimen/icon_size"
@@ -181,7 +225,7 @@
                 android:padding="@dimen/button_padding"
                 app:layout_constraintLeft_toLeftOf="@id/type_button"
                 app:layout_constraintRight_toRightOf="@id/room_button"
-                app:layout_constraintTop_toBottomOf="@id/type_button">
+                app:layout_constraintTop_toBottomOf="@id/room_button">
 
                 <ImageView
                     android:layout_width="@dimen/icon_size"

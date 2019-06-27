@@ -29,6 +29,7 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<Integer> mPrice = new ObservableField<>();
     public final ObservableField<Integer> mRooms = new ObservableField<>();
     public final ObservableField<Integer> mSpinnerPos = new ObservableField<>();
+    public final ObservableField<Integer> mSurface = new ObservableField<>();
     public final ObservableField<String> mDescription = new ObservableField<>();
     private long mRealEstateId;
 
