@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.realEstateList;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.databinding.ObservableField;
 import android.util.Log;
 
 import com.openclassrooms.realestatemanager.models.Photo;
@@ -22,11 +23,15 @@ public class RealEstateViewModel extends ViewModel {
     private final RealEstateDataRepository mRealEstateDataSource;
     private final PhotoDataRepository mPhotoDataSource;
     private final Executor executor;
+
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
     private RealEstate mRealEstate;
-    private int mPrice;
-    private int mRooms;
+    public final ObservableField<Integer> mPrice = new ObservableField<>();
+    public final ObservableField<Integer> mRooms = new ObservableField<>();
+    public final ObservableField<Integer> mSpinnerPos = new ObservableField<>();
+    private String mDescription;
     private long mRealEstateId;
+
 
     public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,PhotoDataRepository photoDataSource, Executor executor) {
         this.mRealEstateDataSource = realEstateDataSource;
@@ -34,7 +39,6 @@ public class RealEstateViewModel extends ViewModel {
         this.executor = executor;
     }
 
-    private int mSpinnerPos;
 
     // -------------
     // FOR REAL ESTATE
@@ -83,22 +87,13 @@ public class RealEstateViewModel extends ViewModel {
     // FOR ADD OR MODIFY REAL ESTATE
     // -------------
 
-    public void setPrice(int mPrice) {
-        this.mPrice = mPrice;
+    /*SETTERS*/
+
+    public void setDescription(String description) {
+        mDescription = description;
     }
 
-    public void setRooms(int mRooms) {
-        this.mRooms = mRooms;
-    }
-
-    public int getSpinnerPos() {
-        return mSpinnerPos;
-    }
-
-    public void setSpinnerPos(int spinnerPos) {
-        mSpinnerPos = spinnerPos;
-    }
-
+    /*GETTERS*/
     public RealEstate getRealEstate() {
         return mRealEstate;
     }

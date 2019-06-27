@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,11 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.databinding.ActivityAddArealEstateBinding;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -28,6 +31,8 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 public class AddARealEstateActivity extends AppCompatActivity {
 
     public static final String TAG = "DEBUG";
+    @BindView(R.id.price_edittext)
+    EditText mPriceEditText;
     @BindView(R.id.spinner_realestate_type)
     Spinner mSpinner;
     @BindView(R.id.image_header)
@@ -38,14 +43,20 @@ public class AddARealEstateActivity extends AppCompatActivity {
     FloatingActionButton mFABAddRealEstate;
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
+    private String mSpinnerValue;
+    private int mPriceValue;
+    private int mNumberOfRooms;
+    private String mDescriptionValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_areal_estate);
+        ActivityAddArealEstateBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_areal_estate);
         ButterKnife.bind(this);
 
         this.configureViewModel();
+        binding.setViewmodel(mRealEstateViewModel);
+
         this.configureImageHeader();
         this.configureUserPhoto(null);
         this.configureTypeSpinner();
@@ -66,9 +77,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate = mRealEstateViewModel.getRealEstate();
         //TODO: récuperer userID automatiquement en fonction de l'utilisateur connecté
         mRealEstate.setUserId(1);
-        mRealEstate.setCategory(mSpinner.getSelectedItem().toString());
+        mRealEstate.setCategory(mSpinnerValue);
+        mRealEstate.setPrice(mPriceValue);
+        mRealEstate.setNbreOfRoom(mNumberOfRooms);
     }
-
     //listener on FAB for adding or updating real estate in database
     private void listenerOnFAB() {
         mFABAddRealEstate.setOnClickListener(new View.OnClickListener() {
@@ -100,38 +112,50 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private void configureTypeSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.type_list,R.layout.custom_item_spinner);
         mSpinner.setAdapter(adapter);
-        mSpinner.setSelection(mRealEstateViewModel.getSpinnerPos());
     }
     //Set a listener on spinner and extrude type of realEstate
     private void getSpinnerInfo() {
-        mRealEstateViewModel.setSpinnerPos(0);
-
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mRealEstateViewModel.setSpinnerPos(position);
-                setRealEstateInfos();
+                onSpinnerItemChanged(parent.getItemAtPosition(position).toString(), position);
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
+
+    //on spinner change, set the type of real estate with "mSpinnerValue" and add data in viewmodel to keep spinner position when user rotate the screen
+    private void onSpinnerItemChanged(String itemValue, int itemPosition) {
+        mSpinnerValue = itemValue;
+        mRealEstateViewModel.mSpinnerPos.set(itemPosition);
+    }
     //listener for price edittext, set price in viewmodel's datas
     @OnTextChanged(value = R.id.price_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void priceChanged(CharSequence text) {
-        try {
-            mRealEstateViewModel.setPrice(Integer.parseInt(text.toString()));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        mPriceEditText.setSelection(mPriceEditText.getText().length());
+        if (text.length() < 1) {
+            mPriceValue = 0;
+        } else {
+            mRealEstateViewModel.mPrice.set(Integer.parseInt(text.toString()));
+            mPriceValue = Integer.parseInt(text.toString());
         }
     }
     //listener for rooms edittext, set number of rooms in viewmodel's datas
     @OnTextChanged(value = R.id.rooms_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void numberOfRoomsChanged(CharSequence text) {
-        try {
-            mRealEstateViewModel.setRooms(Integer.parseInt(text.toString()));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        mPriceEditText.setSelection(mPriceEditText.getText().length());
+        if (text.length() < 1) {
+            mNumberOfRooms = 0;
+        } else {
+            mRealEstateViewModel.mRooms.set(Integer.parseInt(text.toString()));
+            mNumberOfRooms = Integer.parseInt(text.toString());
         }
+    }
+
+    @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void descriptionChanged(CharSequence text) {
+        mRealEstateViewModel.setDescription(text.toString());
+        mDescriptionValue = text.toString();
     }
 }
