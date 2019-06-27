@@ -80,6 +80,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
+        mRealEstate.setDescription(mDescriptionValue);
     }
     //listener on FAB for adding or updating real estate in database
     private void listenerOnFAB() {
@@ -155,7 +156,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void descriptionChanged(CharSequence text) {
-        mRealEstateViewModel.setDescription(text.toString());
+        mRealEstateViewModel.mDescription.set(text.toString());
         mDescriptionValue = text.toString();
     }
 }

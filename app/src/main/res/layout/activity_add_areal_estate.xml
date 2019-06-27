@@ -276,7 +276,7 @@
                     android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
-            <!--"button" Location-->
+            <!--"button" Description-->
             <LinearLayout
                 android:id="@+id/description_button"
                 android:layout_width="0dp"
@@ -313,6 +313,7 @@
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_description"
                     android:maxLines="1"
+                    android:text="@{viewmodel.mDescription}"
                     android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
