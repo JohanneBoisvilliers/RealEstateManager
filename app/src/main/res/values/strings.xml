@@ -48,6 +48,7 @@
     <string name="hint_int">0</string>
     <string name="hint_location">Enter address here</string>
     <string name="hint_description">Enter a description here</string>
+    <string name="snack_bar_no_photo">You\'ve didn\'t picked any photos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
