@@ -1,22 +1,10 @@
 package com.openclassrooms.realestatemanager.utils;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.util.Log;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-/**
- * Created by Philippe on 21/02/2018.
- */
 
 public class Utils {
 
@@ -58,4 +46,5 @@ public class Utils {
             return Connectivity.isConnectedMobile(context) && Connectivity.isConnectedFast(context);
         }
     }
+
 }

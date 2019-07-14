@@ -31,6 +31,7 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<Integer> mSpinnerPos = new ObservableField<>();
     public final ObservableField<Integer> mSurface = new ObservableField<>();
     public final ObservableField<String> mDescription = new ObservableField<>();
+    public final ObservableField<String> mNumberOfPhoto = new ObservableField<>();
     private long mRealEstateId;
 
 
@@ -82,6 +83,12 @@ public class RealEstateViewModel extends ViewModel {
 
     public LiveData<List<Photo>> getRealEstatePhotos(long realEstateId) {
         return mPhotoDataSource.getUriPhotos(realEstateId);
+    }
+
+    public void insertPhotos(Photo[] photos) {
+        executor.execute(() -> {
+            mPhotoDataSource.createPhotos(photos);
+        });
     }
 
     // -------------

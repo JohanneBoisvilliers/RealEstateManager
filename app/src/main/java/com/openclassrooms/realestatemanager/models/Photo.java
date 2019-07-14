@@ -24,7 +24,6 @@ public class Photo {
     public long getRealEstateId() {
         return realEstateId;
     }
-
     public String getDescription() {
         return description;
     }

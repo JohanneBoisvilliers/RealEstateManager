@@ -8,13 +8,17 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,11 +32,17 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.databinding.ActivityAddArealEstateBinding;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,17 +67,22 @@ public class AddARealEstateActivity extends AppCompatActivity {
     ImageView mUserPhoto;
     @BindView(R.id.fab_add_real_estate)
     FloatingActionButton mFABAddRealEstate;
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int PICK_FROM_GALLARY = 2;
     @BindView(R.id.photo_from_device)
     ViewGroup mGetPhotoFromDevice;
+    @BindView(R.id.take_photo)
+    ViewGroup mTakePhoto;
     @BindView(R.id.coordinator_add_a_realEstate)
     View mCoordinator;
+
+    private static final int PICK_FROM_CAMERA = 1;
+    private static final int PICK_FROM_GALLARY = 2;
     private List<String> mImageEncodedList;
+    private Photo[] mFinalPhotoList;
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
     private String mSpinnerValue;
     private String mDescriptionValue;
+    private String mImageFilePath;
     private int mPriceValue;
     private int mSurfaceValue;
     private int mNumberOfRooms;
@@ -88,37 +103,44 @@ public class AddARealEstateActivity extends AppCompatActivity {
         this.getSpinnerInfo();
         this.listenerOnFAB();
         this.listenerOnGetPhotoDevice();
+        this.listenerOnTakePhoto();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        String imageEncoded = "";
         switch (requestCode) {
             case PICK_FROM_GALLARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    String imageEncoded = "";
+                    mImageEncodedList = new ArrayList<>();
                     if (data.getData() != null) {
                         Uri outPutUri = data.getData();
                         this.extrudeUrlFromGallery(filePathColumn, imageEncoded, outPutUri);
                     } else {
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
-                            mImageEncodedList = new ArrayList<>();
                             for (int i = 0; i < mClipData.getItemCount(); i++) {
                                 ClipData.Item item = mClipData.getItemAt(i);
                                 Uri uri = item.getUri();
                                 this.extrudeUrlFromGallery(filePathColumn, imageEncoded, uri);
-                                mImageEncodedList.add(imageEncoded);
                             }
                         }
                     }
+                    mRealEstateViewModel.mNumberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                 } else {
-                    Snackbar snackbar = Snackbar.make(mCoordinator, getString(R.string.snack_bar_no_photo), BaseTransientBottomBar.LENGTH_LONG);
-                    snackbar.show();
+                    this.showSnackBar(getString(R.string.snack_bar_no_photo), BaseTransientBottomBar.LENGTH_LONG);
                 }
                 break;
 
             case PICK_FROM_CAMERA:
+                if (resultCode == Activity.RESULT_OK) {
+                    mImageEncodedList.add(mImageFilePath);
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    this.showSnackBar(getResources().getString(R.string.no_photo), BaseTransientBottomBar.LENGTH_LONG);
+                }
+
                 break;
         }
     }
@@ -144,12 +166,22 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setDescription(mDescriptionValue);
     }
 
+    private void setPhotoForRealEstate(List<String> urlList) {
+        ArrayList<Photo> listPhoto = new ArrayList<>();
+        for (String url : urlList) {
+            Photo photo = new Photo();
+            photo.setUrl(url);
+            photo.setRealEstateId(mRealEstate.getId());
+            listPhoto.add(photo);
+        }
+        mFinalPhotoList = new Photo[listPhoto.size()];
+        listPhoto.toArray(mFinalPhotoList);
+    }
     //on spinner change, set the type of real estate with "mSpinnerValue" and add data in viewmodel to keep spinner position when user rotate the screen
     private void onSpinnerItemChanged(String itemValue, int itemPosition) {
         mSpinnerValue = itemValue;
         mRealEstateViewModel.mSpinnerPos.set(itemPosition);
     }
-
     //acces to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
         String fileId = DocumentsContract.getDocumentId(uri);
@@ -161,6 +193,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
+            mImageEncodedList.add(imageEncoded);
         }
         cursor.close();
     }
@@ -190,6 +223,11 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
+    private void showSnackBar(String textToShow, int duration) {
+        Snackbar snackbar = Snackbar.make(mCoordinator, textToShow, duration);
+        snackbar.show();
+    }
+
     // --- LISTENERS
 
     //listener on FAB for adding or updating real estate in database
@@ -197,8 +235,15 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mFABAddRealEstate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRealEstateInfos();
-                mRealEstateViewModel.insertOrUpdate(mRealEstate);
+                if (checkInfos()) {
+                    setRealEstateInfos();
+                    mRealEstateViewModel.insertOrUpdate(mRealEstate);
+                    setPhotoForRealEstate(mImageEncodedList);
+                    mRealEstateViewModel.insertPhotos(mFinalPhotoList);
+                } else {
+                    showSnackBar("At least one photo", BaseTransientBottomBar.LENGTH_LONG);
+                }
+
             }
         });
     }
@@ -213,7 +258,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
             }
         });
     }
-
     //open photo gallery to pick real estate photos
     private void listenerOnGetPhotoDevice() {
         mGetPhotoFromDevice.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +268,28 @@ public class AddARealEstateActivity extends AppCompatActivity {
                 galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), PICK_FROM_GALLARY);
+            }
+        });
+    }
+
+    private void listenerOnTakePhoto() {
+        mTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (captureIntent.resolveActivity(getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        Log.e(TAG, "onClick: ", ex);
+                    }
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(getContext(), "com.openclassrooms.realestatemanager.provider", photoFile);
+                        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(captureIntent, PICK_FROM_CAMERA);
+                    }
+                }
             }
         });
     }
@@ -249,7 +315,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
             mNumberOfRooms = Integer.parseInt(text.toString());
         }
     }
-
     //listener for surface edittext, set surface in viewmodel's datas
     @OnTextChanged(value = R.id.surface_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void surfaceChanged(CharSequence text) {
@@ -261,11 +326,29 @@ public class AddARealEstateActivity extends AppCompatActivity {
             mSurfaceValue = Integer.parseInt(text.toString());
         }
     }
-
     //listener for description edit text, set description in viewmodel's datas
     @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void descriptionChanged(CharSequence text) {
         mRealEstateViewModel.mDescription.set(text.toString());
         mDescriptionValue = text.toString();
+    }
+
+    // --- Utils
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        mImageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    private Boolean checkInfos() {
+        return (mImageEncodedList != null && mImageEncodedList.size() > 0 && !TextUtils.isEmpty(mDescriptionValue));
     }
 }
