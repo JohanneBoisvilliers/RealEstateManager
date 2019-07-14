@@ -15,6 +15,6 @@ public interface PhotoDao {
     @Query("SELECT * FROM Photo WHERE realEstateId =:realEstateId")
     LiveData<List<Photo>> getUriPhotos(long realEstateId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPhotos(Photo... photos);
 }

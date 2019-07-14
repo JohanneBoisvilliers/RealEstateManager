@@ -68,6 +68,7 @@ public class RealEstateViewModel extends ViewModel {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
             realEstate.setId(mRealEstateId);
+            Log.d(TAG, "bien crée, id = " + realEstate.getId());
         });
     }
 
@@ -87,6 +88,7 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertPhotos(Photo[] photos) {
         executor.execute(() -> {
+            Log.d(TAG, "insertPhotos: insertion photos");
             mPhotoDataSource.createPhotos(photos);
         });
     }
@@ -100,20 +102,21 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstate;
     }
 
-    public void setRealEstate(RealEstate realEstate) {
-        this.mRealEstate = realEstate;
-    }
-
-    public void insertOrUpdate(RealEstate realEstate) {
-        Log.d(TAG, "createItem: " + realEstate.getId());
+    public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
+        if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
+            createItem(realEstate);
+        } else {
+            updateItem(realEstate);
+            Log.d(TAG, "insertOrUpdate: item updated !");
+        }
         executor.execute(() -> {
-            if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
-                createItem(realEstate);
-                Log.d(TAG, "insertOrUpdate: item created !");
-            } else {
-                updateItem(realEstate);
-                Log.d(TAG, "insertOrUpdate: item updated !");
+            for (Photo listOfPhoto : listOfPhotos) {
+                listOfPhoto.setRealEstateId(mRealEstateId);
+                Log.d(TAG, "insertOrUpdate: change photo id " + listOfPhoto.getRealEstateId());
             }
+        });
+        executor.execute(() -> {
+            insertPhotos(listOfPhotos);
         });
     }
 

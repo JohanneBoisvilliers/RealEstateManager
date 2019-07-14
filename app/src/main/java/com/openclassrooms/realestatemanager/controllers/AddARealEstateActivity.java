@@ -110,14 +110,17 @@ public class AddARealEstateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         String imageEncoded = "";
+        Log.d(TAG, "onActivityResult: " + data);
+        mImageEncodedList = new ArrayList<>();
         switch (requestCode) {
             case PICK_FROM_GALLARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    mImageEncodedList = new ArrayList<>();
                     if (data.getData() != null) {
+                        Log.d(TAG, "onActivityResult: data pas null");
                         Uri outPutUri = data.getData();
                         this.extrudeUrlFromGallery(filePathColumn, imageEncoded, outPutUri);
                     } else {
+                        Log.d(TAG, "onActivityResult: data null");
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
                             for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -166,12 +169,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setDescription(mDescriptionValue);
     }
 
+    //transform list of photo into array for request
     private void setPhotoForRealEstate(List<String> urlList) {
         ArrayList<Photo> listPhoto = new ArrayList<>();
         for (String url : urlList) {
             Photo photo = new Photo();
             photo.setUrl(url);
-            photo.setRealEstateId(mRealEstate.getId());
             listPhoto.add(photo);
         }
         mFinalPhotoList = new Photo[listPhoto.size()];
@@ -193,6 +196,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
+            Log.d(TAG, "extrudeUrlFromGallery: " + imageEncoded);
             mImageEncodedList.add(imageEncoded);
         }
         cursor.close();
@@ -237,9 +241,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkInfos()) {
                     setRealEstateInfos();
-                    mRealEstateViewModel.insertOrUpdate(mRealEstate);
                     setPhotoForRealEstate(mImageEncodedList);
-                    mRealEstateViewModel.insertPhotos(mFinalPhotoList);
+                    mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
                 } else {
                     showSnackBar("At least one photo", BaseTransientBottomBar.LENGTH_LONG);
                 }
@@ -272,6 +275,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         });
     }
 
+    //open camera for taking a picture
     private void listenerOnTakePhoto() {
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
