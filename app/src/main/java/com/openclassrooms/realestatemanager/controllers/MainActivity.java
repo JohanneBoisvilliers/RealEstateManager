@@ -6,27 +6,21 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
-import com.openclassrooms.realestatemanager.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,12 +36,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        this.requestWritePermission();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        this.requestWritePermission();
         Stetho.initializeWithDefaults(this);
         this.configureToolbar();
         this.configureDrawerLayout();
@@ -162,8 +161,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == WRITE_PERMISSION){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "You must allow permission write external storage to your mobile device.", Toast.LENGTH_SHORT).show();
-                finish();
+            } else {
+                requestWritePermission();
             }
         }
     }
