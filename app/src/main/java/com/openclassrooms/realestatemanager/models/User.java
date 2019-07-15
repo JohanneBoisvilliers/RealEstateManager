@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.models;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -16,6 +15,9 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
+    }
+
+    public User() {
     }
 
     // -- GETTERS

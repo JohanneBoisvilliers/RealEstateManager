@@ -35,13 +35,16 @@
             android:name=".controllers.AddARealEstateActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".controllers.RealEstateOnMapActivity" />
-        <activity android:name=".controllers.MainActivity">
+        <activity android:name=".controllers.MainActivity"/>
+        <activity android:name=".controllers.SearchRealEstateActivity" />
+        <activity android:name=".login.SignInActivity"/>
+        <activity android:name=".login.RegisterActivity" />
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controllers.SearchRealEstateActivity" />
     </application>
 
 </manifest>
