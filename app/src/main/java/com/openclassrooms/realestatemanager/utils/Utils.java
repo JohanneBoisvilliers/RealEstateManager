@@ -1,6 +1,9 @@
 package com.openclassrooms.realestatemanager.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,11 @@ public class Utils {
         }else{
             return Connectivity.isConnectedMobile(context) && Connectivity.isConnectedFast(context);
         }
+    }
+
+    public static void showSnackBar(@NonNull View coordinator, String textToShow, int duration) {
+        Snackbar snackbar = Snackbar.make(coordinator, textToShow, duration);
+        snackbar.show();
     }
 
 }

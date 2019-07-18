@@ -51,6 +51,7 @@
     <string name="snack_bar_no_photo">You\'ve didn\'t picked any photos</string>
     <string name="number_of_photo">%s photo(s) picked</string>
     <string name="no_photo">You\'ve didn\'t take photo</string>
+    <string name="conditions">At least one photo and a description needed</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="sign_up">SIGNUP</string>

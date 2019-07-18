@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers;
 
-import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -9,11 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,11 +36,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
     private static final int WRITE_PERMISSION = 0x01;
+    public static final String TAG = "DEBUG";
+    private static final int PERMISSION_ALL = 0x02;
 
     @Override
     protected void onStart() {
         super.onStart();
-        this.requestWritePermission();
     }
 
     @Override
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        this.requestWritePermission();
         if (savedInstanceState==null) {
             this.configureRealEstateListFragment();
         }
@@ -63,12 +67,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public void onBackPressed() {
-        // 5 - Handle back click to close menu
+        //  Handle back click to close menu
         if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+        super.onBackPressed();
     }
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -132,16 +135,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     //configure recyclerview fragment for one pane layout
     private void configureRealEstateListFragment(){
-        // A - Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
+        //  Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
         mRealEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
-
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (mRealEstateListFragment == null) {
-            // B - Create new main fragment
+            //  Create new main fragment
             mRealEstateListFragment = new RealEstateListFragment();
-            // C - Add it to FrameLayout container
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_real_estate_recycler_view, mRealEstateListFragment)
+            //  Add it to FrameLayout container
+            ft.add(R.id.container_real_estate_recycler_view, mRealEstateListFragment)
                     .commit();
+        } else {
+            Log.d("DEBUG", "configureRealEstateListFragment: permission ");
+            ft.detach(mRealEstateListFragment);
+            ft.commit();
         }
     }
     //configure the detail fragment for two panes layout
@@ -161,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == WRITE_PERMISSION){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                configureRealEstateListFragment();
             } else {
                 requestWritePermission();
             }
@@ -169,9 +176,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void requestWritePermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERMISSION);
+            String[] PERMISSIONS = {
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
+            };
+
+            if (!this.hasPermissions(this, PERMISSIONS)) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             }
         }
+    }
+
+    public boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

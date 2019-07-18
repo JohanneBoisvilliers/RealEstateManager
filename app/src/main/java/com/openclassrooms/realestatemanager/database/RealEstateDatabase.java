@@ -63,6 +63,7 @@ public abstract class RealEstateDatabase extends RoomDatabase {
                 userTest.put("id",1);
                 userTest.put("username","Johanne Boisvilliers");
                 userTest.put("password","utilisateurDeBase");
+                userTest.put("email", "johanne@gmail.test");
                 db.insert("User",OnConflictStrategy.IGNORE, userTest);
 
                 ContentValues photoTest = new ContentValues();

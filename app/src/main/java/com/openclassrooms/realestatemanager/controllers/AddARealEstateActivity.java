@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -35,6 +34,7 @@ import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -132,7 +132,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     }
                     mRealEstateViewModel.mNumberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                 } else {
-                    this.showSnackBar(getString(R.string.snack_bar_no_photo), BaseTransientBottomBar.LENGTH_LONG);
+                    Utils.showSnackBar(mCoordinator,
+                            getString(R.string.snack_bar_no_photo),
+                            BaseTransientBottomBar.LENGTH_LONG);
                 }
                 break;
 
@@ -141,7 +143,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     mImageEncodedList.add(mImageFilePath);
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    this.showSnackBar(getResources().getString(R.string.no_photo), BaseTransientBottomBar.LENGTH_LONG);
+                    Utils.showSnackBar(mCoordinator,
+                            getResources().getString(R.string.no_photo),
+                            BaseTransientBottomBar.LENGTH_LONG);
                 }
 
                 break;
@@ -168,7 +172,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
         mRealEstate.setDescription(mDescriptionValue);
     }
-
     //transform list of photo into array for request
     private void setPhotoForRealEstate(List<String> urlList) {
         ArrayList<Photo> listPhoto = new ArrayList<>();
@@ -227,11 +230,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
-    private void showSnackBar(String textToShow, int duration) {
-        Snackbar snackbar = Snackbar.make(mCoordinator, textToShow, duration);
-        snackbar.show();
-    }
-
     // --- LISTENERS
 
     //listener on FAB for adding or updating real estate in database
@@ -244,7 +242,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     setPhotoForRealEstate(mImageEncodedList);
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
                 } else {
-                    showSnackBar("At least one photo", BaseTransientBottomBar.LENGTH_LONG);
+                    Utils.showSnackBar(mCoordinator,
+                            getResources().getString(R.string.no_photo),
+                            BaseTransientBottomBar.LENGTH_LONG);
                 }
 
             }
@@ -274,7 +274,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
             }
         });
     }
-
     //open camera for taking a picture
     private void listenerOnTakePhoto() {
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
@@ -351,7 +350,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mImageFilePath = image.getAbsolutePath();
         return image;
     }
-
     private Boolean checkInfos() {
         return (mImageEncodedList != null && mImageEncodedList.size() > 0 && !TextUtils.isEmpty(mDescriptionValue));
     }
