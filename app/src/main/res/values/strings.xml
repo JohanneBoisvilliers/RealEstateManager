@@ -58,6 +58,9 @@
     <string name="Login">LOGIN</string>
     <string name="cancel_registration">Registration has been canceled</string>
 
+    <!-- SIGNIN ACTIVITY -->
+    <string name="sign_in">SIGN IN</string>
+
     <!-- REGISTER ACTIVITY -->
     <string name="register">REGISTER</string>
     <string name="hint_username">USERNAME</string>
