@@ -56,6 +56,7 @@
     <!-- LOGIN ACTIVITY -->
     <string name="sign_up">SIGNUP</string>
     <string name="Login">LOGIN</string>
+    <string name="cancel_registration">Registration has been canceled</string>
 
     <!-- REGISTER ACTIVITY -->
     <string name="register">REGISTER</string>
