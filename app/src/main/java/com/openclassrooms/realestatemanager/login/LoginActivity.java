@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //launch activity to register a new user
     private void listenerForSignUpButton(){
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //TODO progressbar le temps de chercher dans la BD
+    //launch activity for login
     private void listenerForSignInButton() {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
     private void launchSignUpActivity(){
         startActivityForResult(new Intent(this,RegisterActivity.class),REGISTER_REQUEST);
     }
-
     private void launchSignInActivity() {
         startActivity(new Intent(this, SignInActivity.class));
     }
