@@ -9,8 +9,9 @@ import com.openclassrooms.realestatemanager.models.User;
 
 @Dao
 public interface UserDao {
-    @Query("SELECT * FROM User WHERE User.username = :username AND User.password = :password")
-    User getUserForSignIn(String username, String password);
+    @Query("SELECT  COUNT(*) FROM User WHERE User.username = :username AND User.password = " +
+            ":password")
+    Long getUserForSignIn(String username, String password);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertUser(User user);

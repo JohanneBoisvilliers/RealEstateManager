@@ -21,7 +21,7 @@ public class UserViewModel extends ViewModel {
         executor.execute(() -> mUserDataSource.createUser(user));
     }
 
-    public void getUserForSignIn(String username, String password) {
-        executor.execute(() -> currentUser = mUserDataSource.getUserForSignIn(username, password));
+    public Long getUserForSignIn(String username, String password) {
+        return mUserDataSource.getUserForSignIn(username, password);
     }
 }

@@ -107,12 +107,10 @@ public class RealEstateViewModel extends ViewModel {
             createItem(realEstate);
         } else {
             updateItem(realEstate);
-            Log.d(TAG, "insertOrUpdate: item updated !");
         }
         executor.execute(() -> {
             for (Photo listOfPhoto : listOfPhotos) {
                 listOfPhoto.setRealEstateId(mRealEstateId);
-                Log.d(TAG, "insertOrUpdate: change photo id " + listOfPhoto.getRealEstateId());
             }
         });
         executor.execute(() -> {

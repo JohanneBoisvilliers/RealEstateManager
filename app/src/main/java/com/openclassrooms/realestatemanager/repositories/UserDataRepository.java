@@ -16,7 +16,7 @@ public class UserDataRepository {
 
     // --- GET  ---
 
-    public User getUserForSignIn(String username, String password) {
+    public Long getUserForSignIn(String username, String password) {
         return mUserDao.getUserForSignIn(username, password);
     }
 }
