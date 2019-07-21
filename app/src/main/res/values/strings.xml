@@ -60,6 +60,7 @@
 
     <!-- SIGNIN ACTIVITY -->
     <string name="sign_in">SIGN IN</string>
+    <string name="error">Wrong user !</string>
 
     <!-- REGISTER ACTIVITY -->
     <string name="register">REGISTER</string>
