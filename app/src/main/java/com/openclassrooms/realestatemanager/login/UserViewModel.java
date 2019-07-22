@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.login;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.openclassrooms.realestatemanager.models.User;
@@ -23,5 +24,9 @@ public class UserViewModel extends ViewModel {
 
     public Long getUserForSignIn(String username, String password) {
         return mUserDataSource.getUserForSignIn(username, password);
+    }
+
+    public LiveData<User> getUser(Long userId) {
+        return mUserDataSource.getUser(userId);
     }
 }

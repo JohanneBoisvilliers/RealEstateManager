@@ -61,7 +61,7 @@ public class Utils {
         snackbar.show();
     }
 
-    //load image into header with glide
+    //load background image into header with glide
     public static void configureImageHeader(Context context, ImageView view) {
         Glide.with(context)
                 .load(context.getResources().getDrawable(R.drawable.gradient_bleu))
@@ -69,7 +69,7 @@ public class Utils {
                 .into(view);
     }
 
-    //load image into header with glide
+    //load user's photo into header with glide
     public static void configureUserPhoto(@Nullable Object url, Context context, ImageView imageView) {
         if (url == null) {
             url = context.getResources().getDrawable(R.drawable.user);

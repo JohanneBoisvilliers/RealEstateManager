@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableField;
-import android.util.Log;
 
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -14,8 +13,6 @@ import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepositor
 
 import java.util.List;
 import java.util.concurrent.Executor;
-
-import static com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment.TAG;
 
 public class RealEstateViewModel extends ViewModel {
 
@@ -68,7 +65,6 @@ public class RealEstateViewModel extends ViewModel {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
             realEstate.setId(mRealEstateId);
-            Log.d(TAG, "bien crée, id = " + realEstate.getId());
         });
     }
 
@@ -88,7 +84,6 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertPhotos(Photo[] photos) {
         executor.execute(() -> {
-            Log.d(TAG, "insertPhotos: insertion photos");
             mPhotoDataSource.createPhotos(photos);
         });
     }

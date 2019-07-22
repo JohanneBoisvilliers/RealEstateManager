@@ -111,17 +111,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         String imageEncoded = "";
-        Log.d(TAG, "onActivityResult: " + data);
         mImageEncodedList = new ArrayList<>();
         switch (requestCode) {
             case PICK_FROM_GALLARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.getData() != null) {
-                        Log.d(TAG, "onActivityResult: data pas null");
                         Uri outPutUri = data.getData();
                         this.extrudeUrlFromGallery(filePathColumn, imageEncoded, outPutUri);
                     } else {
-                        Log.d(TAG, "onActivityResult: data null");
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
                             for (int i = 0; i < mClipData.getItemCount(); i++) {

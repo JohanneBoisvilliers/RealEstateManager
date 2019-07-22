@@ -63,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO envoyer id de l'utilisateur a mainactivity
                 createUserInDatabase();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);

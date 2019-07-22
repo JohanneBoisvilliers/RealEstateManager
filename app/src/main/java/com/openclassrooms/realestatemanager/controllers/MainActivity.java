@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,10 @@ import android.view.View;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.injections.Injections;
+import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.UserViewModel;
+import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
@@ -41,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
-    private Long mUserId;
+    private UserViewModel mUserViewModel;
+    private View mNavHeader;
+    private HeaderViewHolder mHeaderViewHolder;
 
     @Override
     protected void onStart() {
@@ -54,10 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         Stetho.initializeWithDefaults(this);
+        this.configureViewModel();
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureNavHeader();
+        this.getCurrentUser(getUserIdFromIntent());
         this.requestWritePermission();
         if (savedInstanceState==null) {
             this.configureRealEstateListFragment();
@@ -77,9 +86,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---DATA--- //
     // ---------- //
 
+    //configure viewmodel for requests
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(this);
+        this.mUserViewModel =
+                ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+    }
+
+    //get user id from intent sent by sign in activity or register activity
     private Long getUserIdFromIntent() {
         Long userId = getIntent().getLongExtra("userId", 0);
         return userId;
+    }
+
+    private void getCurrentUser(Long userId) {
+        this.mUserViewModel.getUser(userId).observe(this, this::updateUser);
     }
 
     // --------------- //
@@ -157,15 +178,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.secondaryTextColor));
         toggle.syncState();
     }
-
     //load image into header with glide
     private void configureNavHeader() {
-        View navHeader = mNavigationView.getHeaderView(0);
-        HeaderViewHolder headerViewHolder = new HeaderViewHolder(navHeader);
-        Utils.configureImageHeader(this, headerViewHolder.getBackgroundHeader());
+        mNavHeader = mNavigationView.getHeaderView(0);
+        mHeaderViewHolder = new HeaderViewHolder(mNavHeader);
+        Utils.configureImageHeader(this, mHeaderViewHolder.getBackgroundHeader());
         //TODO récuperer photo utilisateur pour nav header
-        Utils.configureUserPhoto(null, getApplicationContext(), headerViewHolder.getUserPhoto());
-
+        Utils.configureUserPhoto(null, getApplicationContext(), mHeaderViewHolder.getUserPhoto());
     }
     private void configureNavigationView(){
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -199,6 +218,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
                     .commit();
         }
+    }
+
+    //observe user logged in to configure navigation header
+    private void updateUser(User user) {
+        mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());
+        mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
     }
 
     @Override

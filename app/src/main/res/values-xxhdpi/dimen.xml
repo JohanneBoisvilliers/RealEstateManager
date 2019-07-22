@@ -2,6 +2,7 @@
 <resources>
     <!-- Default NavigationView Header height -->
     <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="user_photo_nav">75dp</dimen>
     <!--Fragment Details-->
     <!--_DESIGN_-->
     <dimen name="FAB_elevation_55">55dp</dimen>
