@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class Utils {
 
+    //TODO pourquoi pas essayer d'utiliser une api pour taux actuel
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -50,6 +51,7 @@ public class Utils {
         }
     }
 
+    // Centralize creation of application's snackbars
     public static void showSnackBar(@NonNull View coordinator, String textToShow, int duration) {
         Snackbar snackbar = Snackbar.make(coordinator, textToShow, duration);
         snackbar.show();

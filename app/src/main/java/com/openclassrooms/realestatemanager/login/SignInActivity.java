@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -40,15 +39,22 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
         this.listenerOnSignInButton();
     }
 
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
+
     private void listenerOnSignInButton() {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("debug", "onClick: ");
                 startAsync();
             }
         });
     }
+
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
 
     //launch async task to check if user exist in database
     private void startAsync() {
@@ -65,20 +71,24 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
     @Override
     public void onPostExecute(Long success) {
         this.updateUIAfterTask();
-        if (success == 1) {
+        if (success != null && success != 0) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         } else {
             Utils.showSnackBar(mCoordinator, getString(R.string.error), BaseTransientBottomBar.LENGTH_LONG);
         }
     }
 
-    // ---UI---
+    // -------- //
+    // ---UI--- //
+    // -------- //
 
+    //show progress bar and hide button sigin in during the database's checking
     public void updateUIBeforeTask() {
         mProgressBar.setVisibility(View.VISIBLE);
         mSignInButton.setVisibility(View.GONE);
     }
 
+    //hide progress bar and show sign in button when request is over
     public void updateUIAfterTask() {
         mProgressBar.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);

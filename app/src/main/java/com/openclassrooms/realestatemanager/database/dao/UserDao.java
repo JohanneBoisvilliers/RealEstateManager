@@ -9,7 +9,7 @@ import com.openclassrooms.realestatemanager.models.User;
 
 @Dao
 public interface UserDao {
-    @Query("SELECT  COUNT(*) FROM User WHERE User.username = :username AND User.password = " +
+    @Query("SELECT  User.id FROM User WHERE User.username = :username AND User.password = " +
             ":password")
     Long getUserForSignIn(String username, String password);
 

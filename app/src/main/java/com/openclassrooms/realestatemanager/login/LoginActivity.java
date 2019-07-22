@@ -46,6 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
+
     //launch activity to register a new user
     private void listenerForSignUpButton(){
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +70,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
 
     private void launchSignUpActivity(){
         startActivityForResult(new Intent(this,RegisterActivity.class),REGISTER_REQUEST);

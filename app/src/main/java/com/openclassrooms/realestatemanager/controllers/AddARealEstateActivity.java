@@ -152,7 +152,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         }
     }
 
-    // --- DATA
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
 
     //configure viewmodel to keep datas
     private void configureViewModel() {
@@ -205,7 +207,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    // --- UI
+    // -------- //
+    // ---UI--- //
+    // -------- //
 
     //load image into header with glide
     private void configureImageHeader() {
@@ -230,7 +234,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
-    // --- LISTENERS
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
 
     //listener on FAB for adding or updating real estate in database
     private void listenerOnFAB() {
@@ -336,7 +342,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mDescriptionValue = text.toString();
     }
 
-    // --- Utils
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
