@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
+    private User mCurrentUser;
     private UserViewModel mUserViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getCurrentUser(Long userId) {
+        mCurrentUser = new User();
         this.mUserViewModel.getUser(userId).observe(this, this::updateUser);
     }
 
@@ -160,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAddRealEstateActivity(){
         Intent intent = new Intent(this,AddARealEstateActivity.class);
+        intent.putExtra("userId", mCurrentUser.getId());
+        intent.putExtra("username", mCurrentUser.getUsername());
         startActivity(intent);
     }
 
@@ -224,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUser(User user) {
         mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
+        mCurrentUser.setId(user.getId());
+        mCurrentUser.setUsername(user.getUsername());
     }
 
     @Override

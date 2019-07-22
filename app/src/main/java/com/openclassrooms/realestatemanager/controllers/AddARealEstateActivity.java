@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
@@ -53,6 +54,8 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 public class AddARealEstateActivity extends AppCompatActivity {
 
     public static final String TAG = "DEBUG";
+    @BindView(R.id.explanation_text)
+    TextView mExplanationText;
     @BindView(R.id.price_edittext)
     EditText mPriceEditText;
     @BindView(R.id.surface_edittext)
@@ -99,7 +102,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
         Utils.configureImageHeader(this, mHeader);
         //TODO récupérer photo utilisateur pour header
-        this.configureUserPhoto(null);
+        this.configureUser(null);
         this.configureTypeSpinner();
         this.getSpinnerInfo();
         this.listenerOnFAB();
@@ -188,7 +191,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinnerValue = itemValue;
         mRealEstateViewModel.mSpinnerPos.set(itemPosition);
     }
-    //acces to gallery app
+
+    //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
         String fileId = DocumentsContract.getDocumentId(uri);
         String id = fileId.split(":")[1];
@@ -211,7 +215,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
 
     //load image into header with glide
-    private void configureUserPhoto(@Nullable Object url) {
+    private void configureUser(@Nullable Object url) {
+        String username = getIntent().getStringExtra("username");
+        mExplanationText.setText(getResources().getString((R.string.text_add_realestate), username));
         if (url == null) {
             url = getResources().getDrawable(R.drawable.user);
         }
