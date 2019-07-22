@@ -72,7 +72,9 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
     public void onPostExecute(Long success) {
         this.updateUIAfterTask();
         if (success != null && success != 0) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("userId", success);
+            startActivity(intent);
         } else {
             Utils.showSnackBar(mCoordinator, getString(R.string.error), BaseTransientBottomBar.LENGTH_LONG);
         }

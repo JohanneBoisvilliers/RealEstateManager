@@ -18,11 +18,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
+import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.views.HeaderViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
+    private Long mUserId;
 
     @Override
     protected void onStart() {
         super.onStart();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        this.configureNavHeader();
         this.requestWritePermission();
         if (savedInstanceState==null) {
             this.configureRealEstateListFragment();
         }
         this.configureRealEstateDetailsFragment();
-    }
-
-    private void configureToolbar(){
-        // Sets the Toolbar
-        setSupportActionBar(mToolbar);
     }
     @Override
     public void onBackPressed() {
@@ -73,6 +72,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         super.onBackPressed();
     }
+
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
+
+    private Long getUserIdFromIntent() {
+        Long userId = getIntent().getLongExtra("userId", 0);
+        return userId;
+    }
+
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -119,9 +132,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
+
     private void startAddRealEstateActivity(){
         Intent intent = new Intent(this,AddARealEstateActivity.class);
         startActivity(intent);
+    }
+
+    // -------- //
+    // ---UI--- //
+    // -------- //
+
+    private void configureToolbar() {
+        // Sets the Toolbar
+        setSupportActionBar(mToolbar);
     }
     //Configure Drawer Layout
     private void configureDrawerLayout(){
@@ -129,6 +156,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.secondaryTextColor));
         toggle.syncState();
+    }
+
+    //load image into header with glide
+    private void configureNavHeader() {
+        View navHeader = mNavigationView.getHeaderView(0);
+        HeaderViewHolder headerViewHolder = new HeaderViewHolder(navHeader);
+        Utils.configureImageHeader(this, headerViewHolder.getBackgroundHeader());
+        //TODO récuperer photo utilisateur pour nav header
+        Utils.configureUserPhoto(null, getApplicationContext(), headerViewHolder.getUserPhoto());
+
     }
     private void configureNavigationView(){
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -163,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == WRITE_PERMISSION){
