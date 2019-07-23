@@ -7,18 +7,22 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.User;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    @BindView(R.id.user_photo_register)
+    ImageView mUserPhoto;
     @BindView(R.id.textInputEditTextUsername)
     TextInputEditText mUsernameEditText;
     @BindView(R.id.textInputEditTextEmail)
@@ -40,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Stetho.initializeWithDefaults(this);
         this.configureViewModel();
+        Utils.configureUserPhoto(null, this, mUserPhoto);
         this.listenerOnRegisterButton();
     }
 

@@ -46,6 +46,7 @@
 
     <!--Register Activity-->
     <!--_DESIGN_-->
+    <dimen name="user_photo">150dp</dimen>
     <dimen name="icon_width">50dp</dimen>
     <dimen name="bottom_margin">30dp</dimen>
     <dimen name="edittext_width">270dp</dimen>
