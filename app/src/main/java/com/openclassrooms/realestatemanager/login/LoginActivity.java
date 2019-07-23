@@ -38,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REGISTER_REQUEST) {
             if(resultCode == Activity.RESULT_OK){
+                Utils.showSnackBar(mCoordinator, getString(R.string.registration_success),
+                        BaseTransientBottomBar.LENGTH_LONG);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Utils.showSnackBar(mCoordinator, getString(R.string.cancel_registration),

@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.login;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.widget.Button;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controllers.MainActivity;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.User;
@@ -32,6 +30,8 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.coordinator_add_user)
     View mCoordinator;
     private UserViewModel mUserViewModel;
+    private int mCanceled = Activity.RESULT_CANCELED;
+    private int mSuccessed = Activity.RESULT_OK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +45,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        this.returnCanceledInfoToLoginActivity();
+        this.returnInfoToLoginActivity(mCanceled);
     }
 
-    private void returnCanceledInfoToLoginActivity (){
-        setResult(Activity.RESULT_CANCELED);
+    private void returnInfoToLoginActivity(int returnType) {
+        setResult(returnType);
         finish();
     }
 
@@ -57,20 +57,16 @@ public class RegisterActivity extends AppCompatActivity {
         ViewModelFactory viewModelFactory = Injections.provideViewModelFactory(this);
         mUserViewModel = ViewModelProviders.of(this,viewModelFactory).get(UserViewModel.class);
     }
-
     //add user in database and launch mainActivity
     private void listenerOnRegisterButton(){
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO envoyer id de l'utilisateur a mainactivity
                 createUserInDatabase();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                returnInfoToLoginActivity(mSuccessed);
             }
         });
     }
-
     //create a new user in database and set his params with edittext entries
     private void createUserInDatabase(){
         User user = new User();
