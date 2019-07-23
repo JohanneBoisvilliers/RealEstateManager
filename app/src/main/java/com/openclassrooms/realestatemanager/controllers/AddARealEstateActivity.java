@@ -166,8 +166,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
         mRealEstate = mRealEstateViewModel.getRealEstate();
-        //TODO: récuperer userID automatiquement en fonction de l'utilisateur connecté
-        mRealEstate.setUserId(1);
+        mRealEstate.setUserId(getIntent().getLongExtra("userId", 0));
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
         mRealEstate.setSurface(mSurfaceValue);
@@ -191,7 +190,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinnerValue = itemValue;
         mRealEstateViewModel.mSpinnerPos.set(itemPosition);
     }
-
     //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
         String fileId = DocumentsContract.getDocumentId(uri);
@@ -212,7 +210,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
     // -------- //
     // ---UI--- //
     // -------- //
-
 
     //load image into header with glide
     private void configureUser(@Nullable Object url) {
