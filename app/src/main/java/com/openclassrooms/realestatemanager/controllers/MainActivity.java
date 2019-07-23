@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this,AddARealEstateActivity.class);
         intent.putExtra("userId", mCurrentUser.getId());
         intent.putExtra("username", mCurrentUser.getUsername());
+        intent.putExtra("photoUrl", mCurrentUser.getPhotoUrl());
         startActivity(intent);
     }
 
@@ -187,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavHeader = mNavigationView.getHeaderView(0);
         mHeaderViewHolder = new HeaderViewHolder(mNavHeader);
         Utils.configureImageHeader(this, mHeaderViewHolder.getBackgroundHeader());
-        //TODO récuperer photo utilisateur pour nav header
         Utils.configureUserPhoto(null, getApplicationContext(), mHeaderViewHolder.getUserPhoto());
     }
     private void configureNavigationView(){
@@ -228,8 +228,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUser(User user) {
         mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
+        Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
         mCurrentUser.setId(user.getId());
         mCurrentUser.setUsername(user.getUsername());
+        mCurrentUser.setPhotoUrl(user.getPhotoUrl());
     }
 
     @Override

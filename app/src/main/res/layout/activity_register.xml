@@ -24,9 +24,11 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
+            android:id="@+id/change_photo_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_create_black_24"
+            android:clickable="true"
             android:tint="@color/primaryTextColor"
             app:layout_constraintBottom_toBottomOf="@id/user_photo_register"
             app:layout_constraintRight_toRightOf="@id/user_photo_register" />

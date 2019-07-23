@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        //TODO gerer les permissions ici
         this.listenerForSignUpButton();
         this.listenerForSignInButton();
     }

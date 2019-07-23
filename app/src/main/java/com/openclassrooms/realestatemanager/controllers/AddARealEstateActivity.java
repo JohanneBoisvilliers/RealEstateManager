@@ -101,8 +101,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         binding.setViewmodel(mRealEstateViewModel);
 
         Utils.configureImageHeader(this, mHeader);
-        //TODO récupérer photo utilisateur pour header
-        this.configureUser(null);
+        this.configureUser();
         this.configureTypeSpinner();
         this.getSpinnerInfo();
         this.listenerOnFAB();
@@ -212,14 +211,15 @@ public class AddARealEstateActivity extends AppCompatActivity {
     // -------- //
 
     //load image into header with glide
-    private void configureUser(@Nullable Object url) {
+    private void configureUser() {
         String username = getIntent().getStringExtra("username");
+        Object photoUrl = getIntent().getStringExtra("photoUrl");
         mExplanationText.setText(getResources().getString((R.string.text_add_realestate), username));
-        if (url == null) {
-            url = getResources().getDrawable(R.drawable.user);
+        if (photoUrl == null) {
+            photoUrl = getResources().getDrawable(R.drawable.user);
         }
         Glide.with(this)
-                .load(url)
+                .load(photoUrl)
                 .circleCrop()
                 .into(mUserPhoto);
     }
