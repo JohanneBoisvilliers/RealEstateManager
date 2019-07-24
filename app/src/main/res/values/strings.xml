@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
     <string name="icon_toolbar_add_realestate">Add a real estate</string>
+    <string name="notification_name">notification_add</string>
+    <string name="notification_description">react_to_add</string>
 
     <!-- NAVIGATION DRAWER -->
     <string name="all_real_estate">All real estate</string>

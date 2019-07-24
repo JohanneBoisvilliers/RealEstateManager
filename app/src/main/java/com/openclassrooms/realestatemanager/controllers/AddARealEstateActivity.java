@@ -247,7 +247,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
                             getResources().getString(R.string.no_photo),
                             BaseTransientBottomBar.LENGTH_LONG);
                 }
-
             }
         });
     }
