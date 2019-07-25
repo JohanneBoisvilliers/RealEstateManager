@@ -2,7 +2,9 @@ package com.openclassrooms.realestatemanager.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controllers.MainActivity;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import butterknife.BindView;
@@ -24,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.coordinator_login)
     View mCoordinator;
 
+    // -------------------------------- LIFE CYCLE --------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +36,10 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         //TODO gerer les permissions ici
+        this.checkLastUserLogged();
         this.listenerForSignUpButton();
         this.listenerForSignInButton();
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REGISTER_REQUEST) {
@@ -49,9 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // --------------- //
-    // ---LISTENERS--- //
-    // --------------- //
+
+    // ---------------------------------- LISTENERS ----------------------------------
 
     //launch activity to register a new user
     private void listenerForSignUpButton(){
@@ -62,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    //TODO progressbar le temps de chercher dans la BD
     //launch activity for login
     private void listenerForSignInButton() {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -74,14 +76,30 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // ----------- //
-    // ---UTILS--- //
-    // ----------- //
+    // ----------------------------------- UTILS -----------------------------------
 
     private void launchSignUpActivity(){
         startActivityForResult(new Intent(this,RegisterActivity.class),REGISTER_REQUEST);
     }
     private void launchSignInActivity() {
         startActivity(new Intent(this, SignInActivity.class));
+    }
+
+    private void launchMainActivity(Long userId) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+
+    // ------------------------------------ DATA ------------------------------------
+
+    private void checkLastUserLogged() {
+        Long Userid;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Userid = prefs.getLong("userId", 0);
+
+        if (Userid != 0) {
+            this.launchMainActivity(Userid);
+        }
     }
 }

@@ -3,11 +3,13 @@ package com.openclassrooms.realestatemanager.controllers;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +27,7 @@ import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.LoginActivity;
 import com.openclassrooms.realestatemanager.login.UserViewModel;
 import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
@@ -51,10 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    // -------------------------------- LIFE CYCLE --------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,12 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureNavHeader();
-        this.getCurrentUser(getUserIdFromIntent());
+        this.getCurrentUser(getUserId());
         this.requestWritePermission();
-        if (savedInstanceState==null) {
-            this.configureRealEstateListFragment();
-        }
-        this.configureRealEstateDetailsFragment();
+        this.setFragments(savedInstanceState);
     }
     @Override
     public void onBackPressed() {
@@ -83,9 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onBackPressed();
     }
 
-    // ---------- //
-    // ---DATA--- //
-    // ---------- //
+    // ------------------------------------ DATA ------------------------------------
 
     //configure viewmodel for requests
     private void configureViewModel() {
@@ -93,21 +89,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.mUserViewModel =
                 ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
     }
-
     //get user id from intent sent by sign in activity or register activity
-    private Long getUserIdFromIntent() {
-        Long userId = getIntent().getLongExtra("userId", 0);
-        return userId;
+    private Long getUserId() {
+        if (checkLastUser() != 0) {
+            return checkLastUser();
+        } else {
+            // TODO a tester une fois la fonction deconnexion implémentée
+            startActivity(new Intent(this, LoginActivity.class));
+            return 0L;//getIntent().getLongExtra("userId", 0);
+        }
     }
 
+    //get user logged to set infos in different place of application
     private void getCurrentUser(Long userId) {
         mCurrentUser = new User();
         this.mUserViewModel.getUser(userId).observe(this, this::updateUser);
     }
 
-    // --------------- //
-    // ---LISTENERS--- //
-    // --------------- //
+    //show good fragment depending who call them
+    private void setFragments(Bundle bundle) {
+        String whoCallActivity = getIntent().getStringExtra("ComeFrom");
+        Log.d(TAG, "setFragments: " + whoCallActivity);
+        if (whoCallActivity != null && whoCallActivity.equals("Notification")) {
+            Log.d(TAG, "setFragments: come from notification");
+            mRealEstateDetailsFragment = (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
+
+            if (mRealEstateDetailsFragment == null && findViewById(R.id.container_real_estate_recycler_view) != null) {
+                mRealEstateDetailsFragment = new RealEstateDetailsFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container_real_estate_recycler_view, mRealEstateDetailsFragment)
+                        .commit();
+            }
+        } else {
+            Log.d(TAG, "setFragments: come from login activity");
+            if (bundle == null) {
+                this.configureRealEstateListFragment();
+            }
+            this.configureRealEstateDetailsFragment();
+        }
+    }
+
+    private Long checkLastUser() {
+        Long Userid;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Userid = prefs.getLong("userId", 0);
+        return Userid;
+    }
+
+    // ---------------------------------- LISTENERS ----------------------------------
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -156,9 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    // ----------- //
-    // ---UTILS--- //
-    // ----------- //
+    // ----------------------------------- UTILS -----------------------------------
 
     private void startAddRealEstateActivity(){
         Intent intent = new Intent(this,AddARealEstateActivity.class);
@@ -168,9 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    // -------- //
-    // ---UI--- //
-    // -------- //
+    // ------------------------------------ UI ------------------------------------
 
     private void configureToolbar() {
         // Sets the Toolbar
@@ -204,10 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //  Add it to FrameLayout container
             ft.add(R.id.container_real_estate_recycler_view, mRealEstateListFragment)
                     .commit();
-        } else {
-            Log.d("DEBUG", "configureRealEstateListFragment: permission ");
-            ft.detach(mRealEstateListFragment);
-            ft.commit();
         }
     }
     //configure the detail fragment for two panes layout
@@ -223,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
-
     //observe user logged in to configure navigation header
     private void updateUser(User user) {
         mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());

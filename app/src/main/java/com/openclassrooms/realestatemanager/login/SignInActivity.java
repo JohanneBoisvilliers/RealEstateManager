@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -39,9 +41,7 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
         this.listenerOnSignInButton();
     }
 
-    // --------------- //
-    // ---LISTENERS--- //
-    // --------------- //
+    // ---------------------------------- LISTENERS ----------------------------------
 
     private void listenerOnSignInButton() {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -52,9 +52,7 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
         });
     }
 
-    // ---------- //
-    // ---DATA--- //
-    // ---------- //
+    // ----------------------------------- ASYNC -----------------------------------
 
     //launch async task to check if user exist in database
     private void startAsync() {
@@ -72,27 +70,39 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
     public void onPostExecute(Long success) {
         this.updateUIAfterTask();
         if (success != null && success != 0) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("userId", success);
-            startActivity(intent);
+            startMainActivity(success);
+            saveUserAuth(success);
         } else {
             Utils.showSnackBar(mCoordinator, getString(R.string.error), BaseTransientBottomBar.LENGTH_LONG);
         }
     }
 
-    // -------- //
-    // ---UI--- //
-    // -------- //
+    // ------------------------------------ UI ------------------------------------
 
-    //show progress bar and hide button sigin in during the database's checking
+    //show progress bar and hide button sign in in during the database's checking
     public void updateUIBeforeTask() {
         mProgressBar.setVisibility(View.VISIBLE);
         mSignInButton.setVisibility(View.GONE);
     }
-
     //hide progress bar and show sign in button when request is over
     public void updateUIAfterTask() {
         mProgressBar.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);
+    }
+
+    // ----------------------------------- UTILS -----------------------------------
+
+    public void startMainActivity(Long requestResult) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("userId", requestResult);
+        startActivity(intent);
+    }
+
+    // ------------------------------------ DATA ------------------------------------
+
+    // save user id for auto login function
+    public void saveUserAuth(Long requestResult) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit().putLong("userId", requestResult).commit();
     }
 }

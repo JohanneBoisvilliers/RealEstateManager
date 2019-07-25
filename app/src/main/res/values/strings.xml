@@ -3,6 +3,8 @@
     <string name="icon_toolbar_add_realestate">Add a real estate</string>
     <string name="notification_name">notification_add</string>
     <string name="notification_description">react_to_add</string>
+    <string name="notification_title">Real Estate Manager</string>
+    <string name="notification_message">You\'ve added a new real estate in database !</string>
 
     <!-- NAVIGATION DRAWER -->
     <string name="all_real_estate">All real estate</string>

@@ -9,7 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.login.LoginActivity;
+import com.openclassrooms.realestatemanager.controllers.MainActivity;
 
 public class NotificationsService {
     private static final int NOTIFICATION_ID = 007;
@@ -19,22 +19,23 @@ public class NotificationsService {
 
         createNotificationChannel();
 
-        Intent snoozeIntent = new Intent(MyApp.getContext(), LoginActivity.class);
-        snoozeIntent.putExtra("snooze", 0);
-        PendingIntent snoozePendingIntent =
-                PendingIntent.getBroadcast(MyApp.getContext(), 0, snoozeIntent, 0);
+        Intent notificationIntent = new Intent(MyApp.getContext(), MainActivity.class);
+        notificationIntent.putExtra("ComeFrom", "Notification");
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent notificationPendingIntent =
+                PendingIntent.getActivity(MyApp.getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApp.getContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.baseline_add_24)
-                .setContentTitle("Real Estate Manager")
-                .setContentText("You've added a new real estate in database !")
-                .setContentIntent(snoozePendingIntent)
+                .setContentTitle(MyApp.getContext().getString(R.string.notification_title))
+                .setContentText(MyApp.getContext().getString(R.string.notification_message))
+                .setContentIntent(notificationPendingIntent)
+                .setTimeoutAfter(5 * 60 * 1000)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MyApp.getContext());
 
-// notificationId is a unique int for each notification that you must define
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
