@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +17,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.stetho.common.ListUtil;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.models.Photo;
-import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
-import com.openclassrooms.realestatemanager.viewModels.SharedViewModel;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
@@ -77,7 +73,6 @@ public class RealEstateDetailsFragment extends Fragment {
     private Boolean isTwoPanesLayout = false;
     private RealEstateViewModel mRealEstateViewModel;
     private List<Photo> mRealEstatePhotos = new ArrayList<>();
-    private List<Photo> mPhotoViewPagerDescription;
     private PhotoViewpagerAdapter mPhotoViewPagerAdapter;
 
 
@@ -197,8 +192,7 @@ public class RealEstateDetailsFragment extends Fragment {
                 mEntireView.setVisibility(View.INVISIBLE);
             }
         }
-        SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        model.getSelected().observe(this,  item -> {
+        mRealEstateViewModel.getSelected().observe(this, item -> {
             mRealEstate = item;
             MyApp.isInit=true;
             if(mRealEstateRecyclerView != null){
@@ -262,7 +256,7 @@ public class RealEstateDetailsFragment extends Fragment {
     //configure viewmodel
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
     }
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate){

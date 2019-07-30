@@ -18,4 +18,10 @@ public class PhotoDataRepository {
     // GET
 
     public LiveData<List<Photo>> getUriPhotos(long realEstateId){return this.mPhotoDao.getUriPhotos(realEstateId);}
+
+    //INSERT
+
+    public void createPhotos(Photo[] photoList) {
+        mPhotoDao.insertPhotos(photoList);
+    }
 }

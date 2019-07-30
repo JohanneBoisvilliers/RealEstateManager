@@ -3,8 +3,9 @@ package com.openclassrooms.realestatemanager.realEstateList;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.databinding.ObservableField;
+import android.util.Log;
 
-import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
@@ -14,6 +15,8 @@ import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepositor
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import static com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment.TAG;
+
 public class RealEstateViewModel extends ViewModel {
 
     // REPOSITORIES
@@ -21,22 +24,40 @@ public class RealEstateViewModel extends ViewModel {
     private final PhotoDataRepository mPhotoDataSource;
     private final Executor executor;
 
+    private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
+    private RealEstate mRealEstate;
+    public final ObservableField<Integer> mPrice = new ObservableField<>();
+    public final ObservableField<Integer> mRooms = new ObservableField<>();
+    public final ObservableField<Integer> mSpinnerPos = new ObservableField<>();
+    public final ObservableField<Integer> mSurface = new ObservableField<>();
+    public final ObservableField<String> mDescription = new ObservableField<>();
+    public final ObservableField<String> mNumberOfPhoto = new ObservableField<>();
+    private long mRealEstateId;
+
+
     public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,PhotoDataRepository photoDataSource, Executor executor) {
         this.mRealEstateDataSource = realEstateDataSource;
         this.mPhotoDataSource = photoDataSource;
         this.executor = executor;
     }
 
+
     // -------------
     // FOR REAL ESTATE
     // -------------
 
-    public LiveData<List<RealEstate>> getRealEstate() {
-        return mRealEstateDataSource.getRealEstates();
+    public void init(RealEstate realEstate) {
+        if (realEstate == null) {
+            mRealEstate = new RealEstate();
+        }
     }
 
-    public LiveData<RealEstate> getSpecificRealEstate(long id) {
-        return mRealEstateDataSource.getSpecificRealEstate(id);
+    public void select(RealEstateWithPhotos item) {
+        selected.setValue(item);
+    }
+
+    public LiveData<RealEstateWithPhotos> getSelected() {
+        return selected;
     }
 
     public LiveData<List<RealEstateWithPhotos>> getRealEstatewithPhotos() {
@@ -45,13 +66,9 @@ public class RealEstateViewModel extends ViewModel {
 
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
-            mRealEstateDataSource.createRealEstate(realEstate);
-        });
-    }
-
-    public void deleteItem(long realEstateId) {
-        executor.execute(() -> {
-            mRealEstateDataSource.deleteRealEstate(realEstateId);
+            mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
+            realEstate.setId(mRealEstateId);
+            Log.d(TAG, "bien crée, id = " + realEstate.getId());
         });
     }
 
@@ -68,4 +85,39 @@ public class RealEstateViewModel extends ViewModel {
     public LiveData<List<Photo>> getRealEstatePhotos(long realEstateId) {
         return mPhotoDataSource.getUriPhotos(realEstateId);
     }
+
+    public void insertPhotos(Photo[] photos) {
+        executor.execute(() -> {
+            Log.d(TAG, "insertPhotos: insertion photos");
+            mPhotoDataSource.createPhotos(photos);
+        });
+    }
+
+    // -------------
+    // FOR ADD OR MODIFY REAL ESTATE
+    // -------------
+
+    /*GETTERS*/
+    public RealEstate getRealEstate() {
+        return mRealEstate;
+    }
+
+    public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
+        if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
+            createItem(realEstate);
+        } else {
+            updateItem(realEstate);
+            Log.d(TAG, "insertOrUpdate: item updated !");
+        }
+        executor.execute(() -> {
+            for (Photo listOfPhoto : listOfPhotos) {
+                listOfPhoto.setRealEstateId(mRealEstateId);
+                Log.d(TAG, "insertOrUpdate: change photo id " + listOfPhoto.getRealEstateId());
+            }
+        });
+        executor.execute(() -> {
+            insertPhotos(listOfPhotos);
+        });
+    }
+
 }
