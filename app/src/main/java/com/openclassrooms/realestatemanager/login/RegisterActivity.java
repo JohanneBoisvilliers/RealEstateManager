@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         mUserViewModel = ViewModelProviders.of(this,viewModelFactory).get(UserViewModel.class);
     }
 
+    //add user in database and launch mainActivity
     private void listenerOnRegisterButton(){
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,10 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    //create a new user in database and set his params with edittext entries
     private void createUserInDatabase(){
         User user = new User();
-        user.setPassword(mUsernameEditText.getText().toString());
-        user.setUsername(mPasswordEditText.getText().toString());
+        user.setUsername(mUsernameEditText.getText().toString());
+        user.setPassword(mPasswordEditText.getText().toString());
         user.setEmail(mEmailEditText.getText().toString());
         mUserViewModel.createUser(user);
     }

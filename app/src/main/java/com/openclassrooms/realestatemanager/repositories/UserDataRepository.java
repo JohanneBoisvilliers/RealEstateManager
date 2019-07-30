@@ -13,4 +13,10 @@ public class UserDataRepository {
     public long createUser(User user){
         return mUserDao.insertUser(user);
     }
+
+    // --- GET  ---
+
+    public Long getUserForSignIn(String username, String password) {
+        return mUserDao.getUserForSignIn(username, password);
+    }
 }

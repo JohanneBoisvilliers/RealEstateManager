@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 
 public class UserViewModel extends ViewModel {
     private final UserDataRepository mUserDataSource;
+    public User currentUser;
     private final Executor executor;
 
     public UserViewModel(UserDataRepository userDataSource, Executor executor) {
@@ -17,8 +18,10 @@ public class UserViewModel extends ViewModel {
     }
 
     public void createUser(User user) {
-        executor.execute(() -> {
-            mUserDataSource.createUser(user);
-        });
+        executor.execute(() -> mUserDataSource.createUser(user));
+    }
+
+    public Long getUserForSignIn(String username, String password) {
+        return mUserDataSource.getUserForSignIn(username, password);
     }
 }

@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +19,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final int REGISTER_REQUEST = 1;
     @BindView(R.id.signup_btn)Button mSignUpButton;
+    @BindView(R.id.login_btn)
+    Button mSignInButton;
+    @BindView(R.id.coordinator_login)
+    View mCoordinator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         this.listenerForSignUpButton();
+        this.listenerForSignInButton();
     }
 
     @Override
@@ -34,11 +40,13 @@ public class LoginActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this,"TEST",Toast.LENGTH_LONG).show();
+                Utils.showSnackBar(mCoordinator, getString(R.string.cancel_registration),
+                        BaseTransientBottomBar.LENGTH_LONG);
             }
         }
     }
 
+    //launch activity to register a new user
     private void listenerForSignUpButton(){
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +56,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //TODO progressbar le temps de chercher dans la BD
+    //launch activity for login
+    private void listenerForSignInButton() {
+        mSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchSignInActivity();
+            }
+        });
+    }
+
     private void launchSignUpActivity(){
         startActivityForResult(new Intent(this,RegisterActivity.class),REGISTER_REQUEST);
+    }
+    private void launchSignInActivity() {
+        startActivity(new Intent(this, SignInActivity.class));
     }
 }
