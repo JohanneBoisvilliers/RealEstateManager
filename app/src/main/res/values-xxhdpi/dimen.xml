@@ -38,4 +38,17 @@
     <dimen name="text_in_spinner">12sp</dimen>
     <dimen name="text_info">12sp</dimen>
     <dimen name="margin_to_border">16dp</dimen>
+    <!--Login Activity-->
+    <!--_DESIGN_-->
+    <dimen name="logo_dimensions">200dp</dimen>
+    <dimen name="btn_width">250dp</dimen>
+
+    <!--Register Activity-->
+    <!--_DESIGN_-->
+    <dimen name="icon_width">50dp</dimen>
+    <dimen name="bottom_margin">30dp</dimen>
+    <dimen name="edittext_width">270dp</dimen>
+    <dimen name="horizontal_padding_edittext">20dp</dimen>
+    <dimen name="bottom_padding_edittext">10dp</dimen>
+    <dimen name="top_padding_edittext">15dp</dimen>
 </resources>
