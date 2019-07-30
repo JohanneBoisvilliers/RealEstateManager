@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,24 +108,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //show good fragment depending who call them
     private void setFragments(Bundle bundle) {
         String whoCallActivity = getIntent().getStringExtra("ComeFrom");
-        Log.d(TAG, "setFragments: " + whoCallActivity);
         if (whoCallActivity != null && whoCallActivity.equals("Notification")) {
-            Log.d(TAG, "setFragments: come from notification");
-            mRealEstateDetailsFragment = (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
-
-            if (mRealEstateDetailsFragment == null && findViewById(R.id.container_real_estate_recycler_view) != null) {
-                mRealEstateDetailsFragment = new RealEstateDetailsFragment();
-
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container_real_estate_recycler_view, mRealEstateDetailsFragment)
-                        .commit();
-            }
+            this.configureRealEstateDetailsFragment(R.id.container_real_estate_recycler_view);
         } else {
-            Log.d(TAG, "setFragments: come from login activity");
             if (bundle == null) {
                 this.configureRealEstateListFragment();
             }
-            this.configureRealEstateDetailsFragment();
+            this.configureRealEstateDetailsFragment(R.id.container_real_estate_detail);
         }
     }
 
@@ -233,15 +221,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     //configure the detail fragment for two panes layout
-    private void configureRealEstateDetailsFragment(){
+    private void configureRealEstateDetailsFragment(int id) {
         // Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
-        mRealEstateDetailsFragment = (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_detail);
+        mRealEstateDetailsFragment =
+                (RealEstateDetailsFragment) getSupportFragmentManager().findFragmentById(id);
 
-        if (mRealEstateDetailsFragment == null && findViewById(R.id.container_real_estate_detail) != null) {
+        if (mRealEstateDetailsFragment == null && findViewById(id) != null) {
             mRealEstateDetailsFragment = new RealEstateDetailsFragment();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container_real_estate_detail, mRealEstateDetailsFragment)
+                    .replace(id, mRealEstateDetailsFragment)
                     .commit();
         }
     }

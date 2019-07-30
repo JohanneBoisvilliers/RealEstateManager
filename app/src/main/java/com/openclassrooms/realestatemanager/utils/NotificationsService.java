@@ -21,9 +21,8 @@ public class NotificationsService {
 
         Intent notificationIntent = new Intent(MyApp.getContext(), MainActivity.class);
         notificationIntent.putExtra("ComeFrom", "Notification");
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent notificationPendingIntent =
-                PendingIntent.getActivity(MyApp.getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getBroadcast(MyApp.getContext(), 0, notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApp.getContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.baseline_add_24)
@@ -38,8 +37,6 @@ public class NotificationsService {
 
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
-
-
     public static void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
