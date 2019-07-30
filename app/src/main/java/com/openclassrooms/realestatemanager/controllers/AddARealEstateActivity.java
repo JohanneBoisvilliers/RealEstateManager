@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
@@ -53,6 +54,8 @@ import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 public class AddARealEstateActivity extends AppCompatActivity {
 
     public static final String TAG = "DEBUG";
+    @BindView(R.id.explanation_text)
+    TextView mExplanationText;
     @BindView(R.id.price_edittext)
     EditText mPriceEditText;
     @BindView(R.id.surface_edittext)
@@ -97,8 +100,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
         this.configureViewModel();
         binding.setViewmodel(mRealEstateViewModel);
 
-        this.configureImageHeader();
-        this.configureUserPhoto(null);
+        Utils.configureImageHeader(this, mHeader);
+        this.configureUser();
         this.configureTypeSpinner();
         this.getSpinnerInfo();
         this.listenerOnFAB();
@@ -110,17 +113,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         String imageEncoded = "";
-        Log.d(TAG, "onActivityResult: " + data);
         mImageEncodedList = new ArrayList<>();
         switch (requestCode) {
             case PICK_FROM_GALLARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.getData() != null) {
-                        Log.d(TAG, "onActivityResult: data pas null");
                         Uri outPutUri = data.getData();
                         this.extrudeUrlFromGallery(filePathColumn, imageEncoded, outPutUri);
                     } else {
-                        Log.d(TAG, "onActivityResult: data null");
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
                             for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -152,7 +152,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         }
     }
 
-    // --- DATA
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
 
     //configure viewmodel to keep datas
     private void configureViewModel() {
@@ -163,8 +165,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
         mRealEstate = mRealEstateViewModel.getRealEstate();
-        //TODO: récuperer userID automatiquement en fonction de l'utilisateur connecté
-        mRealEstate.setUserId(1);
+        mRealEstate.setUserId(getIntent().getLongExtra("userId", 0));
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
         mRealEstate.setSurface(mSurfaceValue);
@@ -188,7 +189,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinnerValue = itemValue;
         mRealEstateViewModel.mSpinnerPos.set(itemPosition);
     }
-    //acces to gallery app
+    //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
         String fileId = DocumentsContract.getDocumentId(uri);
         String id = fileId.split(":")[1];
@@ -205,22 +206,20 @@ public class AddARealEstateActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    // --- UI
+    // -------- //
+    // ---UI--- //
+    // -------- //
 
     //load image into header with glide
-    private void configureImageHeader() {
-        Glide.with(this)
-                .load(getResources().getDrawable(R.drawable.gradient_bleu))
-                .centerCrop()
-                .into(mHeader);
-    }
-    //load image into header with glide
-    private void configureUserPhoto(@Nullable Object url) {
-        if (url == null) {
-            url = getResources().getDrawable(R.drawable.user);
+    private void configureUser() {
+        String username = getIntent().getStringExtra("username");
+        Object photoUrl = getIntent().getStringExtra("photoUrl");
+        mExplanationText.setText(getResources().getString((R.string.text_add_realestate), username));
+        if (photoUrl == null) {
+            photoUrl = getResources().getDrawable(R.drawable.user);
         }
         Glide.with(this)
-                .load(url)
+                .load(photoUrl)
                 .circleCrop()
                 .into(mUserPhoto);
     }
@@ -230,7 +229,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
-    // --- LISTENERS
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
 
     //listener on FAB for adding or updating real estate in database
     private void listenerOnFAB() {
@@ -336,7 +337,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mDescriptionValue = text.toString();
     }
 
-    // --- Utils
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());

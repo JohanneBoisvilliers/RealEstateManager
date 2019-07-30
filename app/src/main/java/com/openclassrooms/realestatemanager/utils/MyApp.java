@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.utils;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 public class MyApp extends Application {
 
@@ -10,8 +9,6 @@ public class MyApp extends Application {
     public static Application instance;
 
     public MyApp() {
-
-        Log.i("main", "Constructor fired");
     }
 
     @Override
@@ -23,8 +20,6 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-
-        Log.i("main", "onCreate fired");
     }
 
     public static Context getContext() {

@@ -38,9 +38,7 @@
         <activity android:name=".controllers.MainActivity"/>
         <activity android:name=".controllers.SearchRealEstateActivity" />
         <activity android:name=".login.SignInActivity"/>
-        <activity
-            android:name=".login.RegisterActivity"
-            android:noHistory="true" />
+        <activity android:name=".login.RegisterActivity" />
         <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

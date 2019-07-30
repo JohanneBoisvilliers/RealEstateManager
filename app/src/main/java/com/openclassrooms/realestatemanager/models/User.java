@@ -11,12 +11,14 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String mPhotoUrl;
 
-    public User(long id, String username, String password, String email) {
+    public User(long id, String username, String password, String email, String photoUrl) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.mPhotoUrl = photoUrl;
     }
 
     public User() {
@@ -34,6 +36,9 @@ public class User {
         return password;
     }
 
+    public String getPhotoUrl() {
+        return mPhotoUrl;
+    }
     public String getEmail() {
         return email;
     }
@@ -50,6 +55,9 @@ public class User {
         this.password = password;
     }
 
+    public void setPhotoUrl(String photoUrl) {
+        mPhotoUrl = photoUrl;
+    }
     public void setEmail(String email) {
         this.email = email;
     }

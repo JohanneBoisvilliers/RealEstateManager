@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,11 +19,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.facebook.stetho.Stetho;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.injections.Injections;
+import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.UserViewModel;
+import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
+import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.views.HeaderViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,12 +46,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
+    private User mCurrentUser;
+    private UserViewModel mUserViewModel;
+    private View mNavHeader;
+    private HeaderViewHolder mHeaderViewHolder;
 
     @Override
     protected void onStart() {
         super.onStart();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +62,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         Stetho.initializeWithDefaults(this);
+        this.configureViewModel();
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        this.configureNavHeader();
+        this.getCurrentUser(getUserIdFromIntent());
         this.requestWritePermission();
         if (savedInstanceState==null) {
             this.configureRealEstateListFragment();
         }
         this.configureRealEstateDetailsFragment();
-    }
-
-    private void configureToolbar(){
-        // Sets the Toolbar
-        setSupportActionBar(mToolbar);
     }
     @Override
     public void onBackPressed() {
@@ -73,6 +82,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         super.onBackPressed();
     }
+
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
+
+    //configure viewmodel for requests
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(this);
+        this.mUserViewModel =
+                ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+    }
+
+    //get user id from intent sent by sign in activity or register activity
+    private Long getUserIdFromIntent() {
+        Long userId = getIntent().getLongExtra("userId", 0);
+        return userId;
+    }
+
+    private void getCurrentUser(Long userId) {
+        mCurrentUser = new User();
+        this.mUserViewModel.getUser(userId).observe(this, this::updateUser);
+    }
+
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -119,9 +155,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
+
     private void startAddRealEstateActivity(){
         Intent intent = new Intent(this,AddARealEstateActivity.class);
+        intent.putExtra("userId", mCurrentUser.getId());
+        intent.putExtra("username", mCurrentUser.getUsername());
+        intent.putExtra("photoUrl", mCurrentUser.getPhotoUrl());
         startActivity(intent);
+    }
+
+    // -------- //
+    // ---UI--- //
+    // -------- //
+
+    private void configureToolbar() {
+        // Sets the Toolbar
+        setSupportActionBar(mToolbar);
     }
     //Configure Drawer Layout
     private void configureDrawerLayout(){
@@ -129,6 +182,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.secondaryTextColor));
         toggle.syncState();
+    }
+    //load image into header with glide
+    private void configureNavHeader() {
+        mNavHeader = mNavigationView.getHeaderView(0);
+        mHeaderViewHolder = new HeaderViewHolder(mNavHeader);
+        Utils.configureImageHeader(this, mHeaderViewHolder.getBackgroundHeader());
+        Utils.configureUserPhoto(null, getApplicationContext(), mHeaderViewHolder.getUserPhoto());
     }
     private void configureNavigationView(){
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -163,6 +223,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
         }
     }
+
+    //observe user logged in to configure navigation header
+    private void updateUser(User user) {
+        mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());
+        mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
+        Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
+        mCurrentUser.setId(user.getId());
+        mCurrentUser.setUsername(user.getUsername());
+        mCurrentUser.setPhotoUrl(user.getPhotoUrl());
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == WRITE_PERMISSION){

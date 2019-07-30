@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        //TODO gerer les permissions ici
         this.listenerForSignUpButton();
         this.listenerForSignInButton();
     }
@@ -38,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REGISTER_REQUEST) {
             if(resultCode == Activity.RESULT_OK){
+                Utils.showSnackBar(mCoordinator, getString(R.string.registration_success),
+                        BaseTransientBottomBar.LENGTH_LONG);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Utils.showSnackBar(mCoordinator, getString(R.string.cancel_registration),
@@ -45,6 +48,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    // --------------- //
+    // ---LISTENERS--- //
+    // --------------- //
 
     //launch activity to register a new user
     private void listenerForSignUpButton(){
@@ -66,6 +73,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    // ----------- //
+    // ---UTILS--- //
+    // ----------- //
 
     private void launchSignUpActivity(){
         startActivityForResult(new Intent(this,RegisterActivity.class),REGISTER_REQUEST);
