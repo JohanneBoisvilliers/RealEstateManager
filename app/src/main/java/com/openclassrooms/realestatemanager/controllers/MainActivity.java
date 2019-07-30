@@ -125,12 +125,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return Userid;
     }
 
+    public void clearUserConnected() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit().putLong("userId", 0).commit();
+    }
+
     // ---------------------------------- LISTENERS ----------------------------------
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        // 4 - Handle Navigation Item Click
         int id = item.getItemId();
 
         switch (id){
@@ -139,6 +143,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_around:
                 break;
             case R.id.activity_main_drawer_settings:
+                break;
+            case R.id.activity_main_drawer_disconnect:
+                this.clearUserConnected();
+                this.startLoginActivity();
                 break;
             default:
                 break;
@@ -182,6 +190,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intent.putExtra("username", mCurrentUser.getUsername());
         intent.putExtra("photoUrl", mCurrentUser.getPhotoUrl());
         startActivity(intent);
+    }
+
+    private void startLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     // ------------------------------------ UI ------------------------------------
