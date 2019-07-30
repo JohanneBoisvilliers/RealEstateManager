@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.models;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -11,6 +12,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    @ColumnInfo(name = "photo_url")
     private String mPhotoUrl;
 
     public User(long id, String username, String password, String email, String photoUrl) {

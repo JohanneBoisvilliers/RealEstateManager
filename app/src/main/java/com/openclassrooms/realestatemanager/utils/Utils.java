@@ -55,12 +55,17 @@ public class Utils {
             return Connectivity.isConnectedMobile(context) && Connectivity.isConnectedFast(context);
         }
     }
+
+
+    // -------- //
+    // ---UI--- //
+    // -------- //
+
     // Centralize creation of application's snackbars
     public static void showSnackBar(@NonNull View coordinator, String textToShow, int duration) {
         Snackbar snackbar = Snackbar.make(coordinator, textToShow, duration);
         snackbar.show();
     }
-
     //load background image into header with glide
     public static void configureImageHeader(Context context, ImageView view) {
         Glide.with(context)
@@ -68,7 +73,6 @@ public class Utils {
                 .centerCrop()
                 .into(view);
     }
-
     //load user's photo into header with glide
     public static void configureUserPhoto(@Nullable Object url, Context context, ImageView imageView) {
         if (url == null) {
@@ -78,6 +82,14 @@ public class Utils {
                 .load(url)
                 .circleCrop()
                 .into(imageView);
+    }
+
+    // ---------- //
+    // ---DATA--- //
+    // ---------- //
+
+    public static void getLastUserConnected() {
+
     }
 
 }

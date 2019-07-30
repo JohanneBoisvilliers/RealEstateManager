@@ -90,6 +90,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private int mSurfaceValue;
     private int mNumberOfRooms;
 
+    // -------------------------------- LIFE CYCLE --------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +153,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         }
     }
 
-    // ---------- //
-    // ---DATA--- //
-    // ---------- //
+    // ------------------------------------ DATA ------------------------------------
 
     //configure viewmodel to keep datas
     private void configureViewModel() {
@@ -206,9 +205,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    // -------- //
-    // ---UI--- //
-    // -------- //
+    // ------------------------------------ UI ------------------------------------
 
     //load image into header with glide
     private void configureUser() {
@@ -229,9 +226,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
-    // --------------- //
-    // ---LISTENERS--- //
-    // --------------- //
+    // ---------------------------------- LISTENERS ----------------------------------
 
     //listener on FAB for adding or updating real estate in database
     private void listenerOnFAB() {
@@ -242,12 +237,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     setRealEstateInfos();
                     setPhotoForRealEstate(mImageEncodedList);
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
+                    finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
                             getResources().getString(R.string.no_photo),
                             BaseTransientBottomBar.LENGTH_LONG);
                 }
-
             }
         });
     }
@@ -337,9 +332,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mDescriptionValue = text.toString();
     }
 
-    // ----------- //
-    // ---UTILS--- //
-    // ----------- //
+    /// ----------------------------------- UTILS -----------------------------------
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());

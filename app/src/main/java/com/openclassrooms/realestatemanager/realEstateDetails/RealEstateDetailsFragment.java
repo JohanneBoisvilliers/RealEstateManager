@@ -79,6 +79,8 @@ public class RealEstateDetailsFragment extends Fragment {
     public RealEstateDetailsFragment() {
     }
 
+    // -------------------------------- LIFE CYCLE --------------------------------
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,6 +100,11 @@ public class RealEstateDetailsFragment extends Fragment {
 
         return view;
     }
+
+
+    // ------------------------------------ UI ------------------------------------
+
+
     //configure viewpager which contain photos
     private void configureViewPager(){
         mPhotoViewPagerAdapter =new PhotoViewpagerAdapter(getChildFragmentManager(),mRealEstatePhotos);
@@ -113,6 +120,80 @@ public class RealEstateDetailsFragment extends Fragment {
         //Set layout manager to position the items
         this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
+
+    //show FAB menu
+    private void showFABMenu() {
+        isFABOpen = true;
+        mStatusFAB.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_55));
+        mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
+        mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
+    }
+
+    //hide FAB menu
+    private void closeFABMenu() {
+        isFABOpen = false;
+        mStatusFAB.animate().translationY(0);
+        mModifyEstate.animate().translationY(0);
+        mAddPhoto.animate().translationY(0);
+    }
+
+    //add a button to open description when it's longer than 3 lines
+    private void configureExpandDescription() {
+        mRealEstateDescription.post(new Runnable() {
+            @Override
+            public void run() {
+                mNumberOfLine = mRealEstateDescription.getLineCount();
+                if (mNumberOfLine >= 2) {
+                    mButtonMoreDescription.setVisibility(View.VISIBLE);
+                    mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mButtonMoreDescription.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
+                                mRealEstateDescription.setMaxLines(Integer.MAX_VALUE);
+                                mButtonMoreDescription.setText(getResources().getString(R.string.button_close));
+                            } else {
+                                mRealEstateDescription.setMaxLines(2);
+                                mButtonMoreDescription.setText(getResources().getString(R.string.button_more));
+                            }
+                        }
+                    });
+                } else {
+                    mButtonMoreDescription.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    //configure button to expand real estate location
+    private void configureExpandLocation() {
+        mButtonMoreLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mButtonMoreLocation.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
+                    mRealEstateLocation.setMaxLines(Integer.MAX_VALUE);
+                    mButtonMoreLocation.setText(getResources().getString(R.string.button_close));
+                } else {
+                    mRealEstateLocation.setMaxLines(1);
+                    mButtonMoreLocation.setText(getResources().getString(R.string.button_more));
+                }
+            }
+        });
+    }
+
+    //Hide or show sold out img depending sold state
+    private void setSoldState(RealEstate realEstate) {
+        if (mSoldOut != null) {
+            if (realEstate.getSold()) {
+                mSoldOut.setVisibility(View.VISIBLE);
+            } else {
+                mSoldOut.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    // ---------------------------------- LISTENERS ----------------------------------
+
     //set a click listener to open FAB menu
     private void configureFABMenu(){
         mMainFAB.setOnClickListener(new View.OnClickListener() {
@@ -140,20 +221,9 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
-    //show FAB menu
-    private void showFABMenu(){
-        isFABOpen=true;
-        mStatusFAB.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_55));
-        mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
-        mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
-    }
-    //hide FAB menu
-    private void closeFABMenu(){
-        isFABOpen=false;
-        mStatusFAB.animate().translationY(0);
-        mModifyEstate.animate().translationY(0);
-        mAddPhoto.animate().translationY(0);
-    }
+
+    // ------------------------------------ DATA ------------------------------------
+
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstateWithPhotos realEstate){
         if (realEstate!=null) {
@@ -174,13 +244,13 @@ public class RealEstateDetailsFragment extends Fragment {
     private void getRealEstatesPhotos(long realEstateId){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
     }
-    //notify adapter for the new list of photos
-    private void updateRealEstatePhotos(List<Photo> realEstatePhotos){
-        if (mRealEstateRecyclerView == null) {//one pane layout
-            mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
-        }else{//two panes layout
-            mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
-        }
+
+    // ----------------------------------- UTILS -----------------------------------
+
+    //configure viewmodel
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
     }
     //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
@@ -205,67 +275,14 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
-    //add a button to open description when it's longer than 3 lines
-    private void configureExpandDescription(){
-        mRealEstateDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                mNumberOfLine = mRealEstateDescription.getLineCount();
-                if (mNumberOfLine>=2){
-                    mButtonMoreDescription.setVisibility(View.VISIBLE);
-                    mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mButtonMoreDescription.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more)))
-                            {
-                                mRealEstateDescription.setMaxLines(Integer.MAX_VALUE);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_close));
-                            }
-                            else
-                            {
-                                mRealEstateDescription.setMaxLines(2);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_more));
-                            }
-                        }
-                    });
-                }else{
-                    mButtonMoreDescription.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-    }
-    //configure button to expand real estate location
-    private void configureExpandLocation(){
-        mButtonMoreLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (mButtonMoreLocation.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more)))
-                {
-                    mRealEstateLocation.setMaxLines(Integer.MAX_VALUE);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_close));
-                }
-                else
-                {
-                    mRealEstateLocation.setMaxLines(1);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_more));
-                }
-            }
-        });
-    }
-    //configure viewmodel
-    private void configureViewModel(){
-        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
-    }
-    //Hide or show sold out img depending sold state
-    private void setSoldState(RealEstate realEstate){
-        if (mSoldOut!=null) {
-            if (realEstate.getSold()) {
-                mSoldOut.setVisibility(View.VISIBLE);
-            }else{
-                mSoldOut.setVisibility(View.INVISIBLE);
-            }
+    //notify adapter for the new list of photos
+    private void updateRealEstatePhotos(List<Photo> realEstatePhotos) {
+        if (mRealEstateRecyclerView == null) {//one pane layout
+            mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
+        } else {//two panes layout
+            mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
         }
     }
+
 }

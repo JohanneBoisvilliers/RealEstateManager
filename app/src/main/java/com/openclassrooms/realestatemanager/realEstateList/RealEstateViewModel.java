@@ -10,6 +10,7 @@ import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
+import com.openclassrooms.realestatemanager.utils.NotificationsService;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -61,10 +62,15 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstateDataSource.getRealEstatesWithPhotos();
     }
 
+    public RealEstateWithPhotos getSpecificEstate(Long id) {
+        return mRealEstateDataSource.getSpecificRealEstate(id);
+    }
+
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
             realEstate.setId(mRealEstateId);
+            NotificationsService.sendNotification();
         });
     }
 
