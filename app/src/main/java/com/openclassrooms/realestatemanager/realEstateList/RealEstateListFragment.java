@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.realEstateList;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ public class RealEstateListFragment extends Fragment {
     private RealEstateAdapter mRealEstateAdapter;
     private List<RealEstateWithPhotos> mRealEstateList = new ArrayList<>();
     private RealEstateViewModel mRealEstateViewModel;
+    private Boolean isTrue = false;
     public static final String TAG = "DEBUG";
 
     public RealEstateListFragment() {}
@@ -66,6 +68,7 @@ public class RealEstateListFragment extends Fragment {
                         this.swapFragment();
                     }
                 });
+
     }
     //configure viewmodel for requests
     private void configureViewModel(){
@@ -75,6 +78,15 @@ public class RealEstateListFragment extends Fragment {
     //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
         this.mRealEstateAdapter.updateData(realEstateList);
+        View view = getActivity().findViewById(R.id.container_real_estate_detail);
+        if (view != null) {//two pane layout
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRealEstateRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
+                }
+            }, 0);
+        }
     }
     //request all real estates from database and put an observer to update list if there is any change
     private void getRealEstatesWithPhotos(){
@@ -88,5 +100,6 @@ public class RealEstateListFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
 
 }
