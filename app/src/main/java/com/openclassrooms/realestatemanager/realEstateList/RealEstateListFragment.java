@@ -93,8 +93,7 @@ public class RealEstateListFragment extends Fragment {
     //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
         this.mRealEstateAdapter.updateData(realEstateList);
-        //View view = getActivity().findViewById(R.id.container_real_estate_detail);
-        if (!isOnePaneLayout() && MyApp.isInit) {//tablet mode
+        if (!isOnePaneLayout() && !MyApp.isInit) {//tablet mode
             MyApp.isInit = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
