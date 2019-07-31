@@ -20,6 +20,11 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.type_cardview) TextView mRealEstateType;
     @BindView(R.id.price_cardview) TextView mRealEstatePrice;
     @Nullable
+    @BindView(R.id.fond_transparent)
+    ImageView mTransparentBackground;
+    @BindView(R.id.line_separator)
+    View mLineSeparator;
+    @Nullable
     @BindView(R.id.sold_out_bg) View mSoldOut;
 
     public RealEstateViewHolder(View itemView) {

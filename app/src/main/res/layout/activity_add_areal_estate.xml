@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spinner_margin_top"
                         android:background="@null"
-                        android:selectedItemPosition="@{viewmodel.mSpinnerPos}"
+                        android:selectedItemPosition="@{viewmodel.spinnerPos}"
                         android:spinnerMode="dialog"
                         android:textSize="@dimen/text_in_spinner" />
                 </LinearLayout>
@@ -136,7 +136,7 @@
                         android:hint="@string/hint_int"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:text="@{String.valueOf(viewmodel.mPrice)}"
+                        android:text="@{String.valueOf(viewmodel.price)}"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
                 <!--"button" surface-->
@@ -180,7 +180,7 @@
                         android:hint="@string/hint_int"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:text="@{String.valueOf(viewmodel.mSurface)}"
+                        android:text="@{String.valueOf(viewmodel.surface)}"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
                 <!--"button" Rooms-->
@@ -223,7 +223,7 @@
                         android:hint="@string/hint_int"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:text="@{String.valueOf(viewmodel.mRooms)}"
+                        android:text="@{String.valueOf(viewmodel.rooms)}"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
                 <!--"button" Location-->
@@ -295,7 +295,7 @@
                         android:layout_margin="@dimen/textview_margin"
                         android:gravity="center"
                         android:hint="@string/photo_from_device"
-                        android:text="@{viewmodel.mNumberOfPhoto}"
+                        android:text="@{viewmodel.numberOfPhoto}"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_info" />
 
@@ -369,7 +369,7 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_description"
                         android:maxLines="1"
-                        android:text="@{viewmodel.mDescription}"
+                        android:text="@{viewmodel.description}"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
 

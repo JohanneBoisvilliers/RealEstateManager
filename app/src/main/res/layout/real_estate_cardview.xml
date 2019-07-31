@@ -49,6 +49,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/type_line" />
         <View
+            android:id="@+id/line_separator"
             android:layout_width="@dimen/line_footer"
             android:layout_gravity="center_horizontal"
             android:layout_height="0.1dp"
