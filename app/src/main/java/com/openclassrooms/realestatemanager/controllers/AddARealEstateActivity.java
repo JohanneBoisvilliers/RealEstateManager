@@ -131,7 +131,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    mRealEstateViewModel.mNumberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
+                    mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                 } else {
                     Utils.showSnackBar(mCoordinator,
                             getString(R.string.snack_bar_no_photo),
@@ -186,7 +186,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //on spinner change, set the type of real estate with "mSpinnerValue" and add data in viewmodel to keep spinner position when user rotate the screen
     private void onSpinnerItemChanged(String itemValue, int itemPosition) {
         mSpinnerValue = itemValue;
-        mRealEstateViewModel.mSpinnerPos.set(itemPosition);
+        mRealEstateViewModel.spinnerPos.set(itemPosition);
     }
     //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
@@ -299,7 +299,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         if (text.length() < 1) {
             mPriceValue = 0;
         } else {
-            mRealEstateViewModel.mPrice.set(Integer.parseInt(text.toString()));
+            mRealEstateViewModel.price.set(Integer.parseInt(text.toString()));
             mPriceValue = Integer.parseInt(text.toString());
         }
     }
@@ -310,7 +310,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         if (text.length() < 1) {
             mNumberOfRooms = 0;
         } else {
-            mRealEstateViewModel.mRooms.set(Integer.parseInt(text.toString()));
+            mRealEstateViewModel.rooms.set(Integer.parseInt(text.toString()));
             mNumberOfRooms = Integer.parseInt(text.toString());
         }
     }
@@ -321,14 +321,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
         if (text.length() < 1) {
             mSurfaceValue = 0;
         } else {
-            mRealEstateViewModel.mSurface.set(Integer.parseInt(text.toString()));
+            mRealEstateViewModel.surface.set(Integer.parseInt(text.toString()));
             mSurfaceValue = Integer.parseInt(text.toString());
         }
     }
     //listener for description edit text, set description in viewmodel's datas
     @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void descriptionChanged(CharSequence text) {
-        mRealEstateViewModel.mDescription.set(text.toString());
+        mRealEstateViewModel.description.set(text.toString());
         mDescriptionValue = text.toString();
     }
 

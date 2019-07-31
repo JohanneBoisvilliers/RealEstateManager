@@ -24,12 +24,13 @@ public class RealEstateViewModel extends ViewModel {
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
     private RealEstate mRealEstate;
-    public final ObservableField<Integer> mPrice = new ObservableField<>();
-    public final ObservableField<Integer> mRooms = new ObservableField<>();
-    public final ObservableField<Integer> mSpinnerPos = new ObservableField<>();
-    public final ObservableField<Integer> mSurface = new ObservableField<>();
-    public final ObservableField<String> mDescription = new ObservableField<>();
-    public final ObservableField<String> mNumberOfPhoto = new ObservableField<>();
+    public final ObservableField<Integer> price = new ObservableField<>();
+    public final ObservableField<Integer> rooms = new ObservableField<>();
+    public final ObservableField<Integer> spinnerPos = new ObservableField<>();
+    public final ObservableField<Integer> surface = new ObservableField<>();
+    public final ObservableField<Integer> selectedItemPos = new ObservableField<>();
+    public final ObservableField<String> description = new ObservableField<>();
+    public final ObservableField<String> numberOfPhoto = new ObservableField<>();
     private long mRealEstateId;
 
 

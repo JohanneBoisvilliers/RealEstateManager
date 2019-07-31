@@ -24,7 +24,6 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
-import com.openclassrooms.realestatemanager.utils.MyApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +119,6 @@ public class RealEstateDetailsFragment extends Fragment {
         //Set layout manager to position the items
         this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
-
     //show FAB menu
     private void showFABMenu() {
         isFABOpen = true;
@@ -128,7 +126,6 @@ public class RealEstateDetailsFragment extends Fragment {
         mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
         mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
     }
-
     //hide FAB menu
     private void closeFABMenu() {
         isFABOpen = false;
@@ -136,7 +133,6 @@ public class RealEstateDetailsFragment extends Fragment {
         mModifyEstate.animate().translationY(0);
         mAddPhoto.animate().translationY(0);
     }
-
     //add a button to open description when it's longer than 3 lines
     private void configureExpandDescription() {
         mRealEstateDescription.post(new Runnable() {
@@ -163,7 +159,6 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
-
     //configure button to expand real estate location
     private void configureExpandLocation() {
         mButtonMoreLocation.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +175,6 @@ public class RealEstateDetailsFragment extends Fragment {
             }
         });
     }
-
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate) {
         if (mSoldOut != null) {
@@ -257,18 +251,18 @@ public class RealEstateDetailsFragment extends Fragment {
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView != null){//two panes layout
             isTwoPanesLayout = true;
-            if (!MyApp.isInit) {
-                mBackgroundWhenStarting.setVisibility(View.VISIBLE);
-                mEntireView.setVisibility(View.INVISIBLE);
-            }
+            //if (!MyApp.isInit) {
+            //    mBackgroundWhenStarting.setVisibility(View.VISIBLE);
+            //    mEntireView.setVisibility(View.INVISIBLE);
+            //}
         }
         mRealEstateViewModel.getSelected().observe(this, item -> {
             mRealEstate = item;
-            MyApp.isInit=true;
-            if(mRealEstateRecyclerView != null){
-                mBackgroundWhenStarting.setVisibility(View.GONE);
-                mEntireView.setVisibility(View.VISIBLE);
-            }
+            //MyApp.isInit=true;
+            //if(mRealEstateRecyclerView != null){
+            //    mBackgroundWhenStarting.setVisibility(View.GONE);
+            //    mEntireView.setVisibility(View.VISIBLE);
+            //}
 
             if (mRealEstate!=null) {
                 configureDetails(mRealEstate);

@@ -12,5 +12,8 @@
     <item
         android:id="@+id/activity_main_drawer_settings"
         android:title="@string/settings" />
+    <item
+        android:id="@+id/activity_main_drawer_disconnect"
+        android:title="@string/disconnect" />
 
 </menu>

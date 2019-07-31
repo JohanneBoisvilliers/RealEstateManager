@@ -1,38 +1,41 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
-import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
+import com.openclassrooms.realestatemanager.utils.MyApp;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static android.content.Context.POWER_SERVICE;
-import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
 
     private List<RealEstateWithPhotos> mRealEstateList;
+    public static final int DARK_COLOR =
+            MyApp.getContext().getResources().getColor(R.color.colorPrimaryDark);
+    public static final int LIGHT_COLOR =
+            MyApp.getContext().getResources().getColor(R.color.primaryTextColor);
+    private RealEstateViewModel mRealEstateViewModel;
+    private Boolean isOnePaneLayout;
     public final String TAG = "DEBUG";
+    private int mSelectedItem;
+    private Context mContext;
 
-    public RealEstateAdapter(List<RealEstateWithPhotos> mRealEstateList) {
+    public RealEstateAdapter(List<RealEstateWithPhotos> mRealEstateList, Boolean oneOrTwoPanes,
+                             Context context) {
         this.mRealEstateList = mRealEstateList;
+        this.mSelectedItem = 0;
+        this.isOnePaneLayout = oneOrTwoPanes;
+        this.mContext = context;
+        this.configureViewModel();
     }
 
     @Override
@@ -48,6 +51,16 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     @Override
     public void onBindViewHolder(RealEstateViewHolder holder, int position) {
         holder.updateRealEstateCardView(mRealEstateList.get(position));
+        if (mRealEstateViewModel.selectedItemPos.get() != null) {
+            mSelectedItem = mRealEstateViewModel.selectedItemPos.get();
+        }
+        if (!isOnePaneLayout) {
+            if (mSelectedItem == position) {
+                this.setColorOfSelectedItem(holder, DARK_COLOR, LIGHT_COLOR);
+            } else {
+                this.setColorOfSelectedItem(holder, LIGHT_COLOR, DARK_COLOR);
+            }
+        }
     }
 
     @Override
@@ -64,5 +77,31 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         this.mRealEstateList.addAll(realEstateList);
 
         this.notifyDataSetChanged();
+    }
+
+    //configure viewmodel for requests
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(mContext);
+        this.mRealEstateViewModel =
+                ViewModelProviders.of((FragmentActivity) mContext, mViewModelFactory).get(RealEstateViewModel.class);
+    }
+
+    // ------------------------------------ UI ------------------------------------
+
+    //keep in memory the position of the selected item
+    public void selectedListItem(int pos) {
+        int previousItem = mSelectedItem;
+        mSelectedItem = pos;
+
+        notifyItemChanged(previousItem);
+        notifyItemChanged(pos);
+    }
+
+    private void setColorOfSelectedItem(RealEstateViewHolder holder, int backgroundColor,
+                                        int colorAccent) {
+        holder.mTransparentBackground.setBackgroundColor(backgroundColor);
+        holder.mRealEstateType.setTextColor(colorAccent);
+        holder.mLineSeparator.setBackgroundColor(colorAccent);
+        holder.mRealEstatePrice.setTextColor(colorAccent);
     }
 }
