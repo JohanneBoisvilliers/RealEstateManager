@@ -4,7 +4,8 @@
         android:defaultValue="1"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues"
-        android:key="downloadType"
-        android:summary="Select change for real estate (Dollars or Euros)"
-        android:title="Current change" />
+        android:key="currency"
+        android:persistent="true"
+        android:summary="Select currency for real estate (Dollars or Euros)"
+        android:title="Current currency" />
 </PreferenceScreen>

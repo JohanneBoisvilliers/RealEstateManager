@@ -38,6 +38,20 @@ public class RealEstateListFragment extends Fragment {
 
     public RealEstateListFragment() {}
 
+    // -------------------------------- LIFE CYCLE --------------------------------
+
+
+    @Override
+    public void onStart() {
+        mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
+        super.onStart();
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

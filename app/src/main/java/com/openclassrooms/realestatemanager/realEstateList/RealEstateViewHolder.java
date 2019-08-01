@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,8 +40,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
         }
         this.mRealEstateType.setText(realEstate.getRealEstate().getCategory());
         this.mRealEstatePrice.setText(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price),
-                        realEstate.getRealEstate().getPrice(),
-                        mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro))));
+                realEstate.getRealEstate().getPrice(), this.checkCurrency()));
         if (realEstate.getRealEstate().getSold()) {
             mSoldOut.setVisibility(View.VISIBLE);
         }else{
@@ -52,6 +53,16 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
             return BitmapFactory.decodeFile(realEstate.getPhotoList().get(0).getUrl());
         }else{
             return null;
+        }
+    }
+
+    private String checkCurrency() {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
+        if (pref.getString("realEstateCurrency", "Dollars").equals("Euros")) {
+            return mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro));
+        } else {
+            return mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_dollar));
         }
     }
 
