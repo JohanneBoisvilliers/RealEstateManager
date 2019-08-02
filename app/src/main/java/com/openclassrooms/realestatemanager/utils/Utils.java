@@ -56,10 +56,7 @@ public class Utils {
         }
     }
 
-
-    // -------- //
-    // ---UI--- //
-    // -------- //
+    // ------------------------------------ UI ------------------------------------
 
     // Centralize creation of application's snackbars
     public static void showSnackBar(@NonNull View coordinator, String textToShow, int duration) {
@@ -82,14 +79,6 @@ public class Utils {
                 .load(url)
                 .circleCrop()
                 .into(imageView);
-    }
-
-    // ---------- //
-    // ---DATA--- //
-    // ---------- //
-
-    public static void getLastUserConnected() {
-
     }
 
 }

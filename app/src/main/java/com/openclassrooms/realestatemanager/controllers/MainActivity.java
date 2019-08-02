@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_around:
                 break;
             case R.id.activity_main_drawer_settings:
+                this.startPreferencesActivity();
                 break;
             case R.id.activity_main_drawer_disconnect:
                 this.clearUserConnected();
@@ -194,6 +195,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    private void startPreferencesActivity() {
+        startActivity(new Intent(this,
+                PreferencesActivity.class));
     }
 
     // ------------------------------------ UI ------------------------------------

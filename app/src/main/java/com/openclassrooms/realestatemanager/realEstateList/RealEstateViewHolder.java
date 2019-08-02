@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
+import com.openclassrooms.realestatemanager.utils.getPrice;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RealEstateViewHolder extends RecyclerView.ViewHolder {
+public class RealEstateViewHolder extends RecyclerView.ViewHolder implements getPrice {
 
     @BindView(R.id.image_cardview) ImageView mRealEstatePhoto;
     @BindView(R.id.type_cardview) TextView mRealEstateType;
@@ -37,9 +38,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
             this.mRealEstatePhoto.setImageBitmap(getPhotoFromUri(realEstate));
         }
         this.mRealEstateType.setText(realEstate.getRealEstate().getCategory());
-        this.mRealEstatePrice.setText(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price),
-                        realEstate.getRealEstate().getPrice(),
-                        mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro))));
+        setRealEstatePrice(realEstate, mRealEstatePrice);
         if (realEstate.getRealEstate().getSold()) {
             mSoldOut.setVisibility(View.VISIBLE);
         }else{
@@ -54,5 +53,4 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
             return null;
         }
     }
-
 }
