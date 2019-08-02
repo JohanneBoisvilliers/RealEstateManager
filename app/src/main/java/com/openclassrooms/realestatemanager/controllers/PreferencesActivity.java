@@ -19,34 +19,15 @@ public class PreferencesActivity extends PreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
+    public static class MyPreferenceFragment extends PreferenceFragment {
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(MyApp.getContext());
-
-        //@Override
-        //public void onResume() {
-        //    super.onResume();
-        //    for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); ++i) {
-        //        Preference preference = getPreferenceScreen().getPreference(i);
-        //        if (preference instanceof PreferenceGroup) {
-        //            PreferenceGroup preferenceGroup = (PreferenceGroup) preference;
-        //            for (int j = 0; j < preferenceGroup.getPreferenceCount(); ++j) {
-        //                Preference singlePref = preferenceGroup.getPreference(j);
-        //                getValueForCurrency(singlePref);
-        //            }
-        //        } else {
-        //            getValueForCurrency(preference);
-        //        }
-        //    }
-        //}
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-            //getPreferenceScreen().getSharedPreferences()
-            // .registerOnSharedPreferenceChangeListener(this);
             ListPreference listPreference = (ListPreference) findPreference("currency");
             listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -60,19 +41,9 @@ public class PreferencesActivity extends PreferenceActivity {
 
         }
 
-//        @Override
-//        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//            if (key.equals("realEstateCurrency")) {
-//                return;
-//            }else{
-//                this.getValueForCurrency(findPreference(key));
-//            }
-//        }
-
         private void getValueForCurrency(String newValue) {
-            CharSequence realEstateCurrencyChosen = newValue;
             String currency;
-            if (realEstateCurrencyChosen.equals("1")) {
+            if (((CharSequence) newValue).equals("1")) {
                 currency = "Dollars";
             } else {
                 currency = "Euros";

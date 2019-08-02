@@ -119,6 +119,22 @@ public class RealEstateDetailsFragment extends Fragment {
         //Set layout manager to position the items
         this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
+
+    //get RealEstate from Activity and configure view details in fragment
+    private void configureDetails(RealEstateWithPhotos realEstate) {
+        if (realEstate != null) {
+            this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
+            mRealEstate = realEstate;
+            updateRealEstatePhotos(mRealEstatePhotos);
+            mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
+            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price), realEstate.getRealEstate().getPrice(), getResources().getString((R.string.real_estate_price_euro))));
+            mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
+            mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
+            mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
+            mInformationRoom.setText(getResources().getString((R.string.real_estate_room), realEstate.getRealEstate().getNbreOfRoom()));
+            this.setSoldState(realEstate.getRealEstate());
+        }
+    }
     //show FAB menu
     private void showFABMenu() {
         isFABOpen = true;
@@ -218,22 +234,6 @@ public class RealEstateDetailsFragment extends Fragment {
 
     // ------------------------------------ DATA ------------------------------------
 
-    //get RealEstate from Activity and configure view details in fragment
-    private void configureDetails(RealEstateWithPhotos realEstate){
-        if (realEstate!=null) {
-            this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
-            mRealEstate = realEstate;
-            updateRealEstatePhotos(mRealEstatePhotos);
-            mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
-            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price),realEstate.getRealEstate().getPrice(),getResources().getString((R.string.real_estate_price_euro))));
-            mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
-            mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
-            mInformationSurface.setText(getResources().getString((R.string.real_estate_surface),realEstate.getRealEstate().getSurface()));
-            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),realEstate.getRealEstate().getNbreOfRoom()));
-            this.setSoldState(realEstate.getRealEstate());
-        }
-
-    }
     //request photo for a specific real estate and put an observer to update photos
     private void getRealEstatesPhotos(long realEstateId){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
@@ -251,19 +251,9 @@ public class RealEstateDetailsFragment extends Fragment {
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView != null){//two panes layout
             isTwoPanesLayout = true;
-            //if (!MyApp.isInit) {
-            //    mBackgroundWhenStarting.setVisibility(View.VISIBLE);
-            //    mEntireView.setVisibility(View.INVISIBLE);
-            //}
         }
         mRealEstateViewModel.getSelected().observe(this, item -> {
             mRealEstate = item;
-            //MyApp.isInit=true;
-            //if(mRealEstateRecyclerView != null){
-            //    mBackgroundWhenStarting.setVisibility(View.GONE);
-            //    mEntireView.setVisibility(View.VISIBLE);
-            //}
-
             if (mRealEstate!=null) {
                 configureDetails(mRealEstate);
             }
