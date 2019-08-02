@@ -53,37 +53,4 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements get
             return null;
         }
     }
-
-/*    //check in shared preferences if user want to see real estate price in dollars or euros
-    private String checkCurrency() {
-        SharedPreferences pref =
-                PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
-        if (pref.getString("realEstateCurrency", "Dollars").equals("Euros")) {
-            return mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro));
-        } else {
-            return mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_dollar));
-        }
-    }
-
-    private int convertPrice(int actualPrice) {
-        if (checkCurrency().equals(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro)))) {
-            return Utils.convertEuroToDollars(actualPrice);
-        } else {
-            return Utils.convertDollarToEuro(actualPrice);
-        }
-    }
-
-    private void setRealEstatePrice(RealEstateWithPhotos realEstateWithPhotos) {
-        this.mRealEstatePrice.setText(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price),
-                this.getPriceDependingCurrencyChosen(realEstateWithPhotos),
-                this.checkCurrency()));
-    }
-
-    private int getPriceDependingCurrencyChosen(RealEstateWithPhotos realEstateWithPhotos) {
-        if (checkCurrency().equals(mRealEstatePrice.getContext().getResources().getString((R.string.real_estate_price_euro)))) {
-            return convertPrice(realEstateWithPhotos.getRealEstate().getPrice());
-        } else {
-            return realEstateWithPhotos.getRealEstate().getPrice();
-        }
-    }*/
 }

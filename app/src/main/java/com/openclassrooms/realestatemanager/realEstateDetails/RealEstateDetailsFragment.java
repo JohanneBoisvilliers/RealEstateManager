@@ -101,9 +101,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         return view;
     }
 
-
     // ------------------------------------ UI ------------------------------------
-
 
     //configure viewpager which contain photos
     private void configureViewPager(){
@@ -120,7 +118,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         //Set layout manager to position the items
         this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
-
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstateWithPhotos realEstate) {
         if (realEstate != null) {
@@ -260,7 +257,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             }
         });
     }
-
     //notify adapter for the new list of photos
     private void updateRealEstatePhotos(List<Photo> realEstatePhotos) {
         if (mRealEstateRecyclerView == null) {//one pane layout
