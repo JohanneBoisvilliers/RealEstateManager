@@ -24,11 +24,11 @@ public class Utils {
      * @return
      */
     public static int convertDollarToEuro(int dollars){
-        return (int) Math.round(dollars * 0.9);
+        return (int) Math.round(dollars * 0.89);
     }
 
     public static int convertEuroToDollars(int euros){
-        return (int) Math.round(euros * 1.11);
+        return (int) Math.round(euros * 1.12);
     }
 
     /**
@@ -56,10 +56,7 @@ public class Utils {
         }
     }
 
-
-    // -------- //
-    // ---UI--- //
-    // -------- //
+    // ------------------------------------ UI ------------------------------------
 
     // Centralize creation of application's snackbars
     public static void showSnackBar(@NonNull View coordinator, String textToShow, int duration) {
@@ -82,14 +79,6 @@ public class Utils {
                 .load(url)
                 .circleCrop()
                 .into(imageView);
-    }
-
-    // ---------- //
-    // ---DATA--- //
-    // ---------- //
-
-    public static void getLastUserConnected() {
-
     }
 
 }

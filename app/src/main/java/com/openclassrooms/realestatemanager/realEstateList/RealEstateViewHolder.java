@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,12 +10,12 @@ import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
-import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.utils.getPrice;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RealEstateViewHolder extends RecyclerView.ViewHolder {
+public class RealEstateViewHolder extends RecyclerView.ViewHolder implements getPrice {
 
     @BindView(R.id.image_cardview) ImageView mRealEstatePhoto;
     @BindView(R.id.type_cardview) TextView mRealEstateType;
@@ -40,7 +38,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
             this.mRealEstatePhoto.setImageBitmap(getPhotoFromUri(realEstate));
         }
         this.mRealEstateType.setText(realEstate.getRealEstate().getCategory());
-        this.setRealEstatePrice(realEstate);
+        setRealEstatePrice(realEstate, mRealEstatePrice);
         if (realEstate.getRealEstate().getSold()) {
             mSoldOut.setVisibility(View.VISIBLE);
         }else{
@@ -56,7 +54,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    //check in shared preferences if user want to see real estate price in dollars or euros
+/*    //check in shared preferences if user want to see real estate price in dollars or euros
     private String checkCurrency() {
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
@@ -87,5 +85,5 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder {
         } else {
             return realEstateWithPhotos.getRealEstate().getPrice();
         }
-    }
+    }*/
 }

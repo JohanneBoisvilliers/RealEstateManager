@@ -24,6 +24,7 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.getPrice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RealEstateDetailsFragment extends Fragment {
+public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     @BindView(R.id.real_estate_category) TextView mRealEstateCategory;
     @BindView(R.id.real_estate_price) TextView mRealEstatePrice;
@@ -127,7 +128,7 @@ public class RealEstateDetailsFragment extends Fragment {
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
-            mRealEstatePrice.setText(getResources().getString((R.string.real_estate_price), realEstate.getRealEstate().getPrice(), getResources().getString((R.string.real_estate_price_euro))));
+            setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
             mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
