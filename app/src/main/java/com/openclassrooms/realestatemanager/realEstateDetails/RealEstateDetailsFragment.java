@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.Photo;
@@ -94,6 +96,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         }else{
             this.configureViewPager();
             this.configureFABMenu();
+            this.configureModifyButton();
         }
         this.configureExpandDescription();
         this.configureExpandLocation();
@@ -226,6 +229,15 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
                 mRealEstate.getRealEstate().setSold(isSold);
                 mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
                 setSoldState(mRealEstate.getRealEstate());
+            }
+        });
+    }
+
+    private void configureModifyButton() {
+        mModifyEstate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AddARealEstateActivity.class));
             }
         });
     }
