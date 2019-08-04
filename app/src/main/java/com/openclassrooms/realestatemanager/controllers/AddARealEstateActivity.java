@@ -36,6 +36,7 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.File;
@@ -196,7 +197,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         if (!(mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment"))) {
             mRealEstate = mRealEstateViewModel.getRealEstate();
         }
-        mRealEstate.setUserId(getIntent().getLongExtra("userId", 0));
+        mRealEstate.setUserId(SingletonSession.Instance().getUser().getId());
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
         mRealEstate.setSurface(mSurfaceValue);
@@ -241,11 +242,15 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     //load image into header with glide
     private void configureUser() {
-        String username = getIntent().getStringExtra("username");
-        Object photoUrl = getIntent().getStringExtra("photoUrl");
-        mExplanationText.setText(getResources().getString((R.string.text_add_realestate), username));
-        if (photoUrl == null) {
+        //String username = getIntent().getStringExtra("username");
+        //Object photoUrl = getIntent().getStringExtra("photoUrl");
+        Object photoUrl;
+        mExplanationText.setText(getResources().getString((R.string.text_add_realestate),
+                SingletonSession.Instance().getUser().getUsername()));
+        if (SingletonSession.Instance().getUser().getPhotoUrl() == null) {
             photoUrl = getResources().getDrawable(R.drawable.user);
+        } else {
+            photoUrl = SingletonSession.Instance().getUser().getPhotoUrl();
         }
         Glide.with(this)
                 .load(photoUrl)

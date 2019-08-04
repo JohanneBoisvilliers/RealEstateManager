@@ -57,9 +57,8 @@
     <string name="number_of_photo">%s photo(s) picked</string>
     <string name="no_photo">You\'ve didn\'t take photo</string>
     <string name="conditions">At least one photo and a description needed</string>
-    <string name="text_add_realestate">welcome %s ! You can add a new real estate in database by
-        choosing at least one photo and a description. You can modify all informations later
-        .</string>
+    <string name="text_add_realestate">Welcome %s ! You can add or modify a real estate in
+        database by choosing at least one photo and a description.</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="sign_up">SIGNUP</string>

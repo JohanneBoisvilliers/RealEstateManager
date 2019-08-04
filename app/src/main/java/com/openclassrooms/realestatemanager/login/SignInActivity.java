@@ -105,4 +105,5 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putLong("userId", requestResult).commit();
     }
+
 }
