@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableField;
+import android.util.Log;
 
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -14,6 +15,8 @@ import com.openclassrooms.realestatemanager.utils.NotificationsService;
 
 import java.util.List;
 import java.util.concurrent.Executor;
+
+import static com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment.TAG;
 
 public class RealEstateViewModel extends ViewModel {
 
@@ -63,14 +66,14 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstateDataSource.getRealEstatesWithPhotos();
     }
 
-    public RealEstateWithPhotos getSpecificEstate(Long id) {
+    public LiveData<RealEstateWithPhotos> getSpecificEstate(Long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
     }
 
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
-            realEstate.setId(mRealEstateId);
+            //realEstate.setId(mRealEstateId);
             NotificationsService.sendNotification();
         });
     }
@@ -106,8 +109,10 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
+            Log.d(TAG, "insertOrUpdate: create");
             createItem(realEstate);
         } else {
+            Log.d(TAG, "insertOrUpdate: update, new price :" + realEstate.getPrice());
             updateItem(realEstate);
         }
         executor.execute(() -> {
@@ -120,4 +125,7 @@ public class RealEstateViewModel extends ViewModel {
         });
     }
 
+    public void setRealEstateId(long realEstateId) {
+        mRealEstateId = realEstateId;
+    }
 }

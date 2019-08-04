@@ -34,6 +34,7 @@ import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
@@ -62,6 +63,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
     EditText mSurfaceEditText;
     @BindView(R.id.rooms_edittext)
     EditText mRoomsEditText;
+    @BindView(R.id.address_editText)
+    EditText mAddressEditText;
+    @BindView(R.id.number_of_photo_picked)
+    TextView mNumberOfPhoto;
+    @BindView(R.id.description_edittext)
+    EditText mDescriptionEditText;
     @BindView(R.id.spinner_realestate_type)
     Spinner mSpinner;
     @BindView(R.id.image_header)
@@ -83,9 +90,11 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private Photo[] mFinalPhotoList;
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
+    private RealEstateWithPhotos mRealEstateWithPhotos;
     private String mSpinnerValue;
     private String mDescriptionValue;
     private String mImageFilePath;
+    private String mComeFrom;
     private int mPriceValue;
     private int mSurfaceValue;
     private int mNumberOfRooms;
@@ -102,12 +111,33 @@ public class AddARealEstateActivity extends AppCompatActivity {
         binding.setViewmodel(mRealEstateViewModel);
 
         Utils.configureImageHeader(this, mHeader);
+
         this.configureUser();
         this.configureTypeSpinner();
         this.getSpinnerInfo();
         this.listenerOnFAB();
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
+        this.mComeFrom = getIntent().getStringExtra("comefrom");
+        if (mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")) {
+            this.mRealEstateViewModel.getSpecificEstate(getIntent().getLongExtra("realEstateId",
+                    0)).observe(this, item -> {
+                mRealEstateWithPhotos = item;
+                mRealEstate = item.getRealEstate();
+                mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                mImageEncodedList = new ArrayList<>();
+                for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
+                    mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                }
+                mPriceEditText.setText(String.valueOf(mRealEstateWithPhotos.getRealEstate().getPrice()));
+                mSurfaceEditText.setText((String.valueOf(mRealEstateWithPhotos.getRealEstate().getSurface())));
+                mRoomsEditText.setText(String.valueOf(mRealEstateWithPhotos.getRealEstate().getNbreOfRoom()));
+                mAddressEditText.setText(String.valueOf(mRealEstateWithPhotos.getRealEstate().getAddress()));
+                mNumberOfPhoto.setText(getResources().getString((R.string.number_of_photo),
+                        String.valueOf(mRealEstateWithPhotos.getPhotoList().size())));
+                mDescriptionEditText.setText(String.valueOf(mRealEstateWithPhotos.getRealEstate().getDescription()));
+            });
+        }
     }
 
     @Override
@@ -163,7 +193,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
-        mRealEstate = mRealEstateViewModel.getRealEstate();
+        if (!(mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment"))) {
+            mRealEstate = mRealEstateViewModel.getRealEstate();
+        }
         mRealEstate.setUserId(getIntent().getLongExtra("userId", 0));
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
@@ -234,12 +266,13 @@ public class AddARealEstateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInfos()) {
-                    setRealEstateInfos();
                     setPhotoForRealEstate(mImageEncodedList);
+                    setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
                     finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
+                            //TODO modifier phrase de contrainte
                             getResources().getString(R.string.no_photo),
                             BaseTransientBottomBar.LENGTH_LONG);
                 }

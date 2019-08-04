@@ -234,11 +234,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     }
 
     private void configureModifyButton() {
-        mModifyEstate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddARealEstateActivity.class));
-            }
+        mModifyEstate.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
+            intent.putExtra("comefrom", getClass().getSimpleName());
+            intent.putExtra("realEstateId", mRealEstate.getRealEstate().getId());
+            startActivity(intent);
         });
     }
 

@@ -93,12 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (checkLastUser() != 0) {
             return checkLastUser();
         } else {
-            // TODO a tester une fois la fonction deconnexion implémentée
             startActivity(new Intent(this, LoginActivity.class));
-            return 0L;//getIntent().getLongExtra("userId", 0);
+            return 0L;
         }
     }
-
     //get user logged to set infos in different place of application
     private void getCurrentUser(Long userId) {
         mCurrentUser = new User();
@@ -260,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mCurrentUser.setId(user.getId());
         mCurrentUser.setUsername(user.getUsername());
         mCurrentUser.setPhotoUrl(user.getPhotoUrl());
+
     }
 
     @Override
