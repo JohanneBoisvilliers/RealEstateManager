@@ -260,8 +260,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_location"
+                        android:text="@{String.valueOf(viewmodel.address)}"
                         android:maxLines="1"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
@@ -367,6 +369,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_description"
                         android:maxLines="1"

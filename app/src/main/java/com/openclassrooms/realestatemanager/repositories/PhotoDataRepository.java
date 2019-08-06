@@ -24,4 +24,8 @@ public class PhotoDataRepository {
     public void createPhotos(Photo[] photoList) {
         mPhotoDao.insertPhotos(photoList);
     }
+
+    public void deleteAllPhotos(long realEstateId) {
+        mPhotoDao.deleteAllPhotos(realEstateId);
+    }
 }

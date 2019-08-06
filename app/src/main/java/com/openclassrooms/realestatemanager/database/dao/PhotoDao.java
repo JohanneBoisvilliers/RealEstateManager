@@ -17,4 +17,7 @@ public interface PhotoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPhotos(Photo... photos);
+
+    @Query("DELETE FROM Photo WHERE realEstateId =:realEstateId")
+    void deleteAllPhotos(long realEstateId);
 }

@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableField;
-import android.util.Log;
 
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -16,7 +15,9 @@ import com.openclassrooms.realestatemanager.utils.NotificationsService;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import static com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment.TAG;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class RealEstateViewModel extends ViewModel {
 
@@ -34,6 +35,7 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<Integer> selectedItemPos = new ObservableField<>();
     public final ObservableField<String> description = new ObservableField<>();
     public final ObservableField<String> numberOfPhoto = new ObservableField<>();
+    public final ObservableField<String> address = new ObservableField<>();
     private long mRealEstateId;
 
 
@@ -98,6 +100,27 @@ public class RealEstateViewModel extends ViewModel {
         });
     }
 
+    public void deleteAllPhotos(long realEstateId) {
+        executor.execute(() -> mPhotoDataSource.deleteAllPhotos(realEstateId));
+    }
+
+    public void updatePhotos(long realEstateId, Photo[] photos) {
+        Completable deleteAllCompletable = Completable.fromAction(() -> deleteAllPhotos(realEstateId));
+        Completable setPhotosId = Completable.fromAction(() -> {
+            for (Photo listOfPhoto : photos) {
+                listOfPhoto.setRealEstateId(mRealEstateId);
+            }
+        });
+        Completable insertUserCompletable = Completable.fromAction(() -> insertPhotos(photos));
+
+        deleteAllCompletable
+                .andThen(setPhotosId)
+                .andThen(insertUserCompletable)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.single())
+                .subscribe();
+    }
+
     // -------------
     // FOR ADD OR MODIFY REAL ESTATE
     // -------------
@@ -109,20 +132,19 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
-            Log.d(TAG, "insertOrUpdate: create");
             createItem(realEstate);
+            executor.execute(() -> {
+                for (Photo listOfPhoto : listOfPhotos) {
+                    listOfPhoto.setRealEstateId(mRealEstateId);
+                }
+            });
+            executor.execute(() -> {
+                insertPhotos(listOfPhotos);
+            });
         } else {
-            Log.d(TAG, "insertOrUpdate: update, new price :" + realEstate.getPrice());
             updateItem(realEstate);
+            updatePhotos(mRealEstateId, listOfPhotos);
         }
-        executor.execute(() -> {
-            for (Photo listOfPhoto : listOfPhotos) {
-                listOfPhoto.setRealEstateId(mRealEstateId);
-            }
-        });
-        executor.execute(() -> {
-            insertPhotos(listOfPhotos);
-        });
     }
 
     public void setRealEstateId(long realEstateId) {

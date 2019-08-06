@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,6 @@ public class RealEstateListFragment extends Fragment {
     @Override
     public void onStart() {
         mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
-        //this.getBundleForPerformClick();
         super.onStart();
     }
 
@@ -127,7 +125,6 @@ public class RealEstateListFragment extends Fragment {
                     .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
-                            Log.d(TAG, "onGlobalLayout: " + getPositionOfRealEstate(getArguments().getLong("realEstateIdModified")));
                             mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdModified"))).itemView.performClick();
                             getArguments().clear();
                             mRealEstateRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);

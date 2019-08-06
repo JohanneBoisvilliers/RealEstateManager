@@ -83,6 +83,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

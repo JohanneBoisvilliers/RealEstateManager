@@ -2,14 +2,7 @@ package com.openclassrooms.realestatemanager.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
@@ -26,7 +19,7 @@ public class RealEstate {
     private int surface;
     private int nbreOfRoom;
     private String description;
-    @Ignore private String address;
+    private String address;
 
     public RealEstate() {
     }

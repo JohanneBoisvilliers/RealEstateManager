@@ -61,11 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart: ");
-        if (getIntent().getStringExtra("comeFrom") != null && getIntent().getStringExtra("comeFrom").equals(
-                "AddARealEstateActivity")) {
+        if (getIntent().getStringExtra("comeFrom") != null && getIntent().getStringExtra("comeFrom").equals("AddARealEstateActivity")) {
             mBundle = new Bundle();
             mBundle.putLong("realEstateIdModified", getIntent().getLongExtra("realEstateModifyID", 0));
-            mRealEstateListFragment.setArguments(mBundle);
+            if (mRealEstateListFragment != null) {
+                mRealEstateListFragment.setArguments(mBundle);
+            }
         }
         super.onStart();
     }

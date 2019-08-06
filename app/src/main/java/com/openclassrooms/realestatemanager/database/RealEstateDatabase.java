@@ -56,6 +56,7 @@ public abstract class RealEstateDatabase extends RoomDatabase {
                 realEstateTest.put("surface",120);
                 realEstateTest.put("nbreOfRoom",10);
                 realEstateTest.put("userId",1);
+                realEstateTest.put("address", "931, chemin du Sapin vert,38890, Saint-chef");
                 realEstateTest.put("isSold",false);
                 db.insert("RealEstate", OnConflictStrategy.IGNORE, realEstateTest);
 
