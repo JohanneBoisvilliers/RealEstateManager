@@ -32,6 +32,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.databinding.ActivityAddArealEstateBinding;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
@@ -122,27 +123,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
         this.mComeFrom = getIntent().getStringExtra("comefrom");
-        if (!TextUtils.isEmpty(mComeFrom)/*mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")*/) {
-            this.mRealEstateViewModel
-                    .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
-                    .observe(this, item -> {
-                        mRealEstateWithPhotos = item;
-                        mRealEstate = item.getRealEstate();
-                        mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
-                        for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
-                            mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
-                        }
-                        mRealEstateViewModel.spinnerPos.set(getIndex(mSpinner, mRealEstate.getCategory()));
-                        mRealEstateViewModel.price.set(mRealEstate.getPrice());
-                        mRealEstateViewModel.surface.set(mRealEstate.getSurface());
-                        mRealEstateViewModel.rooms.set(mRealEstate.getNbreOfRoom());
-                        mRealEstateViewModel.address.set(mRealEstate.getAddress());
-                        if (savedInstanceState == null) {
-                            mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mRealEstateWithPhotos.getPhotoList().size())));
-                        }
-                        mRealEstateViewModel.description.set(mRealEstate.getDescription());
-            });
-        }
+        this.getRealEstateForModifyFunction(mComeFrom, savedInstanceState);
     }
 
     @Override
@@ -198,7 +179,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
-        if (TextUtils.isEmpty(mComeFrom)/*!(mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment"))*/) {
+        if (TextUtils.isEmpty(mComeFrom)) {
             mRealEstate = mRealEstateViewModel.getRealEstate();
         }
         mRealEstate.setUserId(SingletonSession.Instance().getUser().getId());
@@ -247,6 +228,23 @@ public class AddARealEstateActivity extends AppCompatActivity {
         cursor.close();
     }
 
+    //when user came to this activity for modify a real estate, we get this real estate in database and set UI
+    private void getRealEstateForModifyFunction(String comeFrom, Bundle bundle) {
+        if (!TextUtils.isEmpty(comeFrom)) {
+            this.mRealEstateViewModel
+                    .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
+                    .observe(this, item -> {
+                        mRealEstateWithPhotos = item;
+                        mRealEstate = item.getRealEstate();
+                        mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                        for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
+                            mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                        }
+                        this.configureUIDependingToRealEstate(bundle, mRealEstateWithPhotos, mRealEstate);
+                    });
+        }
+    }
+
     // ------------------------------------ UI ------------------------------------
 
     //load image into header with glide
@@ -272,6 +270,19 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mSpinner.setAdapter(adapter);
     }
 
+    //fill all the fields to see each real estate features
+    private void configureUIDependingToRealEstate(Bundle bundle, RealEstateWithPhotos realEstateWithPhotos, RealEstate realEstate) {
+        mRealEstateViewModel.spinnerPos.set(getIndex(mSpinner, realEstate.getCategory()));
+        mRealEstateViewModel.price.set(realEstate.getPrice());
+        mRealEstateViewModel.surface.set(realEstate.getSurface());
+        mRealEstateViewModel.rooms.set(realEstate.getNbreOfRoom());
+        mRealEstateViewModel.address.set(realEstate.getAddress());
+        if (bundle == null) {
+            mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(realEstateWithPhotos.getPhotoList().size())));
+        }
+        mRealEstateViewModel.description.set(realEstate.getDescription());
+    }
+
     // ---------------------------------- LISTENERS ----------------------------------
 
     //listener on FAB for adding or updating real estate in database
@@ -287,7 +298,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     }
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
-                    //returnToDetailsWithNewInfos();
+                    returnToDetailsWithNewInfos();
                     finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
@@ -413,13 +424,11 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //return de realEstateDetailsFragment after updating real estate
     private void returnToDetailsWithNewInfos() {
         if (mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")) {
-            Intent intent = new Intent(getContext(), MainActivity.class);
-            intent.putExtra("comeFrom", "AddARealEstateActivity");
-            intent.putExtra("realEstateModifyID", mRealEstate.getId());
-            startActivity(intent);
+            Intent intent = new Intent();
+            intent.putExtra("realEstateId", mRealEstate.getId());
+            setResult(RegisterActivity.SUCCESS, intent);
         }
     }
-
     //private method of your class
     private int getIndex(Spinner spinner, String myString) {
         for (int i = 0; i < spinner.getCount(); i++) {

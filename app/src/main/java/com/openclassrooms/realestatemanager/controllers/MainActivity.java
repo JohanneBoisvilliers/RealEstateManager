@@ -31,6 +31,7 @@ import com.openclassrooms.realestatemanager.login.UserViewModel;
 import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.views.HeaderViewHolder;
@@ -50,32 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
     private UserViewModel mUserViewModel;
+    private RealEstateViewModel mRealEstateViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
     private Bundle mBundle;
 
     // -------------------------------- LIFE CYCLE --------------------------------
-
-
-    @Override
-    protected void onStart() {
-        if (getIntent().getStringExtra("comeFrom") != null && getIntent().getStringExtra("comeFrom").equals("AddARealEstateActivity")) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container_real_estate_recycler_view, new RealEstateDetailsFragment())
-                    .commit();
-/*            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
-            FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-            fragmentManager.detach(fragment);
-            fragmentManager.attach(fragment);
-            fragmentManager.commit();*/
-            //mBundle = new Bundle();
-            //mBundle.putLong("realEstateIdModified", getIntent().getLongExtra("realEstateModifyID", 0));
-            //if (mRealEstateListFragment != null && mRealEstateListFragment.getArguments()!=null) {
-            //    mRealEstateListFragment.setArguments(mBundle);
-            //}
-        }
-        super.onStart();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //configure viewmodel for requests
     private void configureViewModel() {
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(this);
-        this.mUserViewModel =
-                ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        this.mUserViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
     //get user id from intent sent by sign in activity or register activity
     private Long getUserId() {

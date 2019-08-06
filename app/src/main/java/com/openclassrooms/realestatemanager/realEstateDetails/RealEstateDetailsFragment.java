@@ -20,8 +20,7 @@ import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
-import com.openclassrooms.realestatemanager.injections.Injections;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
@@ -68,6 +67,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
 
     private static final String TAG = "DEBUG";
+    public static final int MODIFY_REQUEST = 1234;
     private int mNumberOfLine;
     private RealEstateWithPhotos mRealEstate;
     private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
@@ -103,6 +103,16 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         this.configureExpandLocation();
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MODIFY_REQUEST && resultCode == RegisterActivity.RESULT_OK) {
+            if (data != null) {
+                long realEstateId = data.getLongExtra("realEstateId", 0);
+                mRealEstateViewModel.getSpecificEstate(realEstateId).observe(getActivity(), item -> mRealEstateViewModel.select(item));
+            }
+        }
     }
 
     // ------------------------------------ UI ------------------------------------
@@ -240,7 +250,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
             intent.putExtra("comefrom", getClass().getSimpleName());
             intent.putExtra("realEstateId", mRealEstate.getRealEstate().getId());
-            startActivity(intent);
+            startActivityForResult(intent, MODIFY_REQUEST);
         });
     }
 
@@ -255,8 +265,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     //configure viewmodel
     private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
     //get from database if one pane layout or from shared viewmodel if two panes layout
     private void getRealEstateToConfigure(){
