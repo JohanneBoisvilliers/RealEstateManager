@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,13 +59,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onStart() {
-        Log.d(TAG, "onStart: ");
         if (getIntent().getStringExtra("comeFrom") != null && getIntent().getStringExtra("comeFrom").equals("AddARealEstateActivity")) {
-            mBundle = new Bundle();
-            mBundle.putLong("realEstateIdModified", getIntent().getLongExtra("realEstateModifyID", 0));
-            if (mRealEstateListFragment != null) {
-                mRealEstateListFragment.setArguments(mBundle);
-            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container_real_estate_recycler_view, new RealEstateDetailsFragment())
+                    .commit();
+/*            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
+            FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+            fragmentManager.detach(fragment);
+            fragmentManager.attach(fragment);
+            fragmentManager.commit();*/
+            //mBundle = new Bundle();
+            //mBundle.putLong("realEstateIdModified", getIntent().getLongExtra("realEstateModifyID", 0));
+            //if (mRealEstateListFragment != null && mRealEstateListFragment.getArguments()!=null) {
+            //    mRealEstateListFragment.setArguments(mBundle);
+            //}
         }
         super.onStart();
     }

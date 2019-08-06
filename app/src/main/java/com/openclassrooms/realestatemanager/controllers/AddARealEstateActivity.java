@@ -87,7 +87,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_GALLARY = 2;
-    private List<String> mImageEncodedList;
+    private List<String> mImageEncodedList = new ArrayList<>();
     private List<Photo> mActualPhotos;
     private Photo[] mFinalPhotoList;
     private RealEstateViewModel mRealEstateViewModel;
@@ -122,16 +122,13 @@ public class AddARealEstateActivity extends AppCompatActivity {
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
         this.mComeFrom = getIntent().getStringExtra("comefrom");
-        if (mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")) {
+        if (!TextUtils.isEmpty(mComeFrom)/*mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")*/) {
             this.mRealEstateViewModel
                     .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
                     .observe(this, item -> {
                         mRealEstateWithPhotos = item;
-                        mActualPhotos = new ArrayList<>();
-                        mActualPhotos.addAll(mRealEstateWithPhotos.getPhotoList());
                         mRealEstate = item.getRealEstate();
                         mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
-                        mImageEncodedList = new ArrayList<>();
                         for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
                             mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
                         }
@@ -140,7 +137,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
                         mRealEstateViewModel.surface.set(mRealEstate.getSurface());
                         mRealEstateViewModel.rooms.set(mRealEstate.getNbreOfRoom());
                         mRealEstateViewModel.address.set(mRealEstate.getAddress());
-                        mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mRealEstateWithPhotos.getPhotoList().size())));
+                        if (savedInstanceState == null) {
+                            mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mRealEstateWithPhotos.getPhotoList().size())));
+                        }
                         mRealEstateViewModel.description.set(mRealEstate.getDescription());
             });
         }
@@ -150,7 +149,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         String imageEncoded = "";
-        mImageEncodedList = new ArrayList<>();
         switch (requestCode) {
             case PICK_FROM_GALLARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -200,7 +198,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
-        if (!(mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment"))) {
+        if (TextUtils.isEmpty(mComeFrom)/*!(mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment"))*/) {
             mRealEstate = mRealEstateViewModel.getRealEstate();
         }
         mRealEstate.setUserId(SingletonSession.Instance().getUser().getId());
@@ -210,6 +208,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setSold(false);
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
         mRealEstate.setDescription(mDescriptionValue);
+        mRealEstate.setAddress(mAddresValue);
     }
     //transform list of photo into array for request
     private void setPhotoForRealEstate(List<String> urlList) {
@@ -222,7 +221,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mFinalPhotoList = new Photo[listPhoto.size()];
         listPhoto.toArray(mFinalPhotoList);
     }
-
     //in case of existing photo (when we want to modify a real estate)
     private void updatePhotoList(List<Photo> photoList) {
         mFinalPhotoList = new Photo[photoList.size()];
@@ -244,7 +242,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
-            Log.d(TAG, "extrudeUrlFromGallery: " + imageEncoded);
             mImageEncodedList.add(imageEncoded);
         }
         cursor.close();
@@ -283,16 +280,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInfos()) {
-                    if (mComeFrom.equals("RealEstateDetailsFragment") && mImageEncodedList.size() == 0) {
-                        Log.d(TAG, "onClick: rien ne change");
+                    if (!TextUtils.isEmpty(mComeFrom) && mImageEncodedList.size() == 0) {
                         updatePhotoList(mRealEstateWithPhotos.getPhotoList());
                     } else {
-                        Log.d(TAG, "onClick: changement photos");
                         setPhotoForRealEstate(mImageEncodedList);
                     }
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
-                    returnToDetailsWithNewInfos();
+                    //returnToDetailsWithNewInfos();
                     finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
@@ -319,6 +314,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mGetPhotoFromDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mImageEncodedList.clear();
+                mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -382,18 +379,17 @@ public class AddARealEstateActivity extends AppCompatActivity {
             mSurfaceValue = Integer.parseInt(text.toString());
         }
     }
-
     //listener for address edit text, set description in viewmodel's datas
     @OnTextChanged(value = R.id.address_editText, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void addressChanged(CharSequence text) {
         mRealEstateViewModel.address.set(text.toString());
-        mDescriptionValue = text.toString();
+        mAddresValue = text.toString();
     }
     //listener for description edit text, set description in viewmodel's datas
     @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void descriptionChanged(CharSequence text) {
         mRealEstateViewModel.description.set(text.toString());
-        mAddresValue = text.toString();
+        mDescriptionValue = text.toString();
     }
 
     /// ----------------------------------- UTILS -----------------------------------
