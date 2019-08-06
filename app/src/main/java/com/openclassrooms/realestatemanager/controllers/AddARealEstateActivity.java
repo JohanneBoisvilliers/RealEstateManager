@@ -274,6 +274,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     setPhotoForRealEstate(mImageEncodedList);
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
+                    returnToDetailsWithNewInfos();
                     finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
@@ -384,7 +385,19 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mImageFilePath = image.getAbsolutePath();
         return image;
     }
+
+    //check if there are at least one photo and a description before updating database
     private Boolean checkInfos() {
         return (mImageEncodedList != null && mImageEncodedList.size() > 0 && !TextUtils.isEmpty(mDescriptionValue));
+    }
+
+    //return de realEstateDetailsFragment after updating real estate
+    private void returnToDetailsWithNewInfos() {
+        if (mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")) {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.putExtra("comeFrom", "AddARealEstateActivity");
+            intent.putExtra("realEstateModifyID", mRealEstate.getId());
+            startActivity(intent);
+        }
     }
 }

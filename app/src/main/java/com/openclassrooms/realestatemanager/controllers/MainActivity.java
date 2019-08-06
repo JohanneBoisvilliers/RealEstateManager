@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +53,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private UserViewModel mUserViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
+    private Bundle mBundle;
 
     // -------------------------------- LIFE CYCLE --------------------------------
+
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart: ");
+        if (getIntent().getStringExtra("comeFrom") != null && getIntent().getStringExtra("comeFrom").equals(
+                "AddARealEstateActivity")) {
+            mBundle = new Bundle();
+            mBundle.putLong("realEstateIdModified", getIntent().getLongExtra("realEstateModifyID", 0));
+            mRealEstateListFragment.setArguments(mBundle);
+        }
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
         Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
         SingletonSession.Instance().setUser(user);
-
     }
 
     @Override

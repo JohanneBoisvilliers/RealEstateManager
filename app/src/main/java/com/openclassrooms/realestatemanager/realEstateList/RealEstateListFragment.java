@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
@@ -44,6 +46,7 @@ public class RealEstateListFragment extends Fragment {
     @Override
     public void onStart() {
         mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
+        //this.getBundleForPerformClick();
         super.onStart();
     }
 
@@ -106,6 +109,8 @@ public class RealEstateListFragment extends Fragment {
     }
     //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
+        this.mRealEstateList.clear();
+        this.mRealEstateList.addAll(realEstateList);
         this.mRealEstateAdapter.updateData(realEstateList);
         if (!isOnePaneLayout() && !MyApp.isInit) {//tablet mode
             MyApp.isInit = true;
@@ -116,8 +121,30 @@ public class RealEstateListFragment extends Fragment {
                 }
             }, 0);
         }
+        if (getArguments() != null && getArguments().getLong(
+                "realEstateIdModified") != 0) {
+            this.mRealEstateRecyclerView.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            Log.d(TAG, "onGlobalLayout: " + getPositionOfRealEstate(getArguments().getLong("realEstateIdModified")));
+                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdModified"))).itemView.performClick();
+                            getArguments().clear();
+                            mRealEstateRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
+        }
     }
 
+    private int getPositionOfRealEstate(Long realEstateId) {
+        int position = 0;
+        for (int i = 0; i < mRealEstateList.size(); i++) {
+            if (mRealEstateList.get(i).getRealEstate().getId() == realEstateId) {
+                position = i;
+            }
+        }
+        return position;
+    }
     //check if we are in phone or tablet mode
     private Boolean isOnePaneLayout() {
         View view = getActivity().findViewById(R.id.container_real_estate_detail);

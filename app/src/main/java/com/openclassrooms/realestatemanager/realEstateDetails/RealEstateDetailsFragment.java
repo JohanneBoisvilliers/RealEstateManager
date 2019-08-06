@@ -132,7 +132,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
             mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
-            mInformationRoom.setText(getResources().getString((R.string.real_estate_room), realEstate.getRealEstate().getNbreOfRoom()));
+            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
+                    realEstate.getRealEstate().getNbreOfRoom()));
             this.setSoldState(realEstate.getRealEstate());
         }
     }
