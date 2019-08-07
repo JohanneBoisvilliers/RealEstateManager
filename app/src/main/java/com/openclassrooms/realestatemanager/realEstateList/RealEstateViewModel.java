@@ -27,6 +27,7 @@ public class RealEstateViewModel extends ViewModel {
     private final Executor executor;
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
+    private final MutableLiveData<List<String>> urlList = new MutableLiveData<>();
     private RealEstate mRealEstate;
     public final ObservableField<Integer> price = new ObservableField<>();
     public final ObservableField<Integer> rooms = new ObservableField<>();
@@ -149,5 +150,17 @@ public class RealEstateViewModel extends ViewModel {
 
     public void setRealEstateId(long realEstateId) {
         mRealEstateId = realEstateId;
+    }
+
+    // -------------
+    // FOR DATAS
+    // -------------
+
+    public void selecturlList(List<String> item) {
+        urlList.setValue(item);
+    }
+
+    public LiveData<List<String>> getUrlList() {
+        return urlList;
     }
 }

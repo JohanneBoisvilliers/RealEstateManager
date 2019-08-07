@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,8 +110,14 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MODIFY_REQUEST && resultCode == RegisterActivity.RESULT_OK) {
             if (data != null) {
+                //TODO gerer les 2 mode tablette et tel
                 long realEstateId = data.getLongExtra("realEstateId", 0);
-                mRealEstateViewModel.getSpecificEstate(realEstateId).observe(getActivity(), item -> mRealEstateViewModel.select(item));
+                mRealEstateViewModel.getSpecificEstate(realEstateId).observe(getActivity(),
+                        item -> {
+                            mRealEstateViewModel.select(item);
+                            getRealEstateToConfigure();
+                        });
+
             }
         }
     }
@@ -135,6 +142,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstateWithPhotos realEstate) {
         if (realEstate != null) {
+            Log.d(TAG,
+                    "configureDetails() called with: realEstate = [" + realEstate.getPhotoList().get(0).getUrl() + "]");
             this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
@@ -268,7 +277,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
     //get from database if one pane layout or from shared viewmodel if two panes layout
-    private void getRealEstateToConfigure(){
+    private void getRealEstateToConfigure() throws NullPointerException {
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView != null){//two panes layout
             isTwoPanesLayout = true;

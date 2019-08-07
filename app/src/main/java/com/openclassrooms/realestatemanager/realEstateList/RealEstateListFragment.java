@@ -39,8 +39,6 @@ public class RealEstateListFragment extends Fragment {
     public static final String TAG = "DEBUG";
     public static final String RADIO_DATASET_CHANGED = "com.yourapp.app.RADIO_DATASET_CHANGED";
 
-    private Radio radio;
-
     public RealEstateListFragment() {}
 
     // -------------------------------- LIFE CYCLE --------------------------------
@@ -62,7 +60,6 @@ public class RealEstateListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_real_estate_list, container, false);
         ButterKnife.bind(this,view);
-        radio = new Radio();
         this.configureRecyclerView();
         this.configureViewModel();
 

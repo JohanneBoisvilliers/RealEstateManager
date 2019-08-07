@@ -89,7 +89,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_GALLARY = 2;
     private List<String> mImageEncodedList = new ArrayList<>();
-    private List<Photo> mActualPhotos;
+    private List<String> mGalleryPhotos = new ArrayList<>();
+    private List<String> mCameraPhotos = new ArrayList<>();
     private Photo[] mFinalPhotoList;
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
@@ -132,6 +133,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         String imageEncoded = "";
         switch (requestCode) {
             case PICK_FROM_GALLARY:
+                mGalleryPhotos.clear();
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.getData() != null) {
                         Uri outPutUri = data.getData();
@@ -146,7 +148,11 @@ public class AddARealEstateActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    mImageEncodedList.clear();
+                    mImageEncodedList.addAll(mCameraPhotos);
+                    mImageEncodedList.addAll(mGalleryPhotos);
                     mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
+                    mRealEstateViewModel.selecturlList(mImageEncodedList);
                 } else {
                     Utils.showSnackBar(mCoordinator,
                             getString(R.string.snack_bar_no_photo),
@@ -156,8 +162,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
             case PICK_FROM_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
-                    mImageEncodedList.add(mImageFilePath);
+                    mImageEncodedList.clear();
+                    mCameraPhotos.add(mImageFilePath);
+                    mImageEncodedList.addAll(mCameraPhotos);
+                    mImageEncodedList.addAll(mGalleryPhotos);
                     mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
+                    mRealEstateViewModel.selecturlList(mImageEncodedList);
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
                     Utils.showSnackBar(mCoordinator,
@@ -223,11 +233,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
-            mImageEncodedList.add(imageEncoded);
+            mGalleryPhotos.add(imageEncoded);
         }
         cursor.close();
     }
-
     //when user came to this activity for modify a real estate, we get this real estate in database and set UI
     private void getRealEstateForModifyFunction(String comeFrom, Bundle bundle) {
         if (!TextUtils.isEmpty(comeFrom)) {
@@ -237,8 +246,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
                         mRealEstateWithPhotos = item;
                         mRealEstate = item.getRealEstate();
                         mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
-                        for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
-                            mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                        if (bundle == null) {
+                            for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
+                                mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                                mGalleryPhotos.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                            }
+                        } else {
+                            mRealEstateViewModel.getUrlList().observe(this,
+                                    list -> mImageEncodedList.addAll(list));
                         }
                         this.configureUIDependingToRealEstate(bundle, mRealEstateWithPhotos, mRealEstate);
                     });
@@ -291,11 +306,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInfos()) {
-                    if (!TextUtils.isEmpty(mComeFrom) && mImageEncodedList.size() == 0) {
-                        updatePhotoList(mRealEstateWithPhotos.getPhotoList());
-                    } else {
-                        setPhotoForRealEstate(mImageEncodedList);
-                    }
+                    Log.d(TAG, "onClick: imageEncoded : " + mImageEncodedList.size());
+                    Log.d(TAG, "onClick: gallery : " + mGalleryPhotos.size());
+                    Log.d(TAG, "onClick: camera :" + mCameraPhotos.size());
+                    setPhotoForRealEstate(mImageEncodedList);
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
                     returnToDetailsWithNewInfos();
@@ -325,8 +339,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mGetPhotoFromDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mImageEncodedList.clear();
-                mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
