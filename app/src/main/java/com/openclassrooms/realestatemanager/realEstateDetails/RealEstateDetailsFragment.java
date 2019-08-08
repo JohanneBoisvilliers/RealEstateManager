@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +48,12 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_location) TextView mRealEstateLocation;
     @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
+    @BindView(R.id.modify_button_tablet_mode)
+    Button mModifyTabletMode;
+    @BindView(R.id.sold_button_tablet_mode)
+    Button mSetSoldTabletMode;
+    @BindView(R.id.simul_button_tablet_mode)
+    Button mSimulTabletMode;
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
@@ -95,6 +103,9 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         this.getRealEstateToConfigure();
         if (isTwoPanesLayout) {
             configureRecyclerView();
+            this.configureModifyTabletMode();
+            this.configureSoldTabletMode();
+            this.configureSimulTabletMode();
         }else{
             this.configureViewPager();
             this.configureFABMenu();
@@ -228,40 +239,43 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     //set a click listener to open FAB menu
     private void configureFABMenu(){
-        mMainFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isFABOpen){
-                    showFABMenu();
-                    configureFABchangeStatus();
-                }else{
-                    closeFABMenu();
-                }
+        mMainFAB.setOnClickListener(view -> {
+            if (!isFABOpen) {
+                showFABMenu();
+                configureFABchangeStatus();
+            } else {
+                closeFABMenu();
             }
         });
     }
     //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
-        mStatusFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean isSold = mRealEstate.getRealEstate().getSold();
-                isSold = !isSold;
-                mRealEstate.getRealEstate().setSold(isSold);
-                mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
-                setSoldState(mRealEstate.getRealEstate());
-            }
-        });
+        mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
     }
 
+    //set a listener on modify button to change differents fields of real estates
     private void configureModifyButton() {
-        mModifyEstate.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
-            intent.putExtra("comefrom", getClass().getSimpleName());
-            intent.putExtra("realEstateId", mRealEstate.getRealEstate().getId());
-            startActivityForResult(intent, MODIFY_REQUEST);
-        });
+        mModifyEstate.setOnClickListener(v -> startModifyActivity());
     }
+
+    //we don't have fab in tablet mode so we have to set a button to modify a real estate
+    private void configureModifyTabletMode() {
+        DrawableCompat.setTint(mModifyTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mModifyTabletMode.setOnClickListener(view -> startModifyActivity());
+    }
+
+    private void configureSoldTabletMode() {
+        DrawableCompat.setTint(mSetSoldTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mSetSoldTabletMode.setOnClickListener(view -> changeRealEstateStatus());
+    }
+
+    private void configureSimulTabletMode() {
+        DrawableCompat.setTint(mSimulTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+    }
+
 
     // ------------------------------------ DATA ------------------------------------
 
@@ -298,4 +312,19 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         }
     }
 
+    //change the sold status
+    private void changeRealEstateStatus() {
+        Boolean isSold = mRealEstate.getRealEstate().getSold();
+        isSold = !isSold;
+        mRealEstate.getRealEstate().setSold(isSold);
+        mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
+        setSoldState(mRealEstate.getRealEstate());
+    }
+
+    private void startModifyActivity() {
+        Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
+        intent.putExtra("comefrom", getClass().getSimpleName());
+        intent.putExtra("realEstateId", mRealEstate.getRealEstate().getId());
+        startActivityForResult(intent, MODIFY_REQUEST);
+    }
 }

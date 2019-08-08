@@ -40,6 +40,9 @@
     <string name="real_estate_price">Price : %d%s</string>
     <string name="real_estate_price_dollar">$</string>
     <string name="real_estate_price_euro">€</string>
+    <string name="modify_button">Update</string>
+    <string name="sold_button">Status</string>
+    <string name="simul_button">Simulation</string>
 
     <!-- ADD REAL ESTATE ACTIVITY -->
     <string name="type_button">TYPE</string>
