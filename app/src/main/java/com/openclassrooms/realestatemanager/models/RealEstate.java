@@ -20,6 +20,7 @@ public class RealEstate {
     private int nbreOfRoom;
     private String description;
     private String address;
+    private String pointsOfInterest;
 
     public RealEstate() {
     }
@@ -53,6 +54,11 @@ public class RealEstate {
         return address;
     }
 
+    public String getPointsOfInterest() {
+        return pointsOfInterest;
+    }
+
+
     // -- SETTERS
     public void setId(long id) {
         this.id = id;
@@ -82,4 +88,7 @@ public class RealEstate {
         this.address = address;
     }
 
+    public void setPointsOfInterest(String pointsOfInterest) {
+        this.pointsOfInterest = pointsOfInterest;
+    }
 }

@@ -21,22 +21,26 @@
         <item>Castle</item>
         <item>Appartement</item>
     </string-array>
+    <string-array name="interest_list">
+        <item>School</item>
+        <item>Shops</item>
+        <item>Parking</item>
+        <item>Gas station</item>
+        <item>Mall</item>
+        <item>Town hall</item>
+        <item>Play area</item>
+    </string-array>
     <string name="description_detail">Description</string>
     <string name="button_more">..more</string>
     <string name="button_close">..close</string>
-    <string name="real_estate_surface">Surface : %dm²</string>
-    <string name="real_estate_room">Number of room : %d</string>
-    <string name="real_estate_agent">Real estate agent : %s</string>
-    <string name="real_estate_location">
-        %s \n<!--address-->
-        %s \n<!--details-->
-        %s \n<!--code-->
-        %s \n<!--town-->
-        %s <!--country-->
-    </string>
-    <string name="real_estate_starting_date">For sale since : %s</string>
+    <string name="real_estate_surface">%dm²</string>
+    <string name="real_estate_room">%d room(s)</string>
+    <string name="real_estate_agent">Agent : %s</string>
+    <string name="real_estate_location">%s</string>
+    <string name="real_estate_starting_date">Up for sale :\n %s</string>
     <string name="real_estate_not_sold">Not sold yet</string>
-    <string name="real_estate_sold">Sold since : %s</string>
+    <string name="real_estate_sold">Sold :\n %s</string>
+    <string name="point_of_interest">Points of interests : %s</string>
     <string name="real_estate_price">Price : %d%s</string>
     <string name="real_estate_price_dollar">$</string>
     <string name="real_estate_price_euro">€</string>

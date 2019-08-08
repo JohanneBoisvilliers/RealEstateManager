@@ -48,10 +48,13 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_location) TextView mRealEstateLocation;
     @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
+    @Nullable
     @BindView(R.id.modify_button_tablet_mode)
     Button mModifyTabletMode;
+    @Nullable
     @BindView(R.id.sold_button_tablet_mode)
     Button mSetSoldTabletMode;
+    @Nullable
     @BindView(R.id.simul_button_tablet_mode)
     Button mSimulTabletMode;
     @BindView(R.id.information_surface) TextView mInformationSurface;
