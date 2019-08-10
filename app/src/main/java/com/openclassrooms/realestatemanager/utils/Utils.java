@@ -16,6 +16,8 @@ import java.util.Date;
 
 public class Utils {
 
+    // ----------------------------------- UTILS -----------------------------------
+
     //TODO pourquoi pas essayer d'utiliser une api pour taux actuel
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -30,7 +32,6 @@ public class Utils {
     public static int convertEuroToDollars(int euros){
         return (int) Math.round(euros * 1.12);
     }
-
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -40,7 +41,6 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(new Date());
     }
-
     /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE

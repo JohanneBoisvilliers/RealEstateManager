@@ -2,6 +2,9 @@ package com.openclassrooms.realestatemanager.realEstateList;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,10 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.injections.Injections;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
@@ -35,6 +37,7 @@ public class RealEstateListFragment extends Fragment {
     private RealEstateViewModel mRealEstateViewModel;
     private Boolean isTrue = false;
     public static final String TAG = "DEBUG";
+    public static final String RADIO_DATASET_CHANGED = "com.yourapp.app.RADIO_DATASET_CHANGED";
 
     public RealEstateListFragment() {}
 
@@ -57,7 +60,6 @@ public class RealEstateListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_real_estate_list, container, false);
         ButterKnife.bind(this,view);
-
         this.configureRecyclerView();
         this.configureViewModel();
 
@@ -81,8 +83,7 @@ public class RealEstateListFragment extends Fragment {
 
     //configure viewmodel for requests
     private void configureViewModel(){
-        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
 
     // ----------------------------------- UTILS -----------------------------------
@@ -106,6 +107,8 @@ public class RealEstateListFragment extends Fragment {
     }
     //get photos for all real estates et notify adapter for new real estate list
     private void updateItemsList(List<RealEstateWithPhotos> realEstateList){
+        this.mRealEstateList.clear();
+        this.mRealEstateList.addAll(realEstateList);
         this.mRealEstateAdapter.updateData(realEstateList);
         if (!isOnePaneLayout() && !MyApp.isInit) {//tablet mode
             MyApp.isInit = true;
@@ -116,8 +119,29 @@ public class RealEstateListFragment extends Fragment {
                 }
             }, 0);
         }
+        if (getArguments() != null && getArguments().getLong(
+                "realEstateIdModified") != 0) {
+            this.mRealEstateRecyclerView.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdModified"))).itemView.performClick();
+                            getArguments().clear();
+                            mRealEstateRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
+        }
     }
 
+    private int getPositionOfRealEstate(Long realEstateId) {
+        int position = 0;
+        for (int i = 0; i < mRealEstateList.size(); i++) {
+            if (mRealEstateList.get(i).getRealEstate().getId() == realEstateId) {
+                position = i;
+            }
+        }
+        return position;
+    }
     //check if we are in phone or tablet mode
     private Boolean isOnePaneLayout() {
         View view = getActivity().findViewById(R.id.container_real_estate_detail);
@@ -131,5 +155,12 @@ public class RealEstateListFragment extends Fragment {
         this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
     }
 
-
+    private class Radio extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(RADIO_DATASET_CHANGED)) {
+                mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        }
+    }
 }

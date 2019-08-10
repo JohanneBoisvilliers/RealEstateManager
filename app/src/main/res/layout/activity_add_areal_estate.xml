@@ -38,9 +38,9 @@
                     android:layout_width="@dimen/user_photo_size"
                     android:layout_height="@dimen/user_photo_size"
                     android:src="@drawable/user"
-                    android:layout_marginStart="@dimen/margin_to_border"
                     app:layout_constraintBottom_toBottomOf="@id/image_header"
                     app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/explanation_text"
                     app:layout_constraintTop_toTopOf="@+id/image_header" />
 
                 <TextView
@@ -256,11 +256,14 @@
                         android:textSize="@dimen/text_info" />
 
                     <EditText
+                        android:id="@+id/address_editText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_location"
+                        android:text="@{String.valueOf(viewmodel.address)}"
                         android:maxLines="1"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
@@ -366,11 +369,57 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_description"
                         android:maxLines="1"
                         android:text="@{viewmodel.description}"
                         android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+                <!--points of interest button-->
+                <LinearLayout
+                    android:id="@+id/point_of_interest_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_to_border"
+                    android:layout_marginTop="@dimen/margin_to_border"
+                    android:layout_marginEnd="@dimen/margin_to_border"
+                    android:background="@drawable/drawable_spinner_border"
+                    android:orientation="vertical"
+                    android:padding="@dimen/button_padding"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/description_button">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_action_name"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/point_of_interest_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/textview_margin"
+                        android:text="@string/points_of_interest"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_info" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/textview_margin"
+                        android:gravity="center"
+                        android:hint="@string/hint_interest"
+                        android:text="@{viewmodel.pointOfInterest}"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_info" />
+
                 </LinearLayout>
 
             </android.support.constraint.ConstraintLayout>

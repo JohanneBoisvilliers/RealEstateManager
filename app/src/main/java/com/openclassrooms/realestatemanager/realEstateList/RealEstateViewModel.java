@@ -15,6 +15,10 @@ import com.openclassrooms.realestatemanager.utils.NotificationsService;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class RealEstateViewModel extends ViewModel {
 
     // REPOSITORIES
@@ -23,6 +27,7 @@ public class RealEstateViewModel extends ViewModel {
     private final Executor executor;
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
+    private final MutableLiveData<List<String>> urlList = new MutableLiveData<>();
     private RealEstate mRealEstate;
     public final ObservableField<Integer> price = new ObservableField<>();
     public final ObservableField<Integer> rooms = new ObservableField<>();
@@ -31,6 +36,8 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<Integer> selectedItemPos = new ObservableField<>();
     public final ObservableField<String> description = new ObservableField<>();
     public final ObservableField<String> numberOfPhoto = new ObservableField<>();
+    public final ObservableField<String> address = new ObservableField<>();
+    public final ObservableField<String> pointOfInterest = new ObservableField<>();
     private long mRealEstateId;
 
 
@@ -63,14 +70,14 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstateDataSource.getRealEstatesWithPhotos();
     }
 
-    public RealEstateWithPhotos getSpecificEstate(Long id) {
+    public LiveData<RealEstateWithPhotos> getSpecificEstate(Long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
     }
 
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
-            realEstate.setId(mRealEstateId);
+            //realEstate.setId(mRealEstateId);
             NotificationsService.sendNotification();
         });
     }
@@ -95,6 +102,27 @@ public class RealEstateViewModel extends ViewModel {
         });
     }
 
+    public void deleteAllPhotos(long realEstateId) {
+        executor.execute(() -> mPhotoDataSource.deleteAllPhotos(realEstateId));
+    }
+
+    public void updatePhotos(long realEstateId, Photo[] photos) {
+        Completable deleteAllCompletable = Completable.fromAction(() -> deleteAllPhotos(realEstateId));
+        Completable setPhotosId = Completable.fromAction(() -> {
+            for (Photo listOfPhoto : photos) {
+                listOfPhoto.setRealEstateId(mRealEstateId);
+            }
+        });
+        Completable insertUserCompletable = Completable.fromAction(() -> insertPhotos(photos));
+
+        deleteAllCompletable
+                .andThen(setPhotosId)
+                .andThen(insertUserCompletable)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.single())
+                .subscribe();
+    }
+
     // -------------
     // FOR ADD OR MODIFY REAL ESTATE
     // -------------
@@ -107,17 +135,33 @@ public class RealEstateViewModel extends ViewModel {
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
             createItem(realEstate);
+            executor.execute(() -> {
+                for (Photo listOfPhoto : listOfPhotos) {
+                    listOfPhoto.setRealEstateId(mRealEstateId);
+                }
+            });
+            executor.execute(() -> {
+                insertPhotos(listOfPhotos);
+            });
         } else {
             updateItem(realEstate);
+            updatePhotos(mRealEstateId, listOfPhotos);
         }
-        executor.execute(() -> {
-            for (Photo listOfPhoto : listOfPhotos) {
-                listOfPhoto.setRealEstateId(mRealEstateId);
-            }
-        });
-        executor.execute(() -> {
-            insertPhotos(listOfPhotos);
-        });
     }
 
+    public void setRealEstateId(long realEstateId) {
+        mRealEstateId = realEstateId;
+    }
+
+    // -------------
+    // FOR DATAS
+    // -------------
+
+    public void selecturlList(List<String> item) {
+        urlList.setValue(item);
+    }
+
+    public LiveData<List<String>> getUrlList() {
+        return urlList;
+    }
 }

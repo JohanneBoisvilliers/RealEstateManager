@@ -19,7 +19,7 @@ public interface RealEstateDao {
     LiveData<List<RealEstate>> getRealEstates();
 
     @Query("SELECT * FROM RealEstate WHERE id = :realEstateId")
-    RealEstateWithPhotos getSpecificRealEstate(long realEstateId);
+    LiveData<RealEstateWithPhotos> getSpecificRealEstate(long realEstateId);
 
     @Query("SELECT * FROM RealEstate")
     LiveData<List<RealEstateWithPhotos>> getRealEstateWithPhotos();

@@ -16,7 +16,7 @@ public class RealEstateDataRepository {
 
     // --- GET ---
 
-    public RealEstateWithPhotos getSpecificRealEstate(long id) {
+    public LiveData<RealEstateWithPhotos> getSpecificRealEstate(long id) {
         return this.mRealEstateDao.getSpecificRealEstate(id);
     }
     public LiveData<List<RealEstateWithPhotos>> getRealEstatesWithPhotos(){ return this.mRealEstateDao.getRealEstateWithPhotos(); }
