@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Intent;
@@ -44,10 +45,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
@@ -83,8 +86,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
     ViewGroup mGetPhotoFromDevice;
     @BindView(R.id.take_photo)
     ViewGroup mTakePhoto;
+    @BindView(R.id.point_of_interest_button)
+    ViewGroup mPointsOfInterestButton;
     @BindView(R.id.coordinator_add_a_realEstate)
     View mCoordinator;
+    @BindArray(R.array.interest_list)
+    String[] pointOfInterestArray;
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_GALLARY = 2;
@@ -92,6 +99,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private List<String> mGalleryPhotos = new ArrayList<>();
     private List<String> mCameraPhotos = new ArrayList<>();
     private Photo[] mFinalPhotoList;
+    private boolean[] mStateCheckBoxes = new boolean[7];
+
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
     private RealEstateWithPhotos mRealEstateWithPhotos;
@@ -100,6 +109,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private String mDescriptionValue;
     private String mImageFilePath;
     private String mComeFrom;
+    private String mPoIValue;
     private int mPriceValue;
     private int mSurfaceValue;
     private int mNumberOfRooms;
@@ -111,18 +121,19 @@ public class AddARealEstateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityAddArealEstateBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_areal_estate);
         ButterKnife.bind(this);
-
+        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         this.configureViewModel();
         binding.setViewmodel(mRealEstateViewModel);
-
+        Arrays.fill(mStateCheckBoxes, Boolean.FALSE);
         Utils.configureImageHeader(this, mHeader);
 
         this.configureUser();
-        this.configureTypeSpinner();
+        this.configureSpinners();
         this.getSpinnerInfo();
         this.listenerOnFAB();
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
+        this.listenerOnPoI();
         this.mComeFrom = getIntent().getStringExtra("comefrom");
         this.getRealEstateForModifyFunction(mComeFrom, savedInstanceState);
     }
@@ -200,6 +211,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
         mRealEstate.setDescription(mDescriptionValue);
         mRealEstate.setAddress(mAddresValue);
+        mRealEstate.setPointsOfInterest(mPoIValue);
     }
     //transform list of photo into array for request
     private void setPhotoForRealEstate(List<String> urlList) {
@@ -211,11 +223,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         }
         mFinalPhotoList = new Photo[listPhoto.size()];
         listPhoto.toArray(mFinalPhotoList);
-    }
-    //in case of existing photo (when we want to modify a real estate)
-    private void updatePhotoList(List<Photo> photoList) {
-        mFinalPhotoList = new Photo[photoList.size()];
-        photoList.toArray(mFinalPhotoList);
     }
     //on spinner change, set the type of real estate with "mSpinnerValue" and add data in viewmodel to keep spinner position when user rotate the screen
     private void onSpinnerItemChanged(String itemValue, int itemPosition) {
@@ -251,11 +258,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
                                 mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
                                 mGalleryPhotos.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
                             }
+                            mRealEstateViewModel.selecturlList(mImageEncodedList);
                         } else {
                             mRealEstateViewModel.getUrlList().observe(this,
                                     list -> mImageEncodedList.addAll(list));
                         }
-                        this.configureUIDependingToRealEstate(bundle, mRealEstateWithPhotos, mRealEstate);
+                        this.configureUIDependingToRealEstate(mRealEstateWithPhotos, mRealEstate);
                     });
         }
     }
@@ -280,22 +288,21 @@ public class AddARealEstateActivity extends AppCompatActivity {
                 .into(mUserPhoto);
     }
     //configure spinner to choose type of real estate
-    private void configureTypeSpinner() {
+    private void configureSpinners() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.type_list,R.layout.custom_item_spinner);
         mSpinner.setAdapter(adapter);
     }
 
     //fill all the fields to see each real estate features
-    private void configureUIDependingToRealEstate(Bundle bundle, RealEstateWithPhotos realEstateWithPhotos, RealEstate realEstate) {
+    private void configureUIDependingToRealEstate(RealEstateWithPhotos realEstateWithPhotos, RealEstate realEstate) {
         mRealEstateViewModel.spinnerPos.set(getIndex(mSpinner, realEstate.getCategory()));
         mRealEstateViewModel.price.set(realEstate.getPrice());
         mRealEstateViewModel.surface.set(realEstate.getSurface());
         mRealEstateViewModel.rooms.set(realEstate.getNbreOfRoom());
         mRealEstateViewModel.address.set(realEstate.getAddress());
-        if (bundle == null) {
-            mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(realEstateWithPhotos.getPhotoList().size())));
-        }
+        mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(realEstateWithPhotos.getPhotoList().size())));
         mRealEstateViewModel.description.set(realEstate.getDescription());
+        mRealEstateViewModel.pointOfInterest.set(realEstate.getPointsOfInterest());
     }
 
     // ---------------------------------- LISTENERS ----------------------------------
@@ -306,9 +313,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInfos()) {
-                    Log.d(TAG, "onClick: imageEncoded : " + mImageEncodedList.size());
-                    Log.d(TAG, "onClick: gallery : " + mGalleryPhotos.size());
-                    Log.d(TAG, "onClick: camera :" + mCameraPhotos.size());
                     setPhotoForRealEstate(mImageEncodedList);
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
@@ -367,6 +371,29 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     }
                 }
             }
+        });
+    }
+
+    //open a list of potential points of interest around the real estate
+    private void listenerOnPoI() {
+        List<String> tempList = new ArrayList<>();
+        mPointsOfInterestButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMultiChoiceItems(pointOfInterestArray, mStateCheckBoxes,
+                    (dialog, which, isChecked) -> {
+                        mPoIValue = "";
+                        tempList.clear();
+                        mStateCheckBoxes[which] = isChecked;
+                        for (int i = 0; i < mStateCheckBoxes.length; i++) {
+                            if (mStateCheckBoxes[i]) {
+                                tempList.add(pointOfInterestArray[i]);
+                            }
+                        }
+                        mPoIValue = TextUtils.join(",", tempList);
+                        mRealEstateViewModel.pointOfInterest.set(mPoIValue);
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
     }
     //listener for price edittext, set price in viewmodel's datas

@@ -12,6 +12,7 @@
     <dimen name="big_FAB_min_menu">40dp</dimen>
     <dimen name="margin_description_viewpager">16dp</dimen>
     <dimen name="description_viewpager_background_height">25dp</dimen>
+    <dimen name="space_between_interest_and_map">8dp</dimen>
     <dimen name="map_height">200dp</dimen>
 
 

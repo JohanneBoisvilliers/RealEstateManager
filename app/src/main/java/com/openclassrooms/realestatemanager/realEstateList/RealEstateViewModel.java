@@ -37,6 +37,7 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<String> description = new ObservableField<>();
     public final ObservableField<String> numberOfPhoto = new ObservableField<>();
     public final ObservableField<String> address = new ObservableField<>();
+    public final ObservableField<String> pointOfInterest = new ObservableField<>();
     private long mRealEstateId;
 
 

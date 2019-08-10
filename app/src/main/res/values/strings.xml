@@ -57,9 +57,11 @@
     <string name="photo_from_device">GET PHOTOS FROM DEVICE</string>
     <string name="take_photo">TAKE PHOTO</string>
     <string name="description">DESCRIPTION</string>
+    <string name="points_of_interest">POINTS OF INTEREST</string>
     <string name="hint_int">0</string>
     <string name="hint_location">Enter address here</string>
     <string name="hint_description">Enter a description here</string>
+    <string name="hint_interest">Make your choice</string>
     <string name="snack_bar_no_photo">You\'ve didn\'t picked any photos</string>
     <string name="number_of_photo">%s photo(s) picked</string>
     <string name="no_photo">You\'ve didn\'t take photo</string>

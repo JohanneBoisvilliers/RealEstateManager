@@ -13,7 +13,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,8 +155,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstateWithPhotos realEstate) {
         if (realEstate != null) {
-            Log.d(TAG,
-                    "configureDetails() called with: realEstate = [" + realEstate.getPhotoList().get(0).getUrl() + "]");
             this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
