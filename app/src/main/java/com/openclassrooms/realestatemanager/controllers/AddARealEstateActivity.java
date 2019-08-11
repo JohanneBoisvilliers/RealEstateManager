@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -100,7 +99,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private List<String> mCameraPhotos = new ArrayList<>();
     private Photo[] mFinalPhotoList;
     private boolean[] mStateCheckBoxes = new boolean[7];
-
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
     private RealEstateWithPhotos mRealEstateWithPhotos;
@@ -121,10 +119,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityAddArealEstateBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_areal_estate);
         ButterKnife.bind(this);
-        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
+
         this.configureViewModel();
         binding.setViewmodel(mRealEstateViewModel);
-        Arrays.fill(mStateCheckBoxes, Boolean.FALSE);
+
         Utils.configureImageHeader(this, mHeader);
 
         this.configureUser();
@@ -133,9 +131,9 @@ public class AddARealEstateActivity extends AppCompatActivity {
         this.listenerOnFAB();
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
-        this.listenerOnPoI();
         this.mComeFrom = getIntent().getStringExtra("comefrom");
         this.getRealEstateForModifyFunction(mComeFrom, savedInstanceState);
+
     }
 
     @Override
@@ -247,24 +245,32 @@ public class AddARealEstateActivity extends AppCompatActivity {
     //when user came to this activity for modify a real estate, we get this real estate in database and set UI
     private void getRealEstateForModifyFunction(String comeFrom, Bundle bundle) {
         if (!TextUtils.isEmpty(comeFrom)) {
-            this.mRealEstateViewModel
-                    .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
-                    .observe(this, item -> {
-                        mRealEstateWithPhotos = item;
-                        mRealEstate = item.getRealEstate();
-                        mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
-                        if (bundle == null) {
+            if (bundle == null) {
+                this.mRealEstateViewModel
+                        .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
+                        .observe(this, item -> {
+                            mRealEstateWithPhotos = item;
+                            mRealEstateViewModel.select(item);
+                            mRealEstate = item.getRealEstate();
+                            mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                            this.listenerOnPoI(mRealEstateWithPhotos);
                             for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
                                 mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
                                 mGalleryPhotos.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
                             }
                             mRealEstateViewModel.selecturlList(mImageEncodedList);
-                        } else {
-                            mRealEstateViewModel.getUrlList().observe(this,
-                                    list -> mImageEncodedList.addAll(list));
-                        }
-                        this.configureUIDependingToRealEstate(mRealEstateWithPhotos, mRealEstate);
-                    });
+                            this.configureUIDependingToRealEstate(mRealEstateWithPhotos, mRealEstate);
+                        });
+            } else {
+                mRealEstateViewModel.getUrlList().observe(this, list -> mImageEncodedList.addAll(list));
+                mRealEstateViewModel.getSelected().observe(this, item -> {
+                    mRealEstateWithPhotos = item;
+                    mRealEstate = item.getRealEstate();
+                    mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                    this.listenerOnPoI(mRealEstateWithPhotos);
+                });
+
+            }
         }
     }
 
@@ -272,8 +278,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     //load image into header with glide
     private void configureUser() {
-        //String username = getIntent().getStringExtra("username");
-        //Object photoUrl = getIntent().getStringExtra("photoUrl");
         Object photoUrl;
         mExplanationText.setText(getResources().getString((R.string.text_add_realestate),
                 SingletonSession.Instance().getUser().getUsername()));
@@ -292,7 +296,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.type_list,R.layout.custom_item_spinner);
         mSpinner.setAdapter(adapter);
     }
-
     //fill all the fields to see each real estate features
     private void configureUIDependingToRealEstate(RealEstateWithPhotos realEstateWithPhotos, RealEstate realEstate) {
         mRealEstateViewModel.spinnerPos.set(getIndex(mSpinner, realEstate.getCategory()));
@@ -373,24 +376,34 @@ public class AddARealEstateActivity extends AppCompatActivity {
             }
         });
     }
-
     //open a list of potential points of interest around the real estate
-    private void listenerOnPoI() {
+    private void listenerOnPoI(RealEstateWithPhotos realEstateWithPhotos) {
         List<String> tempList = new ArrayList<>();
+        this.changeStatusOfCheckBoxes();
         mPointsOfInterestButton.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //listener for fetch checkboxes event
             builder.setMultiChoiceItems(pointOfInterestArray, mStateCheckBoxes,
                     (dialog, which, isChecked) -> {
+                        //clear final string,temporary list containing new point of interest,and
+                        // change status of box
                         mPoIValue = "";
                         tempList.clear();
                         mStateCheckBoxes[which] = isChecked;
+                        //add new points of interest into a temporary list
                         for (int i = 0; i < mStateCheckBoxes.length; i++) {
                             if (mStateCheckBoxes[i]) {
                                 tempList.add(pointOfInterestArray[i]);
                             }
                         }
+                        //convert the temporary list in string
                         mPoIValue = TextUtils.join(",", tempList);
+                        //save new string, new status of boxes,and new points of interest into
+                        // viewmodel
                         mRealEstateViewModel.pointOfInterest.set(mPoIValue);
+                        mRealEstateViewModel.selectActualState(mStateCheckBoxes);
+                        realEstateWithPhotos.getRealEstate().setPointsOfInterest(mPoIValue);
+                        mRealEstateViewModel.select(realEstateWithPhotos);
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -478,5 +491,21 @@ public class AddARealEstateActivity extends AppCompatActivity {
         }
 
         return 0;
+    }
+
+    //check boxes when user launch dialog box
+    private void changeStatusOfCheckBoxes() {
+        mRealEstateViewModel.getSelected().observe(this, item -> {
+            mPoIValue = item.getRealEstate().getPointsOfInterest();
+            String[] tempArrayPoI = TextUtils.split(mPoIValue, ",");
+            for (int i = 0; i < pointOfInterestArray.length; i++) {
+                for (int j = 0; j < tempArrayPoI.length; j++) {
+                    if (tempArrayPoI[j].equals(pointOfInterestArray[i])) {
+                        mStateCheckBoxes[i] = true;
+                    }
+                }
+            }
+        });
+
     }
 }

@@ -28,6 +28,7 @@ public class RealEstateViewModel extends ViewModel {
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
     private final MutableLiveData<List<String>> urlList = new MutableLiveData<>();
+    private final MutableLiveData<boolean[]> mActualState = new MutableLiveData<>();
     private RealEstate mRealEstate;
     public final ObservableField<Integer> price = new ObservableField<>();
     public final ObservableField<Integer> rooms = new ObservableField<>();
@@ -72,6 +73,10 @@ public class RealEstateViewModel extends ViewModel {
 
     public LiveData<RealEstateWithPhotos> getSpecificEstate(Long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
+    }
+
+    public void updateRealEstate(RealEstate realEstate) {
+        executor.execute(() -> mRealEstateDataSource.updateRealEstate(realEstate));
     }
 
     public void createItem(RealEstate realEstate) {
@@ -153,15 +158,19 @@ public class RealEstateViewModel extends ViewModel {
         mRealEstateId = realEstateId;
     }
 
-    // -------------
-    // FOR DATAS
-    // -------------
-
     public void selecturlList(List<String> item) {
         urlList.setValue(item);
     }
 
     public LiveData<List<String>> getUrlList() {
         return urlList;
+    }
+
+    public LiveData<boolean[]> getActualState() {
+        return mActualState;
+    }
+
+    public void selectActualState(boolean[] booleans) {
+        mActualState.setValue(booleans);
     }
 }

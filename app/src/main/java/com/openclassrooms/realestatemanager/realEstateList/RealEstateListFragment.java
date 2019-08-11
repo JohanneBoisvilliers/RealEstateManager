@@ -43,7 +43,6 @@ public class RealEstateListFragment extends Fragment {
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
-
     @Override
     public void onStart() {
         mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
