@@ -388,6 +388,35 @@
                                 android:textSize="@dimen/text_informations"/>
 
                         </LinearLayout>
+                        <!--points of interest-->
+                        <LinearLayout
+                            android:id="@+id/point_of_interest_container"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+
+                            android:paddingBottom="10dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/real_estate_container">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_action_name"
+                                android:tint="@color/colorAccentDark" />
+
+                            <TextView
+                                android:id="@+id/point_of_interest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/point_of_interest"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/text_informations" />
+
+                        </LinearLayout>
                     </LinearLayout>
                     <ImageView
                         android:layout_width="0dp"

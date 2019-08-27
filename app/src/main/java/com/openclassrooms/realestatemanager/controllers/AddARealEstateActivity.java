@@ -492,7 +492,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
         return 0;
     }
-
     //check boxes when user launch dialog box
     private void changeStatusOfCheckBoxes() {
         mRealEstateViewModel.getSelected().observe(this, item -> {
