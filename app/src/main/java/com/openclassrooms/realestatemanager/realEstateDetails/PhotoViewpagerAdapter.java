@@ -1,11 +1,8 @@
 package com.openclassrooms.realestatemanager.realEstateDetails;
 
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.openclassrooms.realestatemanager.models.Photo;
 
@@ -38,5 +35,9 @@ public class PhotoViewpagerAdapter extends FragmentStatePagerAdapter {
         this.mRealEstatePhotos.clear();
         this.mRealEstatePhotos = listOfPhotos;
         this.notifyDataSetChanged();
+    }
+
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

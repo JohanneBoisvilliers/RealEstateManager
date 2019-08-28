@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Intent;
@@ -32,9 +33,12 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.databinding.ActivityAddArealEstateBinding;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
+import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.File;
@@ -45,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
@@ -62,6 +67,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
     EditText mSurfaceEditText;
     @BindView(R.id.rooms_edittext)
     EditText mRoomsEditText;
+    @BindView(R.id.address_editText)
+    EditText mAddressEditText;
+    @BindView(R.id.number_of_photo_picked)
+    TextView mNumberOfPhoto;
+    @BindView(R.id.description_edittext)
+    EditText mDescriptionEditText;
     @BindView(R.id.spinner_realestate_type)
     Spinner mSpinner;
     @BindView(R.id.image_header)
@@ -74,18 +85,29 @@ public class AddARealEstateActivity extends AppCompatActivity {
     ViewGroup mGetPhotoFromDevice;
     @BindView(R.id.take_photo)
     ViewGroup mTakePhoto;
+    @BindView(R.id.point_of_interest_button)
+    ViewGroup mPointsOfInterestButton;
     @BindView(R.id.coordinator_add_a_realEstate)
     View mCoordinator;
+    @BindArray(R.array.interest_list)
+    String[] pointOfInterestArray;
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_GALLARY = 2;
-    private List<String> mImageEncodedList;
+    private List<String> mImageEncodedList = new ArrayList<>();
+    private List<String> mGalleryPhotos = new ArrayList<>();
+    private List<String> mCameraPhotos = new ArrayList<>();
     private Photo[] mFinalPhotoList;
+    private boolean[] mStateCheckBoxes = new boolean[7];
     private RealEstateViewModel mRealEstateViewModel;
     private RealEstate mRealEstate;
+    private RealEstateWithPhotos mRealEstateWithPhotos;
     private String mSpinnerValue;
+    private String mAddresValue;
     private String mDescriptionValue;
     private String mImageFilePath;
+    private String mComeFrom;
+    private String mPoIValue;
     private int mPriceValue;
     private int mSurfaceValue;
     private int mNumberOfRooms;
@@ -102,21 +124,25 @@ public class AddARealEstateActivity extends AppCompatActivity {
         binding.setViewmodel(mRealEstateViewModel);
 
         Utils.configureImageHeader(this, mHeader);
+
         this.configureUser();
-        this.configureTypeSpinner();
+        this.configureSpinners();
         this.getSpinnerInfo();
         this.listenerOnFAB();
         this.listenerOnGetPhotoDevice();
         this.listenerOnTakePhoto();
+        this.mComeFrom = getIntent().getStringExtra("comefrom");
+        this.getRealEstateForModifyFunction(mComeFrom, savedInstanceState);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         String imageEncoded = "";
-        mImageEncodedList = new ArrayList<>();
         switch (requestCode) {
             case PICK_FROM_GALLARY:
+                mGalleryPhotos.clear();
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.getData() != null) {
                         Uri outPutUri = data.getData();
@@ -131,7 +157,11 @@ public class AddARealEstateActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    mImageEncodedList.clear();
+                    mImageEncodedList.addAll(mCameraPhotos);
+                    mImageEncodedList.addAll(mGalleryPhotos);
                     mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
+                    mRealEstateViewModel.selecturlList(mImageEncodedList);
                 } else {
                     Utils.showSnackBar(mCoordinator,
                             getString(R.string.snack_bar_no_photo),
@@ -141,7 +171,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
             case PICK_FROM_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
-                    mImageEncodedList.add(mImageFilePath);
+                    mImageEncodedList.clear();
+                    mCameraPhotos.add(mImageFilePath);
+                    mImageEncodedList.addAll(mCameraPhotos);
+                    mImageEncodedList.addAll(mGalleryPhotos);
+                    mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
+                    mRealEstateViewModel.selecturlList(mImageEncodedList);
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
                     Utils.showSnackBar(mCoordinator,
@@ -163,14 +198,18 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //create a realEstate object with all informations fetch from differents widgets(spinner,textview...)
     private void setRealEstateInfos() {
-        mRealEstate = mRealEstateViewModel.getRealEstate();
-        mRealEstate.setUserId(getIntent().getLongExtra("userId", 0));
+        if (TextUtils.isEmpty(mComeFrom)) {
+            mRealEstate = mRealEstateViewModel.getRealEstate();
+        }
+        mRealEstate.setUserId(SingletonSession.Instance().getUser().getId());
         mRealEstate.setCategory(mSpinnerValue);
         mRealEstate.setPrice(mPriceValue);
         mRealEstate.setSurface(mSurfaceValue);
         mRealEstate.setSold(false);
         mRealEstate.setNbreOfRoom(mNumberOfRooms);
         mRealEstate.setDescription(mDescriptionValue);
+        mRealEstate.setAddress(mAddresValue);
+        mRealEstate.setPointsOfInterest(mPoIValue);
     }
     //transform list of photo into array for request
     private void setPhotoForRealEstate(List<String> urlList) {
@@ -199,21 +238,53 @@ public class AddARealEstateActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
-            Log.d(TAG, "extrudeUrlFromGallery: " + imageEncoded);
-            mImageEncodedList.add(imageEncoded);
+            mGalleryPhotos.add(imageEncoded);
         }
         cursor.close();
+    }
+    //when user came to this activity for modify a real estate, we get this real estate in database and set UI
+    private void getRealEstateForModifyFunction(String comeFrom, Bundle bundle) {
+        if (!TextUtils.isEmpty(comeFrom)) {
+            if (bundle == null) {
+                this.mRealEstateViewModel
+                        .getSpecificEstate(getIntent().getLongExtra("realEstateId", 0))
+                        .observe(this, item -> {
+                            mRealEstateWithPhotos = item;
+                            mRealEstateViewModel.select(item);
+                            mRealEstate = item.getRealEstate();
+                            mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                            this.listenerOnPoI(mRealEstateWithPhotos);
+                            for (int i = 0; i < mRealEstateWithPhotos.getPhotoList().size(); i++) {
+                                mImageEncodedList.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                                mGalleryPhotos.add(mRealEstateWithPhotos.getPhotoList().get(i).getUrl());
+                            }
+                            mRealEstateViewModel.selecturlList(mImageEncodedList);
+                            this.configureUIDependingToRealEstate(mRealEstateWithPhotos, mRealEstate);
+                        });
+            } else {
+                mRealEstateViewModel.getUrlList().observe(this, list -> mImageEncodedList.addAll(list));
+                mRealEstateViewModel.getSelected().observe(this, item -> {
+                    mRealEstateWithPhotos = item;
+                    mRealEstate = item.getRealEstate();
+                    mRealEstateViewModel.setRealEstateId(mRealEstate.getId());
+                    this.listenerOnPoI(mRealEstateWithPhotos);
+                });
+
+            }
+        }
     }
 
     // ------------------------------------ UI ------------------------------------
 
     //load image into header with glide
     private void configureUser() {
-        String username = getIntent().getStringExtra("username");
-        Object photoUrl = getIntent().getStringExtra("photoUrl");
-        mExplanationText.setText(getResources().getString((R.string.text_add_realestate), username));
-        if (photoUrl == null) {
+        Object photoUrl;
+        mExplanationText.setText(getResources().getString((R.string.text_add_realestate),
+                SingletonSession.Instance().getUser().getUsername()));
+        if (SingletonSession.Instance().getUser().getPhotoUrl() == null) {
             photoUrl = getResources().getDrawable(R.drawable.user);
+        } else {
+            photoUrl = SingletonSession.Instance().getUser().getPhotoUrl();
         }
         Glide.with(this)
                 .load(photoUrl)
@@ -221,9 +292,20 @@ public class AddARealEstateActivity extends AppCompatActivity {
                 .into(mUserPhoto);
     }
     //configure spinner to choose type of real estate
-    private void configureTypeSpinner() {
+    private void configureSpinners() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.type_list,R.layout.custom_item_spinner);
         mSpinner.setAdapter(adapter);
+    }
+    //fill all the fields to see each real estate features
+    private void configureUIDependingToRealEstate(RealEstateWithPhotos realEstateWithPhotos, RealEstate realEstate) {
+        mRealEstateViewModel.spinnerPos.set(getIndex(mSpinner, realEstate.getCategory()));
+        mRealEstateViewModel.price.set(realEstate.getPrice());
+        mRealEstateViewModel.surface.set(realEstate.getSurface());
+        mRealEstateViewModel.rooms.set(realEstate.getNbreOfRoom());
+        mRealEstateViewModel.address.set(realEstate.getAddress());
+        mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(realEstateWithPhotos.getPhotoList().size())));
+        mRealEstateViewModel.description.set(realEstate.getDescription());
+        mRealEstateViewModel.pointOfInterest.set(realEstate.getPointsOfInterest());
     }
 
     // ---------------------------------- LISTENERS ----------------------------------
@@ -234,12 +316,14 @@ public class AddARealEstateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInfos()) {
-                    setRealEstateInfos();
                     setPhotoForRealEstate(mImageEncodedList);
+                    setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
+                    returnToDetailsWithNewInfos();
                     finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
+                            //TODO modifier phrase de contrainte
                             getResources().getString(R.string.no_photo),
                             BaseTransientBottomBar.LENGTH_LONG);
                 }
@@ -292,6 +376,39 @@ public class AddARealEstateActivity extends AppCompatActivity {
             }
         });
     }
+    //open a list of potential points of interest around the real estate
+    private void listenerOnPoI(RealEstateWithPhotos realEstateWithPhotos) {
+        List<String> tempList = new ArrayList<>();
+        this.changeStatusOfCheckBoxes();
+        mPointsOfInterestButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //listener for fetch checkboxes event
+            builder.setMultiChoiceItems(pointOfInterestArray, mStateCheckBoxes,
+                    (dialog, which, isChecked) -> {
+                        //clear final string,temporary list containing new point of interest,and
+                        // change status of box
+                        mPoIValue = "";
+                        tempList.clear();
+                        mStateCheckBoxes[which] = isChecked;
+                        //add new points of interest into a temporary list
+                        for (int i = 0; i < mStateCheckBoxes.length; i++) {
+                            if (mStateCheckBoxes[i]) {
+                                tempList.add(pointOfInterestArray[i]);
+                            }
+                        }
+                        //convert the temporary list in string
+                        mPoIValue = TextUtils.join(",", tempList);
+                        //save new string, new status of boxes,and new points of interest into
+                        // viewmodel
+                        mRealEstateViewModel.pointOfInterest.set(mPoIValue);
+                        mRealEstateViewModel.selectActualState(mStateCheckBoxes);
+                        realEstateWithPhotos.getRealEstate().setPointsOfInterest(mPoIValue);
+                        mRealEstateViewModel.select(realEstateWithPhotos);
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+    }
     //listener for price edittext, set price in viewmodel's datas
     @OnTextChanged(value = R.id.price_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void priceChanged(CharSequence text) {
@@ -325,6 +442,12 @@ public class AddARealEstateActivity extends AppCompatActivity {
             mSurfaceValue = Integer.parseInt(text.toString());
         }
     }
+    //listener for address edit text, set description in viewmodel's datas
+    @OnTextChanged(value = R.id.address_editText, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void addressChanged(CharSequence text) {
+        mRealEstateViewModel.address.set(text.toString());
+        mAddresValue = text.toString();
+    }
     //listener for description edit text, set description in viewmodel's datas
     @OnTextChanged(value = R.id.description_edittext, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void descriptionChanged(CharSequence text) {
@@ -346,7 +469,42 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mImageFilePath = image.getAbsolutePath();
         return image;
     }
+    //check if there are at least one photo and a description before updating database
     private Boolean checkInfos() {
         return (mImageEncodedList != null && mImageEncodedList.size() > 0 && !TextUtils.isEmpty(mDescriptionValue));
+    }
+    //return de realEstateDetailsFragment after updating real estate
+    private void returnToDetailsWithNewInfos() {
+        if (mComeFrom != null && mComeFrom.equals("RealEstateDetailsFragment")) {
+            Intent intent = new Intent();
+            intent.putExtra("realEstateId", mRealEstate.getId());
+            setResult(RegisterActivity.SUCCESS, intent);
+        }
+    }
+    //private method of your class
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                return i;
+            }
+
+        }
+
+        return 0;
+    }
+    //check boxes when user launch dialog box
+    private void changeStatusOfCheckBoxes() {
+        mRealEstateViewModel.getSelected().observe(this, item -> {
+            mPoIValue = item.getRealEstate().getPointsOfInterest();
+            String[] tempArrayPoI = TextUtils.split(mPoIValue, ",");
+            for (int i = 0; i < pointOfInterestArray.length; i++) {
+                for (int j = 0; j < tempArrayPoI.length; j++) {
+                    if (tempArrayPoI[j].equals(pointOfInterestArray[i])) {
+                        mStateCheckBoxes[i] = true;
+                    }
+                }
+            }
+        });
+
     }
 }

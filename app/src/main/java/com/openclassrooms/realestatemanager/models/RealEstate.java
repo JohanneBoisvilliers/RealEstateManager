@@ -2,14 +2,7 @@ package com.openclassrooms.realestatemanager.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
@@ -26,7 +19,8 @@ public class RealEstate {
     private int surface;
     private int nbreOfRoom;
     private String description;
-    @Ignore private String address;
+    private String address;
+    private String pointsOfInterest;
 
     public RealEstate() {
     }
@@ -60,6 +54,11 @@ public class RealEstate {
         return address;
     }
 
+    public String getPointsOfInterest() {
+        return pointsOfInterest;
+    }
+
+
     // -- SETTERS
     public void setId(long id) {
         this.id = id;
@@ -89,4 +88,7 @@ public class RealEstate {
         this.address = address;
     }
 
+    public void setPointsOfInterest(String pointsOfInterest) {
+        this.pointsOfInterest = pointsOfInterest;
+    }
 }

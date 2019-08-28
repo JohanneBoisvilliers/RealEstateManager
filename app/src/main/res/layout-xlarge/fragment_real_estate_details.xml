@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".realEstateDetails.RealEstateDetailsFragment"
-    android:paddingTop="?attr/actionBarSize">
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:context=".realEstateDetails.RealEstateDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -41,7 +42,27 @@
                     android:id="@+id/recyclerView_details_tablet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"/>
+                    android:scrollbars="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <FrameLayout
+                    android:id="@+id/sold_out_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/background_sold_out"
+                    app:layout_constraintBottom_toBottomOf="@id/recyclerView_details_tablet"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/recyclerView_details_tablet">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/sold_out" />
+                </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -62,8 +83,54 @@
                         android:layout_gravity="bottom"/>
                 </FrameLayout>
 
+                <LinearLayout
+                    android:id="@+id/fab_replacement"
+                    style="?attr/buttonBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_to_border"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerView_details_tablet">
 
+                    <Button
+                        android:id="@+id/modify_button_tablet_mode"
+                        style="?attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="75dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimary"
+                        android:drawableTop="@drawable/baseline_create_24"
+                        android:padding="10dp"
+                        android:text="@string/modify_button"
+                        android:textColor="@color/primaryTextColor" />
 
+                    <Button
+                        android:id="@+id/sold_button_tablet_mode"
+                        style="?attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="75dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimary"
+                        android:drawableTop="@drawable/baseline_attach_money_24"
+                        android:padding="10dp"
+                        android:text="@string/sold_button"
+                        android:textColor="@color/primaryTextColor" />
+
+                    <Button
+                        android:id="@+id/simul_button_tablet_mode"
+                        style="?attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="75dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimary"
+                        android:drawableTop="@drawable/baseline_add_24"
+                        android:padding="10dp"
+                        android:text="@string/simul_button"
+                        android:textColor="@color/primaryTextColor" />
+                </LinearLayout>
                 <!--container under photo -->
                 <LinearLayout
                     android:orientation="vertical"
@@ -97,25 +164,27 @@
 
                 </LinearLayout>
                 <!--container description -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+
 
                     <TextView
+                        android:id="@+id/title_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
-                        android:paddingStart="10dp"
-                        android:paddingBottom="5dp"
+                        android:layout_margin="@dimen/margin_to_border"
                         android:text="@string/description_detail"
                         android:textSize="@dimen/title_desciption"
                         android:fontFamily="sans-serif-medium"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorPrimary"/>
+                        android:textColor="@color/colorPrimary"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/fab_replacement" />
                     <FrameLayout
+                        android:id="@+id/description_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/title_description">
                         <TextView
                             android:id="@+id/real_estate_description"
                             android:layout_width="wrap_content"
@@ -130,7 +199,7 @@
                             android:id="@+id/real_estate_description_fade"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="10dp"
+                            android:paddingStart="@dimen/margin_to_border"
                             android:maxLines="3"
                             android:fontFamily="sans-serif"
                             android:textSize="@dimen/text_description"
@@ -144,53 +213,56 @@
                         android:layout_height="21dp"
                         android:text="@string/button_more"
                         android:textAllCaps="false"
-                        android:paddingEnd="10dp"
+                        android:paddingEnd="@dimen/margin_to_border"
                         android:paddingTop="5dp"
                         android:gravity="top|end"
                         android:textColor="@color/colorAccentDark"
                         android:background="@android:color/transparent"
-                        android:visibility="invisible"/>
-                </LinearLayout>
+                        android:visibility="invisible"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/description_container" />
+
                 <!--container details -->
+
+
+                <!--surface informations-->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/surface_container"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/address_container"
+                    app:layout_constraintTop_toBottomOf="@id/btShowmore">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_settings_overscan_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_surface"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <!--surface informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:orientation="horizontal">
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_settings_overscan_black_18"
-                                android:tint="@color/colorAccentDark"/>
-                            <TextView
-                                android:id="@+id/information_surface"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:gravity="center"
-                                android:text="@string/real_estate_surface"
-                                android:textColor="@color/colorPrimary" />
-                        </LinearLayout>
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="@string/real_estate_surface"
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
                         <!--room informations-->
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:id="@+id/room_container"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:orientation="horizontal">
+                            android:layout_margin="@dimen/margin_to_border"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/for_sale_container"
+                            app:layout_constraintTop_toBottomOf="@id/surface_container">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
@@ -207,12 +279,15 @@
                         </LinearLayout>
                         <!--agent informations-->
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:id="@+id/real_estate_container"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:orientation="horizontal">
+                            android:layout_margin="@dimen/margin_to_border"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/sold_since_container"
+                            app:layout_constraintTop_toBottomOf="@id/room_container">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
@@ -229,12 +304,15 @@
                         </LinearLayout>
                         <!--location informations-->
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:id="@+id/address_container"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:orientation="horizontal">
+                            android:layout_margin="@dimen/margin_to_border"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toRightOf="@id/surface_container"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/btShowmore">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
@@ -260,12 +338,15 @@
                         </LinearLayout>
                         <!--For sale informations-->
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:id="@+id/for_sale_container"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:orientation="horizontal">
+                            android:layout_margin="@dimen/margin_to_border"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toRightOf="@id/room_container"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/address_container">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
@@ -284,13 +365,16 @@
                         </LinearLayout>
                         <!--sold information-->
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:id="@+id/sold_since_container"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
+                            android:layout_margin="@dimen/margin_to_border"
                             android:paddingBottom="10dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toRightOf="@id/real_estate_container"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/for_sale_container">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
@@ -307,18 +391,46 @@
                                 android:textColor="@color/colorPrimary" />
 
                         </LinearLayout>
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
+
+                <!--points of interest-->
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
                         android:layout_gravity="center"
                         android:background="@color/colorPrimary"
-                        android:layout_margin="15dp"/>
+                        android:layout_margin="@dimen/margin_to_border"
+                    app:layout_constraintTop_toBottomOf="@id/point_of_interest_container" />
+
+                <LinearLayout
+                    android:id="@+id/point_of_interest_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/real_estate_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_action_name"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/point_of_interest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/point_of_interest"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+
                 </LinearLayout>
 
 
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/add_photo_fab"

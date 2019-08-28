@@ -2,11 +2,14 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.injections.Injections;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
+import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
@@ -44,6 +47,15 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_location) TextView mRealEstateLocation;
     @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
+    @Nullable
+    @BindView(R.id.modify_button_tablet_mode)
+    Button mModifyTabletMode;
+    @Nullable
+    @BindView(R.id.sold_button_tablet_mode)
+    Button mSetSoldTabletMode;
+    @Nullable
+    @BindView(R.id.simul_button_tablet_mode)
+    Button mSimulTabletMode;
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
@@ -66,6 +78,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
 
     private static final String TAG = "DEBUG";
+    public static final int MODIFY_REQUEST = 1234;
     private int mNumberOfLine;
     private RealEstateWithPhotos mRealEstate;
     private RecyclerViewDetailsPhotoAdapter mRecyclerViewPhotoAdapter;
@@ -81,6 +94,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,14 +105,34 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         this.getRealEstateToConfigure();
         if (isTwoPanesLayout) {
             configureRecyclerView();
+            this.configureModifyTabletMode();
+            this.configureSoldTabletMode();
+            this.configureSimulTabletMode();
         }else{
             this.configureViewPager();
             this.configureFABMenu();
+            this.configureModifyButton();
         }
         this.configureExpandDescription();
         this.configureExpandLocation();
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MODIFY_REQUEST && resultCode == RegisterActivity.RESULT_OK) {
+            if (data != null) {
+                //TODO gerer les 2 mode tablette et tel
+                long realEstateId = data.getLongExtra("realEstateId", 0);
+                mRealEstateViewModel.getSpecificEstate(realEstateId).observe(getActivity(),
+                        item -> {
+                            mRealEstateViewModel.select(item);
+                            getRealEstateToConfigure();
+                        });
+
+            }
+        }
     }
 
     // ------------------------------------ UI ------------------------------------
@@ -129,7 +163,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
             mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
-            mInformationRoom.setText(getResources().getString((R.string.real_estate_room), realEstate.getRealEstate().getNbreOfRoom()));
+            mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
+                    realEstate.getRealEstate().getNbreOfRoom()));
             this.setSoldState(realEstate.getRealEstate());
         }
     }
@@ -204,31 +239,43 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     //set a click listener to open FAB menu
     private void configureFABMenu(){
-        mMainFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isFABOpen){
-                    showFABMenu();
-                    configureFABchangeStatus();
-                }else{
-                    closeFABMenu();
-                }
+        mMainFAB.setOnClickListener(view -> {
+            if (!isFABOpen) {
+                showFABMenu();
+                configureFABchangeStatus();
+            } else {
+                closeFABMenu();
             }
         });
     }
     //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
-        mStatusFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean isSold = mRealEstate.getRealEstate().getSold();
-                isSold = !isSold;
-                mRealEstate.getRealEstate().setSold(isSold);
-                mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
-                setSoldState(mRealEstate.getRealEstate());
-            }
-        });
+        mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
     }
+
+    //set a listener on modify button to change differents fields of real estates
+    private void configureModifyButton() {
+        mModifyEstate.setOnClickListener(v -> startModifyActivity());
+    }
+
+    //we don't have fab in tablet mode so we have to set a button to modify a real estate
+    private void configureModifyTabletMode() {
+        DrawableCompat.setTint(mModifyTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mModifyTabletMode.setOnClickListener(view -> startModifyActivity());
+    }
+
+    private void configureSoldTabletMode() {
+        DrawableCompat.setTint(mSetSoldTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mSetSoldTabletMode.setOnClickListener(view -> changeRealEstateStatus());
+    }
+
+    private void configureSimulTabletMode() {
+        DrawableCompat.setTint(mSimulTabletMode.getCompoundDrawables()[1],
+                ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+    }
+
 
     // ------------------------------------ DATA ------------------------------------
 
@@ -241,11 +288,10 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     //configure viewmodel
     private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
     //get from database if one pane layout or from shared viewmodel if two panes layout
-    private void getRealEstateToConfigure(){
+    private void getRealEstateToConfigure() throws NullPointerException {
         mRealEstateRecyclerView = getActivity().findViewById(R.id.real_estate_recycler_view);
         if(mRealEstateRecyclerView != null){//two panes layout
             isTwoPanesLayout = true;
@@ -266,4 +312,19 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         }
     }
 
+    //change the sold status
+    private void changeRealEstateStatus() {
+        Boolean isSold = mRealEstate.getRealEstate().getSold();
+        isSold = !isSold;
+        mRealEstate.getRealEstate().setSold(isSold);
+        mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
+        setSoldState(mRealEstate.getRealEstate());
+    }
+
+    private void startModifyActivity() {
+        Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
+        intent.putExtra("comefrom", getClass().getSimpleName());
+        intent.putExtra("realEstateId", mRealEstate.getRealEstate().getId());
+        startActivityForResult(intent, MODIFY_REQUEST);
+    }
 }

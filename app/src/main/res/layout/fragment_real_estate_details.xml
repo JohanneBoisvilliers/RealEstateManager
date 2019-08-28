@@ -6,19 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".realEstateDetails.RealEstateDetailsFragment">
     <FrameLayout
-    android:id="@+id/anchor_FAB"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+        android:id="@+id/anchor_FAB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.CoordinatorLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView_details_tablet"
@@ -26,10 +25,13 @@
                     android:layout_height="wrap_content"
                     android:scrollbars="horizontal"
                     android:visibility="gone" />
-
+                <!--viewpager container-->
                 <FrameLayout
+                    android:id="@+id/viewpager_container"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/real_estate_photo"
@@ -60,15 +62,16 @@
                     </FrameLayout>
 
                 </FrameLayout>
-
-
-                <!--container under photo -->
+                <!--type and price container -->
                 <LinearLayout
+                    android:id="@+id/type_and_price_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
                     android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/viewpager_container">
 
                     <TextView
                         android:id="@+id/real_estate_category"
@@ -95,18 +98,20 @@
                 </LinearLayout>
                 <!--container description -->
                 <LinearLayout
+                    android:id="@+id/description_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/margin_to_border"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/map">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:paddingStart="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
                         android:text="@string/description_detail"
+                        android:layout_marginBottom="@dimen/margin_to_border"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/title_desciption" />
@@ -121,7 +126,6 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
                             android:maxLines="2"
-                            android:paddingStart="10dp"
                             android:text="description du bien"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_description" />
@@ -133,7 +137,6 @@
                             android:background="@android:color/transparent"
                             android:fontFamily="sans-serif"
                             android:maxLines="3"
-                            android:paddingStart="10dp"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_description" />
                     </FrameLayout>
@@ -151,189 +154,225 @@
                         android:textColor="@color/colorAccentDark"
                         android:visibility="invisible"/>
                 </LinearLayout>
-                <!--container details -->
+                <!--surface informations-->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/surface_container"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <!--surface informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_settings_overscan_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_surface"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/real_estate_surface"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-                        </LinearLayout>
-                        <!--room informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_hotel_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_room"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/real_estate_room"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-                        </LinearLayout>
-                        <!--agent informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_face_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_agent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/real_estate_agent"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-                        </LinearLayout>
-                        <!--location informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_location_on_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_location"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:maxLines="1"
-                                android:text="@string/real_estate_location"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-
-                            <Button
-                                android:id="@+id/btnLocationMore"
-                                android:layout_width="wrap_content"
-                                android:layout_height="21dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/button_more"
-                                android:textAllCaps="false"
-                                android:textColor="@color/colorAccentDark" />
-                        </LinearLayout>
-                        <!--For sale informations-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_date_range_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_starting_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:maxLines="1"
-                                android:text="@string/real_estate_starting_date"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-
-                        </LinearLayout>
-                        <!--sold information-->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="10dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:src="@drawable/baseline_attach_money_black_18"
-                                android:tint="@color/colorAccentDark" />
-
-                            <TextView
-                                android:id="@+id/information_sold"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:maxLines="1"
-                                android:text="@string/real_estate_sold"
-                                android:textSize="@dimen/text_informations"
-                                android:textColor="@color/colorPrimary" />
-
-                        </LinearLayout>
-                    </LinearLayout>
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/address_container"
+                    app:layout_constraintTop_toBottomOf="@id/type_and_price_container">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorPrimary" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_settings_overscan_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_surface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/real_estate_surface"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+                </LinearLayout>
+                <!--room informations-->
+                <LinearLayout
+                    android:id="@+id/room_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/for_sale_container"
+                    app:layout_constraintTop_toBottomOf="@id/surface_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_hotel_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_room"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/real_estate_room"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+                </LinearLayout>
+                <!--agent informations-->
+                <LinearLayout
+                    android:id="@+id/real_estate_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/sold_since_container"
+                    app:layout_constraintTop_toBottomOf="@id/room_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_face_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_agent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/real_estate_agent"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+                </LinearLayout>
+                <!--location informations-->
+                <LinearLayout
+                    android:id="@+id/address_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toRightOf="@id/surface_container"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/surface_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_location_on_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:maxLines="1"
+                        android:text="@string/real_estate_location"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+
+                    <Button
+                        android:id="@+id/btnLocationMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="21dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/button_more"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorAccentDark" />
+                </LinearLayout>
+                <!--For sale informations-->
+                <LinearLayout
+                    android:id="@+id/for_sale_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/room_container"
+                    app:layout_constraintLeft_toRightOf="@id/room_container"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/room_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_date_range_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_starting_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/real_estate_starting_date"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+
+                </LinearLayout>
+                <!--sold information-->
+                <LinearLayout
+                    android:id="@+id/sold_since_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/real_estate_container"
+                    app:layout_constraintLeft_toRightOf="@id/real_estate_container"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/real_estate_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_attach_money_black_18"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/information_sold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/real_estate_sold"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+
+                </LinearLayout>
+                <!--points of interest-->
+                <LinearLayout
+                    android:id="@+id/point_of_interest_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/real_estate_container">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_action_name"
+                        android:tint="@color/colorAccentDark" />
+
+                    <TextView
+                        android:id="@+id/point_of_interest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/point_of_interest"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_informations" />
+
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/map"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/map_height"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin_to_border"
+                    android:layout_marginTop="@dimen/space_between_interest_and_map"
+                    android:layout_marginEnd="@dimen/margin_to_border"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/point_of_interest_container" />
 
-            </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/add_photo_fab"

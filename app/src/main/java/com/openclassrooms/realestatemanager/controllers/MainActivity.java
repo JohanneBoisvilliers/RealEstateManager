@@ -31,6 +31,9 @@ import com.openclassrooms.realestatemanager.login.UserViewModel;
 import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.MyApp;
+import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.views.HeaderViewHolder;
 
@@ -48,10 +51,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WRITE_PERMISSION = 0x01;
     public static final String TAG = "DEBUG";
     private static final int PERMISSION_ALL = 0x02;
-    private User mCurrentUser;
     private UserViewModel mUserViewModel;
+    private RealEstateViewModel mRealEstateViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
+    private Bundle mBundle;
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         Stetho.initializeWithDefaults(this);
+
         this.configureViewModel();
         this.configureToolbar();
         this.configureDrawerLayout();
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.mDrawerLayout.closeDrawer(GravityCompat.START);
         }
         super.onBackPressed();
+        MyApp.isInit = false;
     }
 
     // ------------------------------------ DATA ------------------------------------
@@ -85,23 +91,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //configure viewmodel for requests
     private void configureViewModel() {
         ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(this);
-        this.mUserViewModel =
-                ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        this.mUserViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
     //get user id from intent sent by sign in activity or register activity
     private Long getUserId() {
         if (checkLastUser() != 0) {
             return checkLastUser();
         } else {
-            // TODO a tester une fois la fonction deconnexion implémentée
             startActivity(new Intent(this, LoginActivity.class));
-            return 0L;//getIntent().getLongExtra("userId", 0);
+            return 0L;
         }
     }
-
     //get user logged to set infos in different place of application
     private void getCurrentUser(Long userId) {
-        mCurrentUser = new User();
         this.mUserViewModel.getUser(userId).observe(this, this::updateUser);
     }
 
@@ -186,11 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ----------------------------------- UTILS -----------------------------------
 
     private void startAddRealEstateActivity(){
-        Intent intent = new Intent(this,AddARealEstateActivity.class);
-        intent.putExtra("userId", mCurrentUser.getId());
-        intent.putExtra("username", mCurrentUser.getUsername());
-        intent.putExtra("photoUrl", mCurrentUser.getPhotoUrl());
-        startActivity(intent);
+        startActivity(new Intent(this, AddARealEstateActivity.class));
     }
 
     private void startLoginActivity() {
@@ -257,9 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mHeaderViewHolder.getUserNameTxt().setText(user.getUsername());
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
         Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
-        mCurrentUser.setId(user.getId());
-        mCurrentUser.setUsername(user.getUsername());
-        mCurrentUser.setPhotoUrl(user.getPhotoUrl());
+        SingletonSession.Instance().setUser(user);
     }
 
     @Override
