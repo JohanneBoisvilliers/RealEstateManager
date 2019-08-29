@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
 import com.openclassrooms.realestatemanager.login.RegisterActivity;
@@ -71,6 +72,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
     @Nullable
     @BindView(R.id.show_background_start) View mEntireView;
+    @BindView(R.id.map)
+    ImageView mMapContainer;
     @Nullable
     @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
     @Nullable
@@ -115,7 +118,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         }
         this.configureExpandDescription();
         this.configureExpandLocation();
-
         return view;
     }
 
@@ -158,6 +160,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             this.getRealEstatesPhotos(realEstate.getRealEstate().getId());
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
+            this.getMap(mRealEstate.getRealEstate().getAddress());
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
             setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
@@ -252,36 +255,39 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
     }
-
     //set a listener on modify button to change differents fields of real estates
     private void configureModifyButton() {
         mModifyEstate.setOnClickListener(v -> startModifyActivity());
     }
-
     //we don't have fab in tablet mode so we have to set a button to modify a real estate
     private void configureModifyTabletMode() {
         DrawableCompat.setTint(mModifyTabletMode.getCompoundDrawables()[1],
                 ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
         mModifyTabletMode.setOnClickListener(view -> startModifyActivity());
     }
-
     private void configureSoldTabletMode() {
         DrawableCompat.setTint(mSetSoldTabletMode.getCompoundDrawables()[1],
                 ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
         mSetSoldTabletMode.setOnClickListener(view -> changeRealEstateStatus());
     }
-
     private void configureSimulTabletMode() {
         DrawableCompat.setTint(mSimulTabletMode.getCompoundDrawables()[1],
                 ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
     }
-
 
     // ------------------------------------ DATA ------------------------------------
 
     //request photo for a specific real estate and put an observer to update photos
     private void getRealEstatesPhotos(long realEstateId){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
+    }
+
+    private void getMap(String address) {
+        Glide.with(this).load("https://maps.googleapis.com/maps/api/staticmap?markers=" +
+                address +
+                "zoom=12&size=400x400&key=" + getString(R.string.APIKEY))
+                .centerCrop()
+                .into(mMapContainer);
     }
 
     // ----------------------------------- UTILS -----------------------------------

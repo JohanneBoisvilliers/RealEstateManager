@@ -398,11 +398,12 @@
 
                 <!--points of interest-->
                 <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp"
-                        android:layout_gravity="center"
-                        android:background="@color/colorPrimary"
-                        android:layout_margin="@dimen/margin_to_border"
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin_to_border"
+                    android:background="@color/colorPrimary"
                     app:layout_constraintTop_toBottomOf="@id/point_of_interest_container" />
 
                 <LinearLayout
