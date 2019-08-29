@@ -271,6 +271,10 @@ public class AddARealEstateActivity extends AppCompatActivity {
                 });
 
             }
+        } else {
+            RealEstateWithPhotos realEstateWithPhotos = new RealEstateWithPhotos();
+            realEstateWithPhotos.setRealEstate(mRealEstateViewModel.getRealEstate());
+            this.listenerOnPoI(realEstateWithPhotos);
         }
     }
 

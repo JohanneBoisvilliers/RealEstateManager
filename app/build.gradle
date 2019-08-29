@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resValue "string", "APIKEY", "\""+getApiKey()+"\""
     }
     dataBinding {
         enabled = true
@@ -28,7 +29,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
+def getApiKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+    return properties.getProperty("apikey")
+}
 dependencies {
     //ANDROID
     implementation fileTree(dir: 'libs', include: ['*.jar'])
