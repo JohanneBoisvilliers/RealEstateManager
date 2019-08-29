@@ -13,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -283,11 +284,15 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     }
 
     private void getMap(String address) {
-        Glide.with(this).load("https://maps.googleapis.com/maps/api/staticmap?markers=" +
-                address +
-                "zoom=12&size=400x400&key=" + getString(R.string.APIKEY))
-                .centerCrop()
-                .into(mMapContainer);
+        if (TextUtils.isEmpty(address) || address.equals("null")) {
+            Glide.with(this).load(getResources().getDrawable(R.drawable.background_start)).centerInside().into(mMapContainer);
+        } else {
+            Glide.with(this).load("https://maps.googleapis.com/maps/api/staticmap?markers=" +
+                    address +
+                    "zoom=12&size=400x400&key=" + getString(R.string.APIKEY))
+                    .centerCrop()
+                    .into(mMapContainer);
+        }
     }
 
     // ----------------------------------- UTILS -----------------------------------
