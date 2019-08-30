@@ -31,7 +31,7 @@
         <item>Play area</item>
     </string-array>
     <string name="description_detail">Description</string>
-    <string name="button_more">..more</string>
+    <string name="button_more">Show address</string>
     <string name="button_close">..close</string>
     <string name="real_estate_surface">%dm²</string>
     <string name="real_estate_room">%d room(s)</string>

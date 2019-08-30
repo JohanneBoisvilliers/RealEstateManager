@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -46,7 +47,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.real_estate_price) TextView mRealEstatePrice;
     @BindView(R.id.real_estate_description) TextView mRealEstateDescription;
     @BindView(R.id.real_estate_description_fade) TextView mRealEstateDescriptionFade;
-    @BindView(R.id.information_location) TextView mRealEstateLocation;
     @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
     @Nullable
@@ -213,22 +213,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             }
         });
     }
-    //configure button to expand real estate location
-    private void configureExpandLocation() {
-        mButtonMoreLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mButtonMoreLocation.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
-                    mRealEstateLocation.setMaxLines(Integer.MAX_VALUE);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_close));
-                } else {
-                    mRealEstateLocation.setMaxLines(1);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_more));
-                }
-            }
-        });
-    }
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate) {
         if (mSoldOut != null) {
@@ -256,6 +240,17 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
+    }
+
+    //configure button to expand real estate location
+    private void configureExpandLocation() {
+        mButtonMoreLocation.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(mRealEstate.getRealEstate().getAddress())
+                    .setTitle("Address");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
     //set a listener on modify button to change differents fields of real estates
     private void configureModifyButton() {
@@ -295,6 +290,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         }
     }
 
+    //get user who is in charge of this estate
     private void getUserInCharge() {
         mRealEstateViewModel.getUser(mRealEstate.getRealEstate().getUserId()).observe(this,
                 user -> mInformationAgent.setText(user.getUsername()));
