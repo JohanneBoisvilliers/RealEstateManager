@@ -8,8 +8,10 @@ import android.databinding.ObservableField;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
+import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
+import com.openclassrooms.realestatemanager.repositories.UserDataRepository;
 import com.openclassrooms.realestatemanager.utils.NotificationsService;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class RealEstateViewModel extends ViewModel {
     // REPOSITORIES
     private final RealEstateDataRepository mRealEstateDataSource;
     private final PhotoDataRepository mPhotoDataSource;
+    private final UserDataRepository mUserDataRepository;
     private final Executor executor;
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
@@ -42,9 +45,12 @@ public class RealEstateViewModel extends ViewModel {
     private long mRealEstateId;
 
 
-    public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,PhotoDataRepository photoDataSource, Executor executor) {
+    public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,
+                               PhotoDataRepository photoDataSource,
+                               UserDataRepository userDataSource, Executor executor) {
         this.mRealEstateDataSource = realEstateDataSource;
         this.mPhotoDataSource = photoDataSource;
+        this.mUserDataRepository = userDataSource;
         this.executor = executor;
     }
 
@@ -172,5 +178,13 @@ public class RealEstateViewModel extends ViewModel {
 
     public void selectActualState(boolean[] booleans) {
         mActualState.setValue(booleans);
+    }
+
+    // -------------
+    // FOR USER
+    // -------------
+
+    public LiveData<User> getUser(long userId) {
+        return mUserDataRepository.getUser(userId);
     }
 }

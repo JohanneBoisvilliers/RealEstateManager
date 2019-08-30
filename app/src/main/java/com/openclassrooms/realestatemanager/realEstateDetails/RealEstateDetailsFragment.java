@@ -162,6 +162,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
             this.getMap(mRealEstate.getRealEstate().getAddress());
+            this.getUserInCharge();
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
             setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
@@ -282,7 +283,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void getRealEstatesPhotos(long realEstateId){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
     }
-
     private void getMap(String address) {
         if (TextUtils.isEmpty(address) || address.equals("null")) {
             Glide.with(this).load(getResources().getDrawable(R.drawable.background_start)).centerInside().into(mMapContainer);
@@ -293,6 +293,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
                     .centerCrop()
                     .into(mMapContainer);
         }
+    }
+
+    private void getUserInCharge() {
+        mRealEstateViewModel.getUser(mRealEstate.getRealEstate().getUserId()).observe(this,
+                user -> mInformationAgent.setText(user.getUsername()));
     }
 
     // ----------------------------------- UTILS -----------------------------------
@@ -322,7 +327,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
         }
     }
-
     //change the sold status
     private void changeRealEstateStatus() {
         Boolean isSold = mRealEstate.getRealEstate().getSold();
@@ -331,7 +335,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
         setSoldState(mRealEstate.getRealEstate());
     }
-
     private void startModifyActivity() {
         Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
         intent.putExtra("comefrom", getClass().getSimpleName());

@@ -27,7 +27,6 @@ public class Injections {
         return new UserDataRepository(database.userDao());
     }
 
-
     public static Executor provideExecutor(){ return Executors.newSingleThreadExecutor(); }
 
     public static ViewModelFactory provideViewModelFactory(Context context) {
