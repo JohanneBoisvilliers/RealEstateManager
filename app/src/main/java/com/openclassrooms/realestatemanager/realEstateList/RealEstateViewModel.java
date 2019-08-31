@@ -8,9 +8,12 @@ import android.databinding.ObservableField;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
+import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
+import com.openclassrooms.realestatemanager.repositories.UserDataRepository;
 import com.openclassrooms.realestatemanager.utils.NotificationsService;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -24,6 +27,7 @@ public class RealEstateViewModel extends ViewModel {
     // REPOSITORIES
     private final RealEstateDataRepository mRealEstateDataSource;
     private final PhotoDataRepository mPhotoDataSource;
+    private final UserDataRepository mUserDataRepository;
     private final Executor executor;
 
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
@@ -42,9 +46,12 @@ public class RealEstateViewModel extends ViewModel {
     private long mRealEstateId;
 
 
-    public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,PhotoDataRepository photoDataSource, Executor executor) {
+    public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,
+                               PhotoDataRepository photoDataSource,
+                               UserDataRepository userDataSource, Executor executor) {
         this.mRealEstateDataSource = realEstateDataSource;
         this.mPhotoDataSource = photoDataSource;
+        this.mUserDataRepository = userDataSource;
         this.executor = executor;
     }
 
@@ -82,7 +89,6 @@ public class RealEstateViewModel extends ViewModel {
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
-            //realEstate.setId(mRealEstateId);
             NotificationsService.sendNotification();
         });
     }
@@ -139,6 +145,7 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
+            realEstate.setUpForSale(Utils.getTodayDate());
             createItem(realEstate);
             executor.execute(() -> {
                 for (Photo listOfPhoto : listOfPhotos) {
@@ -172,5 +179,13 @@ public class RealEstateViewModel extends ViewModel {
 
     public void selectActualState(boolean[] booleans) {
         mActualState.setValue(booleans);
+    }
+
+    // -------------
+    // FOR USER
+    // -------------
+
+    public LiveData<User> getUser(long userId) {
+        return mUserDataRepository.getUser(userId);
     }
 }

@@ -500,11 +500,17 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private void changeStatusOfCheckBoxes() {
         mRealEstateViewModel.getSelected().observe(this, item -> {
             mPoIValue = item.getRealEstate().getPointsOfInterest();
-            String[] tempArrayPoI = TextUtils.split(mPoIValue, ",");
-            for (int i = 0; i < pointOfInterestArray.length; i++) {
-                for (int j = 0; j < tempArrayPoI.length; j++) {
-                    if (tempArrayPoI[j].equals(pointOfInterestArray[i])) {
-                        mStateCheckBoxes[i] = true;
+            if (TextUtils.isEmpty(mPoIValue)) {
+                for (int i = 0; i < mStateCheckBoxes.length; i++) {
+                    mStateCheckBoxes[i] = false;
+                }
+            } else {
+                String[] tempArrayPoI = TextUtils.split(mPoIValue, ",");
+                for (int i = 0; i < pointOfInterestArray.length; i++) {
+                    for (int j = 0; j < tempArrayPoI.length; j++) {
+                        if (tempArrayPoI[j].equals(pointOfInterestArray[i])) {
+                            mStateCheckBoxes[i] = true;
+                        }
                     }
                 }
             }

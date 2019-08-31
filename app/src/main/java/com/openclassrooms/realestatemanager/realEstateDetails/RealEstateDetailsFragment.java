@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.utils.getPrice;
 
 import java.util.ArrayList;
@@ -46,7 +48,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.real_estate_price) TextView mRealEstatePrice;
     @BindView(R.id.real_estate_description) TextView mRealEstateDescription;
     @BindView(R.id.real_estate_description_fade) TextView mRealEstateDescriptionFade;
-    @BindView(R.id.information_location) TextView mRealEstateLocation;
     @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
     @Nullable
@@ -61,6 +62,12 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
+    @BindView(R.id.point_of_interest)
+    TextView mPoIField;
+    @BindView(R.id.information_starting_date)
+    TextView mUpForSale;
+    @BindView(R.id.information_sold)
+    TextView mSoldSince;
     @Nullable
     @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
     @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
@@ -79,7 +86,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
     @Nullable
     @BindView(R.id.sold_out_bg) View mSoldOut;
-
 
     private static final String TAG = "DEBUG";
     public static final int MODIFY_REQUEST = 1234;
@@ -162,6 +168,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstate = realEstate;
             updateRealEstatePhotos(mRealEstatePhotos);
             this.getMap(mRealEstate.getRealEstate().getAddress());
+            this.getUserInCharge();
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
             setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
@@ -169,6 +176,10 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
             mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
                     realEstate.getRealEstate().getNbreOfRoom()));
+            mPoIField.setText(getResources().getString((R.string.point_of_interest),
+                    realEstate.getRealEstate().getPointsOfInterest()));
+            mUpForSale.setText(getResources().getString((R.string.real_estate_starting_date),
+                    realEstate.getRealEstate().getUpForSale()));
             this.setSoldState(realEstate.getRealEstate());
         }
     }
@@ -212,29 +223,16 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             }
         });
     }
-    //configure button to expand real estate location
-    private void configureExpandLocation() {
-        mButtonMoreLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mButtonMoreLocation.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
-                    mRealEstateLocation.setMaxLines(Integer.MAX_VALUE);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_close));
-                } else {
-                    mRealEstateLocation.setMaxLines(1);
-                    mButtonMoreLocation.setText(getResources().getString(R.string.button_more));
-                }
-            }
-        });
-    }
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate) {
         if (mSoldOut != null) {
             if (realEstate.getSold()) {
                 mSoldOut.setVisibility(View.VISIBLE);
+                mSoldSince.setText(getResources().getString((R.string.real_estate_sold),
+                        realEstate.getSoldSince()));
             } else {
                 mSoldOut.setVisibility(View.INVISIBLE);
+                mSoldSince.setText(R.string.real_estate_not_sold);
             }
         }
     }
@@ -255,6 +253,16 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
+    }
+    //configure button to expand real estate location
+    private void configureExpandLocation() {
+        mButtonMoreLocation.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(mRealEstate.getRealEstate().getAddress())
+                    .setTitle("Address");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
     //set a listener on modify button to change differents fields of real estates
     private void configureModifyButton() {
@@ -282,7 +290,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void getRealEstatesPhotos(long realEstateId){
         this.mRealEstateViewModel.getRealEstatePhotos(realEstateId).observe(this, this::updateRealEstatePhotos);
     }
-
     private void getMap(String address) {
         if (TextUtils.isEmpty(address) || address.equals("null")) {
             Glide.with(this).load(getResources().getDrawable(R.drawable.background_start)).centerInside().into(mMapContainer);
@@ -293,6 +300,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
                     .centerCrop()
                     .into(mMapContainer);
         }
+    }
+    //get user who is in charge of this estate
+    private void getUserInCharge() {
+        mRealEstateViewModel.getUser(mRealEstate.getRealEstate().getUserId()).observe(this,
+                user -> mInformationAgent.setText(user.getUsername()));
     }
 
     // ----------------------------------- UTILS -----------------------------------
@@ -322,16 +334,15 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
         }
     }
-
     //change the sold status
     private void changeRealEstateStatus() {
         Boolean isSold = mRealEstate.getRealEstate().getSold();
         isSold = !isSold;
         mRealEstate.getRealEstate().setSold(isSold);
+        mRealEstate.getRealEstate().setSoldSince(Utils.getTodayDate());
         mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
         setSoldState(mRealEstate.getRealEstate());
     }
-
     private void startModifyActivity() {
         Intent intent = new Intent(getContext(), AddARealEstateActivity.class);
         intent.putExtra("comefrom", getClass().getSimpleName());

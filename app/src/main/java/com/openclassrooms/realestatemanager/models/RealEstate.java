@@ -21,6 +21,8 @@ public class RealEstate {
     private String description;
     private String address;
     private String pointsOfInterest;
+    private String upForSale;
+    private String soldSince;
 
     public RealEstate() {
     }
@@ -53,11 +55,16 @@ public class RealEstate {
     public String getAddress() {
         return address;
     }
-
     public String getPointsOfInterest() {
         return pointsOfInterest;
     }
+    public String getUpForSale() {
+        return upForSale;
+    }
 
+    public String getSoldSince() {
+        return soldSince;
+    }
 
     // -- SETTERS
     public void setId(long id) {
@@ -87,8 +94,14 @@ public class RealEstate {
     public void setAddress(String address) {
         this.address = address;
     }
-
     public void setPointsOfInterest(String pointsOfInterest) {
         this.pointsOfInterest = pointsOfInterest;
+    }
+    public void setUpForSale(String upForSale) {
+        this.upForSale = upForSale;
+    }
+
+    public void setSoldSince(String soldSince) {
+        this.soldSince = soldSince;
     }
 }
