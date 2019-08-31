@@ -30,6 +30,7 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.utils.getPrice;
 
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     TextView mPoIField;
     @BindView(R.id.information_starting_date)
     TextView mUpForSale;
+    @BindView(R.id.information_sold)
+    TextView mSoldSince;
     @Nullable
     @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
     @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
@@ -83,7 +86,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.background_start) ImageView mBackgroundWhenStarting;
     @Nullable
     @BindView(R.id.sold_out_bg) View mSoldOut;
-
 
     private static final String TAG = "DEBUG";
     public static final int MODIFY_REQUEST = 1234;
@@ -226,8 +228,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         if (mSoldOut != null) {
             if (realEstate.getSold()) {
                 mSoldOut.setVisibility(View.VISIBLE);
+                mSoldSince.setText(getResources().getString((R.string.real_estate_sold),
+                        realEstate.getSoldSince()));
             } else {
                 mSoldOut.setVisibility(View.INVISIBLE);
+                mSoldSince.setText(R.string.real_estate_not_sold);
             }
         }
     }
@@ -334,6 +339,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         Boolean isSold = mRealEstate.getRealEstate().getSold();
         isSold = !isSold;
         mRealEstate.getRealEstate().setSold(isSold);
+        mRealEstate.getRealEstate().setSoldSince(Utils.getTodayDate());
         mRealEstateViewModel.updateItem(mRealEstate.getRealEstate());
         setSoldState(mRealEstate.getRealEstate());
     }
