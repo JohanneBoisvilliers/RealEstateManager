@@ -61,6 +61,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_surface) TextView mInformationSurface;
     @BindView(R.id.information_room) TextView mInformationRoom;
     @BindView(R.id.information_agent) TextView mInformationAgent;
+    @BindView(R.id.point_of_interest)
+    TextView mPoIField;
     @Nullable
     @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
     @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
@@ -170,6 +172,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
             mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
                     realEstate.getRealEstate().getNbreOfRoom()));
+            mPoIField.setText(getResources().getString((R.string.point_of_interest),
+                    realEstate.getRealEstate().getPointsOfInterest()));
             this.setSoldState(realEstate.getRealEstate());
         }
     }
@@ -241,7 +245,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
     }
-
     //configure button to expand real estate location
     private void configureExpandLocation() {
         mButtonMoreLocation.setOnClickListener(v -> {
@@ -289,7 +292,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
                     .into(mMapContainer);
         }
     }
-
     //get user who is in charge of this estate
     private void getUserInCharge() {
         mRealEstateViewModel.getUser(mRealEstate.getRealEstate().getUserId()).observe(this,
