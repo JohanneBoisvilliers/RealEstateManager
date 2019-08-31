@@ -63,6 +63,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.information_agent) TextView mInformationAgent;
     @BindView(R.id.point_of_interest)
     TextView mPoIField;
+    @BindView(R.id.information_starting_date)
+    TextView mUpForSale;
     @Nullable
     @BindView(R.id.real_estate_photo) ViewPager mPhotoViewpager;
     @BindView(R.id.dot_indicator) TabLayout mDotIndicator;
@@ -174,6 +176,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
                     realEstate.getRealEstate().getNbreOfRoom()));
             mPoIField.setText(getResources().getString((R.string.point_of_interest),
                     realEstate.getRealEstate().getPointsOfInterest()));
+            mUpForSale.setText(getResources().getString((R.string.real_estate_starting_date),
+                    realEstate.getRealEstate().getUpForSale()));
             this.setSoldState(realEstate.getRealEstate());
         }
     }

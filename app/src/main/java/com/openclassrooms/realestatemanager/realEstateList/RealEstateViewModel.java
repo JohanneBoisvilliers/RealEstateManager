@@ -13,6 +13,7 @@ import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.RealEstateDataRepository;
 import com.openclassrooms.realestatemanager.repositories.UserDataRepository;
 import com.openclassrooms.realestatemanager.utils.NotificationsService;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -88,7 +89,6 @@ public class RealEstateViewModel extends ViewModel {
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
-            //realEstate.setId(mRealEstateId);
             NotificationsService.sendNotification();
         });
     }
@@ -145,6 +145,7 @@ public class RealEstateViewModel extends ViewModel {
 
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
+            realEstate.setUpForSale(Utils.getTodayDate());
             createItem(realEstate);
             executor.execute(() -> {
                 for (Photo listOfPhoto : listOfPhotos) {

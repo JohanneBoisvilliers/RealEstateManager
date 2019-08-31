@@ -37,9 +37,9 @@
     <string name="real_estate_room">%d room(s)</string>
     <string name="real_estate_agent">Agent : %s</string>
     <string name="real_estate_location">%s</string>
-    <string name="real_estate_starting_date">Up for sale :\n %s</string>
+    <string name="real_estate_starting_date">Up for sale : %s</string>
     <string name="real_estate_not_sold">Not sold yet</string>
-    <string name="real_estate_sold">Sold :\n %s</string>
+    <string name="real_estate_sold">Sold : %s</string>
     <string name="point_of_interest">Points of interests : %s</string>
     <string name="real_estate_price">Price : %d%s</string>
     <string name="real_estate_price_dollar">$</string>
