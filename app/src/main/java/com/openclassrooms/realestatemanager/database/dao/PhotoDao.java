@@ -18,6 +18,9 @@ public interface PhotoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPhotos(Photo... photos);
 
+    @Query("UPDATE Photo SET description =:description WHERE id =:photoId")
+    int updatePhoto(long photoId, String description);
+
     @Query("DELETE FROM Photo WHERE realEstateId =:realEstateId")
     void deleteAllPhotos(long realEstateId);
 }

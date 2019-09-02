@@ -15,14 +15,14 @@ public class PhotoDataRepository {
         this.mPhotoDao = mPhotoDao;
     }
 
-    // GET
-
     public LiveData<List<Photo>> getUriPhotos(long realEstateId){return this.mPhotoDao.getUriPhotos(realEstateId);}
-
-    //INSERT
 
     public void createPhotos(Photo[] photoList) {
         mPhotoDao.insertPhotos(photoList);
+    }
+
+    public void updatePhoto(long photoId, String description) {
+        mPhotoDao.updatePhoto(photoId, description);
     }
 
     public void deleteAllPhotos(long realEstateId) {

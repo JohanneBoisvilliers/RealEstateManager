@@ -23,7 +23,9 @@ public class PhotoViewpagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return photoViewpagerFragment.newInstance(this.mRealEstatePhotos.get(position).getUrl(),mRealEstatePhotos.get(position).getDescription());
+        return photoViewpagerFragment.newInstance(this.mRealEstatePhotos.get(position).getUrl(),
+                mRealEstatePhotos.get(position).getDescription(),
+                mRealEstatePhotos.get(position).getId());
     }
 
     @Override

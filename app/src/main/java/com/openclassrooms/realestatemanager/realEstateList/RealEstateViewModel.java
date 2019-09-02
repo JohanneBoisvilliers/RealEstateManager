@@ -134,6 +134,10 @@ public class RealEstateViewModel extends ViewModel {
                 .subscribe();
     }
 
+    public void updateSpecificPhoto(long photoId, String description) {
+        executor.execute(() -> mPhotoDataSource.updatePhoto(photoId, description));
+    }
+
     // -------------
     // FOR ADD OR MODIFY REAL ESTATE
     // -------------
