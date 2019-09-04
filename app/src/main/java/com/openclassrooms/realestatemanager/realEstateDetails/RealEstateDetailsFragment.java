@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
@@ -30,9 +31,11 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.utils.getPrice;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +163,23 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         this.mRecyclerViewForPhotos.setAdapter(this.mRecyclerViewPhotoAdapter);
         //Set layout manager to position the items
         this.mRecyclerViewForPhotos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        ItemClickSupport.addTo(mRecyclerViewForPhotos, R.layout.fragment_real_estate_list)
+                .setOnItemClickListener((recyclerView1, position, v) -> {
+                    FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    Fragment prev = getChildFragmentManager().findFragmentByTag("dialog");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+
+                    // Create and show the dialog.
+                    GalleryDialog dialogFragment = new GalleryDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("photos", (Serializable) mRealEstatePhotos);
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.show(ft, "dialog");
+                });
+
     }
     //get RealEstate from Activity and configure view details in fragment
     private void configureDetails(RealEstateWithPhotos realEstate) {
@@ -332,6 +352,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mPhotoViewPagerAdapter.updatePhotos(realEstatePhotos);
         } else {//two panes layout
             mRecyclerViewPhotoAdapter.updatePhotos(realEstatePhotos);
+            mRealEstatePhotos.clear();
+            mRealEstatePhotos.addAll(realEstatePhotos);
         }
     }
     //change the sold status

@@ -41,10 +41,6 @@ public class photoViewpagerFragment extends Fragment {
     private long mPhotoId;
     private RealEstateViewModel mRealEstateViewModel;
 
-    public photoViewpagerFragment() {
-        // Required empty public constructor
-    }
-
     // Method that will create a new instance of PageFragment, and add data to its bundle.
     public static photoViewpagerFragment newInstance(String photoUrl, String photoDescription,
                                                      long photoId) {

@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/framelayout_test_viewpager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingTop="?attr/actionBarSize"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".realEstateDetails.photoViewpagerFragment">
 
     <android.support.constraint.ConstraintLayout
@@ -35,6 +37,7 @@
             app:layout_constraintTop_toTopOf="@id/background_description"
             app:layout_constraintBottom_toBottomOf="@+id/background_description"
             app:layout_constraintLeft_toLeftOf="@+id/background_description"
+            android:background="@null"
             android:hint="description"
             android:maxLines="1"
             android:singleLine="true"
