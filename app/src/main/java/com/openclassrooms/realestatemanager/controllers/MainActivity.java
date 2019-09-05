@@ -141,9 +141,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         switch (id){
-            case R.id.activity_main_drawer_all_estate:
-                break;
             case R.id.activity_main_drawer_around:
+                this.startRealEstateOnMapActivity();
                 break;
             case R.id.activity_main_drawer_settings:
                 this.startPreferencesActivity();
@@ -199,6 +198,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void startPreferencesActivity() {
         startActivity(new Intent(this,
                 PreferencesActivity.class));
+    }
+
+    private void startRealEstateOnMapActivity() {
+        startActivity(new Intent(this, RealEstateOnMapActivity.class));
     }
 
     // ------------------------------------ UI ------------------------------------
