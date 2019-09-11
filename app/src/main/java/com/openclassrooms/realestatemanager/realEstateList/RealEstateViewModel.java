@@ -15,6 +15,7 @@ import com.openclassrooms.realestatemanager.repositories.UserDataRepository;
 import com.openclassrooms.realestatemanager.utils.NotificationsService;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -29,9 +30,9 @@ public class RealEstateViewModel extends ViewModel {
     private final PhotoDataRepository mPhotoDataSource;
     private final UserDataRepository mUserDataRepository;
     private final Executor executor;
-
     private final MutableLiveData<RealEstateWithPhotos> selected = new MutableLiveData<RealEstateWithPhotos>();
     private final MutableLiveData<List<String>> urlList = new MutableLiveData<>();
+    private final MutableLiveData<LinkedHashMap<Long, String>> addressesList = new MutableLiveData<>();
     private final MutableLiveData<boolean[]> mActualState = new MutableLiveData<>();
     private RealEstate mRealEstate;
     public final ObservableField<Integer> price = new ObservableField<>();
@@ -45,7 +46,6 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<String> pointOfInterest = new ObservableField<>();
     private long mRealEstateId;
 
-
     public RealEstateViewModel(RealEstateDataRepository realEstateDataSource,
                                PhotoDataRepository photoDataSource,
                                UserDataRepository userDataSource, Executor executor) {
@@ -55,68 +55,53 @@ public class RealEstateViewModel extends ViewModel {
         this.executor = executor;
     }
 
-
-    // -------------
     // FOR REAL ESTATE
-    // -------------
 
     public void init(RealEstate realEstate) {
         if (realEstate == null) {
             mRealEstate = new RealEstate();
         }
     }
-
     public void select(RealEstateWithPhotos item) {
         selected.setValue(item);
     }
-
     public LiveData<RealEstateWithPhotos> getSelected() {
         return selected;
     }
-
     public LiveData<List<RealEstateWithPhotos>> getRealEstatewithPhotos() {
         return mRealEstateDataSource.getRealEstatesWithPhotos();
     }
-
     public LiveData<RealEstateWithPhotos> getSpecificEstate(Long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
     }
-
     public void updateRealEstate(RealEstate realEstate) {
         executor.execute(() -> mRealEstateDataSource.updateRealEstate(realEstate));
     }
-
     public void createItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateId = mRealEstateDataSource.createRealEstate(realEstate);
             NotificationsService.sendNotification();
         });
     }
-
     public void updateItem(RealEstate realEstate) {
         executor.execute(() -> {
             mRealEstateDataSource.updateRealEstate(realEstate);
         });
     }
 
-    // -------------
     // FOR PHOTOS
-    // -------------
 
     public LiveData<List<Photo>> getRealEstatePhotos(long realEstateId) {
         return mPhotoDataSource.getUriPhotos(realEstateId);
     }
-
     public void insertPhotos(Photo[] photos) {
         executor.execute(() -> {
             mPhotoDataSource.createPhotos(photos);
         });
     }
-
     public void deleteAllPhotos(long realEstateId) {
         executor.execute(() -> mPhotoDataSource.deleteAllPhotos(realEstateId));
     }
-
     public void updatePhotos(long realEstateId, Photo[] photos) {
         Completable deleteAllCompletable = Completable.fromAction(() -> deleteAllPhotos(realEstateId));
         Completable setPhotosId = Completable.fromAction(() -> {
@@ -133,20 +118,16 @@ public class RealEstateViewModel extends ViewModel {
                 .subscribeOn(Schedulers.single())
                 .subscribe();
     }
-
     public void updateSpecificPhoto(long photoId, String description) {
         executor.execute(() -> mPhotoDataSource.updatePhoto(photoId, description));
     }
 
-    // -------------
     // FOR ADD OR MODIFY REAL ESTATE
-    // -------------
 
     /*GETTERS*/
     public RealEstate getRealEstate() {
         return mRealEstate;
     }
-
     public void insertOrUpdate(RealEstate realEstate, Photo[] listOfPhotos) {
         if (realEstate.getId() != mRealEstateId || realEstate.getId() == 0) {
             realEstate.setUpForSale(Utils.getTodayDate());
@@ -164,32 +145,35 @@ public class RealEstateViewModel extends ViewModel {
             updatePhotos(mRealEstateId, listOfPhotos);
         }
     }
-
     public void setRealEstateId(long realEstateId) {
         mRealEstateId = realEstateId;
     }
-
     public void selecturlList(List<String> item) {
         urlList.setValue(item);
     }
-
     public LiveData<List<String>> getUrlList() {
         return urlList;
     }
-
     public LiveData<boolean[]> getActualState() {
         return mActualState;
     }
-
     public void selectActualState(boolean[] booleans) {
         mActualState.setValue(booleans);
     }
 
-    // -------------
     // FOR USER
-    // -------------
 
     public LiveData<User> getUser(long userId) {
         return mUserDataRepository.getUser(userId);
+    }
+
+    //FOR MAP
+
+    public void selectAddressesList(LinkedHashMap<Long, String> addressesList) {
+        this.addressesList.setValue(addressesList);
+    }
+
+    public LiveData<LinkedHashMap<Long, String>> getAddressesList() {
+        return this.addressesList;
     }
 }

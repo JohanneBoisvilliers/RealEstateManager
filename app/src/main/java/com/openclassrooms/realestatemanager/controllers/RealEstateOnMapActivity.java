@@ -20,9 +20,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.utils.ConvertAddressesAsyncTask;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.openclassrooms.realestatemanager.utils.MyApp.getContext;
 
@@ -30,7 +41,8 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener {
+        GoogleMap.OnMyLocationClickListener,
+        ConvertAddressesAsyncTask.Listeners {
 
     public static final String TAG = "DEBUG";
     private final static int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101;
@@ -38,20 +50,23 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastKnownLocation;
+    private LinkedHashMap<Long, String> mAddresses = new LinkedHashMap<>();
+    ;
+    private LinkedHashMap<Long, LatLng> mLatLngsAddresses = new LinkedHashMap<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private List<Marker> mMarkerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_real_estate_on_map);
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
 
+        this.setGoogleApiClient();
+        String str = getIntent().getStringExtra("addresses");
+        Gson gson = new Gson();
+        Type listType = new TypeToken<LinkedHashMap<Long, String>>() {
+        }.getType();
+        mAddresses = gson.fromJson(str, listType);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -65,7 +80,32 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
         getLocationPermission();
         updateLocationUI();
         getDeviceLocation();
+        new ConvertAddressesAsyncTask(this, this, mAddresses, getString(R.string.APIKEY)).execute();
     }
+
+
+    // ------------------------------------ UI ------------------------------------
+
+    private void updateLocationUI() {
+        if (mMap == null) {
+            return;
+        }
+        try {
+            if (mLocationPermissionGranted) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            } else {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mLastKnownLocation = null;
+                getLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    // ----------------------------------- UTILS -----------------------------------
 
     private void getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -96,26 +136,6 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
-    private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
-        try {
-            if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
-
     private void getDeviceLocation() {
         try {
             if (mLocationPermissionGranted) {
@@ -159,5 +179,39 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
     @Override
     public void onMyLocationClick(@NonNull Location location) {
 
+    }
+
+    public void setGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onPreExecute() {
+
+    }
+
+    @Override
+    public void doInBackground() {
+
+    }
+
+    @Override
+    public void onPostExecute() {
+        Log.d(TAG, "onPostExecute: " + mLatLngsAddresses);
+        for (Map.Entry entry : mLatLngsAddresses.entrySet()) {
+            Marker tempMarker = mMap.addMarker(new MarkerOptions()
+                    .position((LatLng) entry.getValue()));
+            tempMarker.setTag(entry.getKey());
+        }
+    }
+
+    public void setLatLngsAddresses(LinkedHashMap<Long, LatLng> latLngArrayList) {
+        this.mLatLngsAddresses = latLngArrayList;
     }
 }

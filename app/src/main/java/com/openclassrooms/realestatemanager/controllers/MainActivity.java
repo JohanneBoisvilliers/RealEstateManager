@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.facebook.stetho.Stetho;
+import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
@@ -196,12 +197,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void startPreferencesActivity() {
-        startActivity(new Intent(this,
-                PreferencesActivity.class));
+        startActivity(new Intent(this, PreferencesActivity.class));
     }
 
     private void startRealEstateOnMapActivity() {
-        startActivity(new Intent(this, RealEstateOnMapActivity.class));
+        mRealEstateViewModel.getAddressesList().observe(this, list -> {
+            Gson gson = new Gson();
+            String serializedList = gson.toJson(list);
+            Intent intent = new Intent(this, RealEstateOnMapActivity.class);
+            intent.putExtra("addresses", serializedList);
+            startActivity(intent);
+        });
     }
 
     // ------------------------------------ UI ------------------------------------
