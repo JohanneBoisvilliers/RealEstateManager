@@ -36,7 +36,6 @@ public class RealEstateListFragment extends Fragment {
     private RealEstateViewModel mRealEstateViewModel;
     private Boolean isTrue = false;
     public static final String TAG = "DEBUG";
-    public static final String RADIO_DATASET_CHANGED = "com.yourapp.app.RADIO_DATASET_CHANGED";
 
     public RealEstateListFragment() {}
 
@@ -120,12 +119,12 @@ public class RealEstateListFragment extends Fragment {
             }, 0);
         }
         if (getArguments() != null && getArguments().getLong(
-                "realEstateIdModified") != 0) {
+                "realEstateIdToClick") != 0) {
             this.mRealEstateRecyclerView.getViewTreeObserver()
                     .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
-                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdModified")))
+                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdToClick")))
                                     .itemView.performClick();
                             getArguments().clear();
                             mRealEstateRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);

@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -42,16 +43,17 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
-        ConvertAddressesAsyncTask.Listeners {
+        ConvertAddressesAsyncTask.Listeners,
+        GoogleMap.OnMarkerClickListener {
 
     public static final String TAG = "DEBUG";
     private final static int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101;
     private Boolean mLocationPermissionGranted = false;
+    private Boolean isTwoPanes;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastKnownLocation;
     private LinkedHashMap<Long, String> mAddresses = new LinkedHashMap<>();
-    ;
     private LinkedHashMap<Long, LatLng> mLatLngsAddresses = new LinkedHashMap<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private List<Marker> mMarkerList = new ArrayList<>();
@@ -63,6 +65,7 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
 
         this.setGoogleApiClient();
         String str = getIntent().getStringExtra("addresses");
+        isTwoPanes = getIntent().getBooleanExtra("isTwoPanes", false);
         Gson gson = new Gson();
         Type listType = new TypeToken<LinkedHashMap<Long, String>>() {
         }.getType();
@@ -209,9 +212,21 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
                     .position((LatLng) entry.getValue()));
             tempMarker.setTag(entry.getKey());
         }
+        mMap.setOnMarkerClickListener(this);
     }
 
     public void setLatLngsAddresses(LinkedHashMap<Long, LatLng> latLngArrayList) {
         this.mLatLngsAddresses = latLngArrayList;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("ComeFrom", "map");
+        intent.putExtra("realEstateId", (Long) marker.getTag());
+        intent.putExtra("realEstateIdToClick", (Long) marker.getTag());
+        intent.putExtra("isTwoPanes", isTwoPanes);
+        startActivity(intent);
+        return false;
     }
 }

@@ -1,13 +1,12 @@
 package com.openclassrooms.realestatemanager.realEstateList;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.utils.getPrice;
@@ -34,23 +33,16 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements get
     }
 
     public void updateRealEstateCardView(RealEstateWithPhotos realEstate){
-        if (getPhotoFromUri(realEstate)!=null) {
-            this.mRealEstatePhoto.setImageBitmap(getPhotoFromUri(realEstate));
-        }
+        Glide.with(mRealEstatePhoto.getContext())
+                .load(realEstate.getPhotoList().get(0).getUrl())
+                .centerCrop()
+                .into(mRealEstatePhoto);
         this.mRealEstateType.setText(realEstate.getRealEstate().getCategory());
         setRealEstatePrice(realEstate, mRealEstatePrice);
         if (realEstate.getRealEstate().getSold()) {
             mSoldOut.setVisibility(View.VISIBLE);
         }else{
             mSoldOut.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    public Bitmap getPhotoFromUri(RealEstateWithPhotos realEstate){
-        if (realEstate.getPhotoList().size()>0){
-            return BitmapFactory.decodeFile(realEstate.getPhotoList().get(0).getUrl());
-        }else{
-            return null;
         }
     }
 }

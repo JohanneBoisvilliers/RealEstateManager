@@ -324,7 +324,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     setRealEstateInfos();
                     mRealEstateViewModel.insertOrUpdate(mRealEstate, mFinalPhotoList);
                     returnToDetailsWithNewInfos();
-                    finish();
+                    startActivity(new Intent(getContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    //finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
                             //TODO modifier phrase de contrainte
