@@ -135,7 +135,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MODIFY_REQUEST && resultCode == RegisterActivity.RESULT_OK) {
             if (data != null) {
-                //TODO gerer les 2 mode tablette et tel
                 long realEstateId = data.getLongExtra("realEstateId", 0);
                 mRealEstateViewModel.getSpecificEstate(realEstateId).observe(getActivity(),
                         item -> {

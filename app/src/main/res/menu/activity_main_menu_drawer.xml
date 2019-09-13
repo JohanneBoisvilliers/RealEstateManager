@@ -4,9 +4,6 @@
     tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/activity_main_drawer_all_estate"
-        android:title="@string/all_real_estate" />
-    <item
         android:id="@+id/activity_main_drawer_around"
         android:title="@string/real_estate_around" />
     <item

@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.facebook.stetho.Stetho;
+import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
@@ -36,6 +37,8 @@ import com.openclassrooms.realestatemanager.utils.MyApp;
 import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.views.HeaderViewHolder;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,11 +114,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //show good fragment depending who call them
     private void setFragments(Bundle bundle) {
         String whoCallActivity = getIntent().getStringExtra("ComeFrom");
-        if (whoCallActivity != null && whoCallActivity.equals("Notification")) {
-            this.configureRealEstateDetailsFragment(R.id.container_real_estate_recycler_view);
+        Long realEstateId = getIntent().getLongExtra("realEstateId", 0L);
+        Boolean isTwoPanes = getIntent().getBooleanExtra("isTwoPanes", false);
+        if (whoCallActivity != null && whoCallActivity.equals("map")) {
+            mRealEstateViewModel.getSpecificEstate(realEstateId).observe(this, item -> {
+                mRealEstateViewModel.select(item);
+                if (isTwoPanes) {
+                    if (bundle == null) {
+                        this.configureRealEstateListFragment(whoCallActivity);
+                    }
+                    this.configureRealEstateDetailsFragment(R.id.container_real_estate_detail);
+                } else {
+                    configureRealEstateDetailsFragment(R.id.container_real_estate_recycler_view);
+                }
+            });
         } else {
             if (bundle == null) {
-                this.configureRealEstateListFragment();
+                this.configureRealEstateListFragment(null);
             }
             this.configureRealEstateDetailsFragment(R.id.container_real_estate_detail);
         }
@@ -141,9 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         switch (id){
-            case R.id.activity_main_drawer_all_estate:
-                break;
             case R.id.activity_main_drawer_around:
+                this.startRealEstateOnMapActivity();
                 break;
             case R.id.activity_main_drawer_settings:
                 this.startPreferencesActivity();
@@ -197,8 +211,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void startPreferencesActivity() {
-        startActivity(new Intent(this,
-                PreferencesActivity.class));
+        startActivity(new Intent(this, PreferencesActivity.class));
+    }
+
+    private void startRealEstateOnMapActivity() {
+        mRealEstateViewModel.getAddressesList().observe(this, list -> {
+            Gson gson = new Gson();
+            String serializedList = gson.toJson(list);
+            Intent intent = new Intent(this, RealEstateOnMapActivity.class);
+            if (mRealEstateDetailsFragment != null) {
+                intent.putExtra("isTwoPanes", true);
+            }
+            intent.putExtra("addresses", serializedList);
+            startActivity(intent);
+        });
     }
 
     // ------------------------------------ UI ------------------------------------
@@ -225,13 +251,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigationView.setNavigationItemSelectedListener(this);
     }
     //configure recyclerview fragment for one pane layout
-    private void configureRealEstateListFragment(){
+    private void configureRealEstateListFragment(@Nullable String comeFrom) {
         //  Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
         mRealEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (mRealEstateListFragment == null) {
             //  Create new main fragment
             mRealEstateListFragment = new RealEstateListFragment();
+            if (comeFrom != null && comeFrom.equals("map")) {
+                Bundle bundle = new Bundle();
+                bundle.putLong("realEstateIdToClick", (Long) getIntent().getLongExtra("realEstateId", 0L));
+                mRealEstateListFragment.setArguments(bundle);
+            }
             //  Add it to FrameLayout container
             ft.add(R.id.container_real_estate_recycler_view, mRealEstateListFragment)
                     .commit();
@@ -263,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == WRITE_PERMISSION){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                configureRealEstateListFragment();
+                configureRealEstateListFragment(null);
             } else {
                 requestWritePermission();
             }

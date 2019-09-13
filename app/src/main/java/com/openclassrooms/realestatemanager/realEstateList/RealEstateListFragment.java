@@ -2,9 +2,6 @@ package com.openclassrooms.realestatemanager.realEstateList;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -23,6 +20,7 @@ import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,10 +32,10 @@ public class RealEstateListFragment extends Fragment {
 
     private RealEstateAdapter mRealEstateAdapter;
     private List<RealEstateWithPhotos> mRealEstateList = new ArrayList<>();
+    private LinkedHashMap<Long, String> mAddressList = new LinkedHashMap<>();
     private RealEstateViewModel mRealEstateViewModel;
     private Boolean isTrue = false;
     public static final String TAG = "DEBUG";
-    public static final String RADIO_DATASET_CHANGED = "com.yourapp.app.RADIO_DATASET_CHANGED";
 
     public RealEstateListFragment() {}
 
@@ -109,6 +107,8 @@ public class RealEstateListFragment extends Fragment {
         this.mRealEstateList.clear();
         this.mRealEstateList.addAll(realEstateList);
         this.mRealEstateAdapter.updateData(realEstateList);
+        mAddressList.putAll(this.fetchRealEstateAddress(realEstateList));
+        mRealEstateViewModel.selectAddressesList(mAddressList);
         if (!isOnePaneLayout() && !MyApp.isInit) {//tablet mode
             MyApp.isInit = true;
             new Handler().postDelayed(new Runnable() {
@@ -119,12 +119,13 @@ public class RealEstateListFragment extends Fragment {
             }, 0);
         }
         if (getArguments() != null && getArguments().getLong(
-                "realEstateIdModified") != 0) {
+                "realEstateIdToClick") != 0) {
             this.mRealEstateRecyclerView.getViewTreeObserver()
                     .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
-                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdModified"))).itemView.performClick();
+                            mRealEstateRecyclerView.findViewHolderForAdapterPosition(getPositionOfRealEstate(getArguments().getLong("realEstateIdToClick")))
+                                    .itemView.performClick();
                             getArguments().clear();
                             mRealEstateRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         }
@@ -147,19 +148,20 @@ public class RealEstateListFragment extends Fragment {
         return view == null;
     }
 
+    //fetch all addresses of real estate for markers on map
+    private LinkedHashMap<Long, String> fetchRealEstateAddress(List<RealEstateWithPhotos> realEstateList) {
+        LinkedHashMap<Long, String> tempList = new LinkedHashMap<>();
+        for (int i = 0; i < realEstateList.size(); i++) {
+            tempList.put(realEstateList.get(i).getRealEstate().getId(),
+                    realEstateList.get(i).getRealEstate().getAddress());
+        }
+        return tempList;
+    }
+
     // ----------------------------------- ASYNC -----------------------------------
 
     //request all real estates from database and put an observer to update list if there is any change
     private void getRealEstatesWithPhotos(){
         this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
-    }
-
-    private class Radio extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(RADIO_DATASET_CHANGED)) {
-                mRealEstateRecyclerView.getAdapter().notifyDataSetChanged();
-            }
-        }
     }
 }
