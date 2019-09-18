@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -280,9 +279,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
 
     private void configureFABCreditSimutlator() {
         mCreditSimulator.setOnClickListener(view -> {
-            Log.d(TAG,
-                    "configureFABCreditSimutlator: " + (150000 * (1.5 / 100 / 12)) / (1 - (Math.pow(1 + (1.5 / 100 / 12),
-                            -(15 * 12)))));
             Intent intent = new Intent(getContext(), CreditSimulatorActivity.class);
             intent.putExtra("realEstatePrice", mRealEstate.getRealEstate().getPrice());
             startActivity(intent);
@@ -317,6 +313,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void configureSimulTabletMode() {
         DrawableCompat.setTint(mSimulTabletMode.getCompoundDrawables()[1],
                 ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mSimulTabletMode.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), CreditSimulatorActivity.class);
+            intent.putExtra("realEstatePrice", mRealEstate.getRealEstate().getPrice());
+            startActivity(intent);
+        });
     }
 
     // ------------------------------------ DATA ------------------------------------

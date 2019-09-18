@@ -56,6 +56,8 @@ public class CreditSimulatorActivity extends AppCompatActivity {
     }
 
     // ----------------------------------- UTILS -----------------------------------
+
+    //check if all fields are filled
     private Boolean isFieldOk() {
         if (!TextUtils.isEmpty(mRealEstatePriceEditText.getText().toString()) &&
                 !TextUtils.isEmpty(mRateInput.getText().toString()) &&
@@ -67,11 +69,13 @@ public class CreditSimulatorActivity extends AppCompatActivity {
         }
     }
 
+    //calculate the loan cost monthly
     private double monthlyCost(int price, double rate, int years, int contribution) {
         return ((price - contribution) * (rate / 100 / 12))
                 / (1 - (Math.pow(1 + (rate / 100 / 12), -(years * 12))));
     }
 
+    //calculate the total cost
     private double totalCost(int years, double monthlyCost, int price) {
         return (12 * years * monthlyCost) - price;
     }
@@ -85,7 +89,6 @@ public class CreditSimulatorActivity extends AppCompatActivity {
             Log.w("EditText length", "contributionChanged: wrong value! ");
         }
     }
-
     @OnTextChanged(value = R.id.years_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void yearsChanged(CharSequence text) throws NumberFormatException {
         try {
@@ -94,7 +97,6 @@ public class CreditSimulatorActivity extends AppCompatActivity {
             Log.w("EditText length", "yearsChanged: wrong value! ");
         }
     }
-
     @OnTextChanged(value = R.id.rate_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void rateChanged(CharSequence text) throws NumberFormatException {
         try {
@@ -103,7 +105,6 @@ public class CreditSimulatorActivity extends AppCompatActivity {
             Log.w("EditText length", "rateChanged: wrong value! ");
         }
     }
-
     @OnTextChanged(value = R.id.price_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void priceChanged(CharSequence text) throws NumberFormatException {
         try {
@@ -113,6 +114,8 @@ public class CreditSimulatorActivity extends AppCompatActivity {
         }
     }
 
+    //when user click on submit button, a textview appear to show the total loan cost and the
+    // monthly cost
     private void listenerOnSubmitBtn() {
         mSubmitBtn.setOnClickListener(v -> {
             if (isFieldOk()) {
