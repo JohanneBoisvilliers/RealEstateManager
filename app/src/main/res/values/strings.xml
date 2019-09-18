@@ -91,7 +91,7 @@
     <string name="rate">Rate :</string>
     <string name="years">Years :</string>
     <string name="btn_submit">SUBMIT</string>
-    <string name="result_loan_simulator">Total cost : %d, monthly : %d</string>
+    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
     <string-array name="type_list">
         <item>Loft</item>
         <item>House</item>
