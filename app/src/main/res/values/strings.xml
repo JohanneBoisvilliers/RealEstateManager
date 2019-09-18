@@ -86,12 +86,6 @@
         <item>2</item>
     </string-array>
 
-    <!-- CREDIT SIMULATOR -->
-    <string name="contribution">Contribution :</string>
-    <string name="rate">Rate :</string>
-    <string name="years">Years :</string>
-    <string name="btn_submit">SUBMIT</string>
-    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
     <string-array name="type_list">
         <item>Loft</item>
         <item>House</item>
@@ -107,5 +101,13 @@
         <item>Town hall</item>
         <item>Play area</item>
     </string-array>
+
+    <!-- CREDIT SIMULATOR -->
+    <string name="contribution">Contribution :</string>
+    <string name="rate">Rate :</string>
+    <string name="years">Years :</string>
+    <string name="btn_submit">SUBMIT</string>
+    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
+    <string name="fields_error">Please fill all fields !</string>
 
 </resources>

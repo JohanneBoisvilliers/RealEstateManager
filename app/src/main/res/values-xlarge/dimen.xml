@@ -20,4 +20,13 @@
         <!--_DESIGN_-->
     <dimen name="line_footer">220dp</dimen>
 
+    <!--Loan simulator Activity-->
+    <!--_DESIGN_-->
+    <dimen name="edittext_height">60dp</dimen>
+    <dimen name="space_between_fields">60dp</dimen>
+    <dimen name="logo_dimension_loan">300dp</dimen>
+    <dimen name="title_font_size">30sp</dimen>
+    <dimen name="fields_font_size">30sp</dimen>
+    <dimen name="btn_height">60dp</dimen>
+    <dimen name="btn_submit_width">200dp</dimen>
 </resources>

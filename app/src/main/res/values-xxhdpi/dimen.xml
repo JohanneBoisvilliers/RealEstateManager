@@ -62,4 +62,9 @@
     <dimen name="edittext_height">40dp</dimen>
     <dimen name="space_between_fields">40dp</dimen>
     <dimen name="logo_dimension_loan">175dp</dimen>
+    <dimen name="title_font_size">15sp</dimen>
+    <dimen name="fields_font_size">12sp</dimen>
+    <dimen name="btn_height">30dp</dimen>
+    <dimen name="btn_submit_width">100dp</dimen>
+
 </resources>

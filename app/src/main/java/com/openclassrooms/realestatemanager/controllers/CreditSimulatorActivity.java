@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.text.NumberFormat;
 
@@ -54,8 +56,11 @@ public class CreditSimulatorActivity extends AppCompatActivity {
     }
 
     // ----------------------------------- UTILS -----------------------------------
-    private Boolean isFieldOk(EditText field) {
-        if (TextUtils.isEmpty(field.getText().toString()) && Double.parseDouble(field.getText().toString()) > 0) {
+    private Boolean isFieldOk() {
+        if (!TextUtils.isEmpty(mRealEstatePriceEditText.getText().toString()) &&
+                !TextUtils.isEmpty(mRateInput.getText().toString()) &&
+                !TextUtils.isEmpty(mYearsInput.getText().toString()) &&
+                !TextUtils.isEmpty(mUserContribution.getText().toString())) {
             return true;
         } else {
             return false;
@@ -110,19 +115,18 @@ public class CreditSimulatorActivity extends AppCompatActivity {
 
     private void listenerOnSubmitBtn() {
         mSubmitBtn.setOnClickListener(v -> {
-            mResult.setVisibility(View.VISIBLE);
-            NumberFormat numberFormat = NumberFormat.getInstance();
-            numberFormat.setMaximumFractionDigits(2);
-            String total =
-                    numberFormat.format(totalCost(mYearsValue,
-                            monthlyCost(mPriceValue,
-                                    mRateValue,
-                                    mYearsValue,
-                                    mContributionValue), (mPriceValue - mContributionValue)));
-            String month = numberFormat.format(monthlyCost(mPriceValue, mRateValue,
-                    mYearsValue,
-                    mContributionValue));
-            mResult.setText(getString((R.string.result_loan_simulator), total, month));
+            if (isFieldOk()) {
+                mResult.setVisibility(View.VISIBLE);
+                NumberFormat numberFormat = NumberFormat.getInstance();
+                numberFormat.setMaximumFractionDigits(2);
+                String total = numberFormat.format(totalCost(mYearsValue,
+                        monthlyCost(mPriceValue, mRateValue, mYearsValue, mContributionValue),
+                        (mPriceValue - mContributionValue)));
+                String month = numberFormat.format(monthlyCost(mPriceValue, mRateValue, mYearsValue, mContributionValue));
+                mResult.setText(getString((R.string.result_loan_simulator), total, month));
+            } else {
+                Utils.showSnackBar(mCoordinatorLayout, getString(R.string.fields_error), BaseTransientBottomBar.LENGTH_LONG);
+            }
         });
     }
 }
