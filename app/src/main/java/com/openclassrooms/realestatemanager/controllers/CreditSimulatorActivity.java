@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,23 +73,39 @@ public class CreditSimulatorActivity extends AppCompatActivity {
 
     // ---------------------------------- LISTENERS ----------------------------------
     @OnTextChanged(value = R.id.contribution_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void contributionChanged(CharSequence text) {
-        mContributionValue = Integer.parseInt(text.toString());
+    public void contributionChanged(CharSequence text) throws NumberFormatException {
+        try {
+            mContributionValue = Integer.parseInt(text.toString());
+        } catch (NumberFormatException e) {
+            Log.w("EditText length", "contributionChanged: wrong value! ");
+        }
     }
 
     @OnTextChanged(value = R.id.years_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void yearsChanged(CharSequence text) {
-        mYearsValue = Integer.parseInt(text.toString());
+    public void yearsChanged(CharSequence text) throws NumberFormatException {
+        try {
+            mYearsValue = Integer.parseInt(text.toString());
+        } catch (NumberFormatException e) {
+            Log.w("EditText length", "yearsChanged: wrong value! ");
+        }
     }
 
     @OnTextChanged(value = R.id.rate_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void rateChanged(CharSequence text) {
-        mRateValue = Double.parseDouble(text.toString());
+    public void rateChanged(CharSequence text) throws NumberFormatException {
+        try {
+            mRateValue = Double.parseDouble(text.toString());
+        } catch (NumberFormatException e) {
+            Log.w("EditText length", "rateChanged: wrong value! ");
+        }
     }
 
     @OnTextChanged(value = R.id.price_container, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void priceChanged(CharSequence text) {
-        mPriceValue = Integer.parseInt(text.toString());
+    public void priceChanged(CharSequence text) throws NumberFormatException {
+        try {
+            mPriceValue = Integer.parseInt(text.toString());
+        } catch (NumberFormatException e) {
+            Log.w("EditText length", "priceChanged: wrong value! ");
+        }
     }
 
     private void listenerOnSubmitBtn() {
