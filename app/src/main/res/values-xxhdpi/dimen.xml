@@ -56,4 +56,10 @@
     <dimen name="horizontal_padding_edittext">20dp</dimen>
     <dimen name="bottom_padding_edittext">10dp</dimen>
     <dimen name="top_padding_edittext">15dp</dimen>
+
+    <!--Loan simulator Activity-->
+    <!--_DESIGN_-->
+    <dimen name="edittext_height">40dp</dimen>
+    <dimen name="space_between_fields">40dp</dimen>
+    <dimen name="logo_dimension_loan">175dp</dimen>
 </resources>

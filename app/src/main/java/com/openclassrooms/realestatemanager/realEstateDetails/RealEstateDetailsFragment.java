@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
+import com.openclassrooms.realestatemanager.controllers.CreditSimulatorActivity;
 import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -77,7 +79,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.main_fab) FloatingActionButton mMainFAB;
     @BindView(R.id.status_fab) FloatingActionButton mStatusFAB;
     @BindView(R.id.modify_real_estate_fab) FloatingActionButton mModifyEstate;
-    @BindView(R.id.add_photo_fab) FloatingActionButton mAddPhoto;
+    @BindView(R.id.credit_simulator)
+    FloatingActionButton mCreditSimulator;
     @BindView(R.id.recyclerView_details_tablet) RecyclerView mRecyclerViewForPhotos;
     @Nullable
     @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
@@ -126,6 +129,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             this.configureFABMenu();
             this.configureModifyButton();
         }
+        this.configureFABCreditSimutlator();
         this.configureExpandDescription();
         this.configureExpandLocation();
         return view;
@@ -207,14 +211,14 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         isFABOpen = true;
         mStatusFAB.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_55));
         mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
-        mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
+        mCreditSimulator.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
     }
     //hide FAB menu
     private void closeFABMenu() {
         isFABOpen = false;
         mStatusFAB.animate().translationY(0);
         mModifyEstate.animate().translationY(0);
-        mAddPhoto.animate().translationY(0);
+        mCreditSimulator.animate().translationY(0);
     }
     //add a button to open description when it's longer than 3 lines
     private void configureExpandDescription() {
@@ -272,6 +276,18 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     //set a listener on sold button to change sold status
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
+    }
+
+    private void configureFABCreditSimutlator() {
+        mCreditSimulator.setOnClickListener(view -> {
+            Log.d(TAG,
+                    "configureFABCreditSimutlator: " + (150000 * (1.5 / 100 / 12)) / (1 - (Math.pow(1 + (1.5 / 100 / 12),
+                            -(15 * 12)))));
+            Intent intent = new Intent(getContext(), CreditSimulatorActivity.class);
+            intent.putExtra("realEstatePrice", mRealEstate.getRealEstate().getPrice());
+            startActivity(intent);
+        });
+
     }
     //configure button to expand real estate location
     private void configureExpandLocation() {
