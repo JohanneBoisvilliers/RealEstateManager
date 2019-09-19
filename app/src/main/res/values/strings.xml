@@ -76,22 +76,33 @@
     <!-- PREFERENCES ACTIVITY -->
     <string name="credit_real_estate_cost">Real Estate price :</string>
 
+    <string name="contribution">Contribution :</string>
+
+    <string name="rate">Rate :</string>
+
+    <string name="years">Years :</string>
+    <string name="btn_submit">SUBMIT</string>
+
+    <!-- CREDIT SIMULATOR -->
+    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
+    <string name="fields_error">Please fill all fields !</string>
+    <string name="toolbar_title_search">Search Real Estate</string>
     <string-array name="listArray">
         <item>Dollars</item>
         <item>Euros</item>
     </string-array>
-
     <string-array name="listValues">
         <item>1</item>
         <item>2</item>
     </string-array>
-
     <string-array name="type_list">
         <item>Loft</item>
         <item>House</item>
         <item>Castle</item>
         <item>Appartement</item>
     </string-array>
+
+    <!--SEARCH ACTIVITY-->
     <string-array name="interest_list">
         <item>School</item>
         <item>Shops</item>
@@ -101,13 +112,5 @@
         <item>Town hall</item>
         <item>Play area</item>
     </string-array>
-
-    <!-- CREDIT SIMULATOR -->
-    <string name="contribution">Contribution :</string>
-    <string name="rate">Rate :</string>
-    <string name="years">Years :</string>
-    <string name="btn_submit">SUBMIT</string>
-    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
-    <string name="fields_error">Please fill all fields !</string>
 
 </resources>

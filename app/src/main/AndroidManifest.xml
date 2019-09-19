@@ -20,7 +20,15 @@
         <activity android:name=".controllers.RealEstateOnMapActivity" />
 
         <activity android:name=".controllers.MainActivity" />
-        <activity android:name=".controllers.SearchRealEstateActivity" />
+        <activity
+            android:name=".searchEstate.SearchRealEstateActivity"
+            android:parentActivityName=".controllers.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.MainActivity" />
+        </activity>
         <activity android:name=".login.SignInActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".login.LoginActivity">

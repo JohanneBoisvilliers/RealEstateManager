@@ -6,4 +6,9 @@
         app:showAsAction="ifRoom"
         android:title="@string/icon_toolbar_add_realestate">
     </item>
+    <item
+        android:id="@+id/menu_activity_main_search_realestate"
+        android:icon="@drawable/baseline_search_24"
+        android:title="@string/icon_toolbar_add_realestate"
+        app:showAsAction="ifRoom"></item>
 </menu>

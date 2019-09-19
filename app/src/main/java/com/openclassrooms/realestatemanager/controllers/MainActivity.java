@@ -33,6 +33,7 @@ import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.searchEstate.SearchRealEstateActivity;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
@@ -195,6 +196,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_activity_main_add_realestate:
                 this.startAddRealEstateActivity();
                 return true;
+            case R.id.menu_activity_main_search_realestate:
+                this.startSearchRealEstateActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -204,6 +208,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAddRealEstateActivity(){
         startActivity(new Intent(this, AddARealEstateActivity.class));
+    }
+
+    private void startSearchRealEstateActivity() {
+        startActivity(new Intent(this, SearchRealEstateActivity.class));
     }
 
     private void startLoginActivity() {
