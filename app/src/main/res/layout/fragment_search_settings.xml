@@ -1,15 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/color_gradient"
+    android:paddingTop="?attr/actionBarSize"
     tools:context=".searchEstate.SearchSettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
-        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_between_fields"
+        android:background="@drawable/btn_rounded"
+        android:text="@string/btn_submit"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/input_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="@string/hint_input_from"
+        android:inputType="number"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/price_from"
+        app:layout_constraintLeft_toRightOf="@id/price_from"
+        app:layout_constraintRight_toLeftOf="@id/price_to"
+        app:layout_constraintTop_toTopOf="@id/price_from" />
+
+    <EditText
+        android:id="@+id/input_to"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_to_border"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="@string/hint_input_to"
+        android:inputType="number"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/price_from"
+        app:layout_constraintLeft_toRightOf="@id/price_to"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/price_from" />
+
+    <EditText
+        android:id="@+id/input_room_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_to_border"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="@string/hint_input_rooms"
+        android:inputType="number"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/room_search"
+        app:layout_constraintLeft_toRightOf="@id/room_search"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/room_search" />
+
+    <EditText
+        android:id="@+id/input_size_search_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="@string/hint_area"
+        android:inputType="number"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/size_search_from"
+        app:layout_constraintLeft_toRightOf="@id/size_search_from"
+        app:layout_constraintRight_toLeftOf="@id/size_search_to"
+        app:layout_constraintTop_toTopOf="@id/size_search_from" />
+
+    <EditText
+        android:id="@+id/input_size_search_to"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="@string/hint_area"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@id/size_search_from"
+        app:layout_constraintLeft_toRightOf="@id/size_search_to"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/size_search_from" />
+
+    <Spinner
+        android:id="@+id/search_type_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_to_border"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@+id/search_type_real_estate"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@id/search_type_real_estate"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search_type_real_estate" />
+
+    <TextView
+        android:id="@+id/search_type_real_estate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_to_border"
+        android:layout_marginTop="@dimen/space_between_fields"
+        android:text="@string/type_list"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/search_type_spinner"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/price_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_to_border"
+        android:layout_marginTop="@dimen/space_between_fields"
+        android:text="@string/cost_from"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_type_real_estate" />
+
+    <TextView
+        android:id="@+id/price_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cost_to"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/price_from"
+        app:layout_constraintLeft_toRightOf="@id/input_from"
+        app:layout_constraintRight_toLeftOf="@id/input_to"
+        app:layout_constraintTop_toTopOf="@id/price_from" />
+
+    <TextView
+        android:id="@+id/room_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_to_border"
+        android:layout_marginTop="@dimen/space_between_fields"
+        android:text="@string/rooms_input"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price_from" />
+
+    <TextView
+        android:id="@+id/size_search_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_to_border"
+        android:layout_marginTop="@dimen/space_between_fields"
+        android:text="@string/area_input_from"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_search" />
+
+    <TextView
+        android:id="@+id/size_search_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/area_input_to"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="@id/size_search_from"
+        app:layout_constraintLeft_toRightOf="@id/input_size_search_from"
+        app:layout_constraintRight_toLeftOf="@id/input_size_search_to"
+        app:layout_constraintTop_toTopOf="@id/size_search_from" />
+
+</android.support.constraint.ConstraintLayout>
