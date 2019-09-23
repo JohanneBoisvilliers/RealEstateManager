@@ -1,25 +1,25 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
 <resources>
-  <color name="colorPrimary">#90a4ae</color>
-  <color name="colorPrimaryLight">#c1d5e0</color>
-  <color name="colorPrimaryDark">#62757f</color>
-  <color name="colorAccent">#00838f</color>
-  <color name="colorAccentLight">#4fb3bf</color>
-  <color name="colorAccentDark">#005662</color>
-  <color name="primaryTextColor">#fafafa</color>
-  <color name="secondaryTextColor">#fafafa</color>
-  <color name="background_sold_out">#FF6262</color>
+    <color name="colorPrimary">#90a4ae</color>
+    <color name="colorPrimaryLight">#c1d5e0</color>
+    <color name="colorPrimaryDark">#62757f</color>
+    <color name="colorAccent">#00838f</color>
+    <color name="colorAccentLight">#4fb3bf</color>
+    <color name="colorAccentDark">#005662</color>
+    <color name="primaryTextColor">#fafafa</color>
+    <color name="secondaryTextColor">#fafafa</color>
+    <color name="background_sold_out">#FF6262</color>
 
-  <array name="colorPagesViewPager">
-    <item>#EDD9CF</item>
-    <item>#BED4D6</item>
-    <item>#ADCEB7</item>
-    <item>#F7CF8B</item>
-    <item>#FD96A2</item>
-    <item>#EDD9CF</item>
-    <item>#BED4D6</item>
-    <item>#ADCEB7</item>
-    <item>#F7CF8B</item>
-    <item>#81424A</item>
-  </array>
+    <array name="colorPagesViewPager">
+        <item>#EDD9CF</item>
+        <item>#BED4D6</item>
+        <item>#ADCEB7</item>
+        <item>#F7CF8B</item>
+        <item>#FD96A2</item>
+        <item>#EDD9CF</item>
+        <item>#BED4D6</item>
+        <item>#ADCEB7</item>
+        <item>#F7CF8B</item>
+        <item>#81424A</item>
+    </array>
 </resources>
