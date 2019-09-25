@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.injections.Injections;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
 import butterknife.BindView;
@@ -19,6 +20,7 @@ public class SearchRealEstateActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private SearchSettingsFragment mSearchSettingsFragment;
+    private RealEstateListFragment mRealEstateListFragment;
     private RealEstateViewModel mRealEstateViewModel;
 
     @Override
@@ -28,19 +30,34 @@ public class SearchRealEstateActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         this.configureViewModel();
         this.configureToolbar();
-        this.configureSearchSettingsFragment();
+        if (savedInstanceState == null) {
+            this.configureSearchSettingsFragment();
+        }
+
     }
 
     // ----------------------------------- UTILS -----------------------------------
     private void configureToolbar() {
         // Sets the Toolbar
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void configureSearchSettingsFragment() {
         mSearchSettingsFragment =
                 (SearchSettingsFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment_container);
+
+        if (mSearchSettingsFragment == null && findViewById(R.id.search_fragment_container) != null) {
+            mSearchSettingsFragment = new SearchSettingsFragment();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.search_fragment_container, mSearchSettingsFragment)
+                    .commit();
+        }
+    }
+
+    private void configureResultFragment() {
+        mRealEstateListFragment =
+                (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment_container);
 
         if (mSearchSettingsFragment == null && findViewById(R.id.search_fragment_container) != null) {
             mSearchSettingsFragment = new SearchSettingsFragment();

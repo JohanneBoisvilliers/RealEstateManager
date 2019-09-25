@@ -9,13 +9,23 @@
     <dimen name="FAB_elevation_155">155dp</dimen>
     <dimen name="big_FAB">56dp</dimen>
     <dimen name="big_FAB_min_menu">40dp</dimen>
-
         <!--_TEXT_-->
     <dimen name="text_description">16sp</dimen>
     <dimen name="title_desciption">24sp</dimen>
     <dimen name="text_informations">16sp</dimen>
     <dimen name="text_type">20sp</dimen>
-
+    <!--Add RealEstate Activity-->
+    <!--_DESIGN_-->
+    <dimen name="image_header_height">200dp</dimen>
+    <dimen name="user_photo_size">100dp</dimen>
+    <dimen name="button_padding">10dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="textview_margin">5dp</dimen>
+    <dimen name="spinner_margin_top">3dp</dimen>
+    <!--_TEXT_-->
+    <dimen name="text_in_spinner">12sp</dimen>
+    <dimen name="text_info">12sp</dimen>
+    <dimen name="margin_to_border">16dp</dimen>
     <!--CardView-->
         <!--_DESIGN_-->
     <dimen name="line_footer">220dp</dimen>
@@ -29,4 +39,8 @@
     <dimen name="fields_font_size">30sp</dimen>
     <dimen name="btn_height">60dp</dimen>
     <dimen name="btn_submit_width">200dp</dimen>
+
+    <!--Search real estate-->
+    <!--TEXT-->
+    <dimen name="fields_text_size">25sp</dimen>
 </resources>

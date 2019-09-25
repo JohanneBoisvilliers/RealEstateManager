@@ -3,25 +3,25 @@
     <!-- Default NavigationView Header height -->
     <dimen name="nav_header_height">176dp</dimen>
     <!--Fragment Details-->
-        <!--_DESIGN_-->
+    <!--_DESIGN_-->
     <dimen name="FAB_elevation_55">55dp</dimen>
     <dimen name="FAB_elevation_105">105dp</dimen>
     <dimen name="FAB_elevation_155">155dp</dimen>
     <dimen name="big_FAB">56dp</dimen>
     <dimen name="big_FAB_min_menu">40dp</dimen>
 
-        <!--_TEXT_-->
+    <!--_TEXT_-->
     <dimen name="text_description">16sp</dimen>
     <dimen name="title_desciption">20sp</dimen>
     <dimen name="text_informations">16sp</dimen>
     <dimen name="text_type">22sp</dimen>
 
     <!--CardView-->
-        <!--_DESIGN_-->
+    <!--_DESIGN_-->
     <dimen name="line_footer">370dp</dimen>
     <dimen name="header_height">340dp</dimen>
 
-        <!--_TEXT_-->
+    <!--_TEXT_-->
     <dimen name="type_line">24sp</dimen>
     <dimen name="price_line">20sp</dimen>
 </resources>
