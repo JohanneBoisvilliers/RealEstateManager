@@ -40,6 +40,7 @@ public class RealEstateViewModel extends ViewModel {
     public final ObservableField<Integer> spinnerPos = new ObservableField<>();
     public final ObservableField<Integer> surface = new ObservableField<>();
     public final ObservableField<Integer> selectedItemPos = new ObservableField<>();
+    public final ObservableField<String> category = new ObservableField<>();
     public final ObservableField<String> description = new ObservableField<>();
     public final ObservableField<String> numberOfPhoto = new ObservableField<>();
     public final ObservableField<String> address = new ObservableField<>();
@@ -73,6 +74,10 @@ public class RealEstateViewModel extends ViewModel {
     }
     public LiveData<RealEstateWithPhotos> getSpecificEstate(Long id) {
         return mRealEstateDataSource.getSpecificRealEstate(id);
+    }
+
+    public LiveData<List<RealEstateWithPhotos>> getResultSearch(String category) {
+        return mRealEstateDataSource.getResultSearch(category);
     }
     public void updateRealEstate(RealEstate realEstate) {
         executor.execute(() -> mRealEstateDataSource.updateRealEstate(realEstate));

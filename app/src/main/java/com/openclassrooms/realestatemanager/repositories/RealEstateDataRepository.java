@@ -19,6 +19,10 @@ public class RealEstateDataRepository {
     public LiveData<RealEstateWithPhotos> getSpecificRealEstate(long id) {
         return this.mRealEstateDao.getSpecificRealEstate(id);
     }
+
+    public LiveData<List<RealEstateWithPhotos>> getResultSearch(String category) {
+        return this.mRealEstateDao.getResultSearch(category);
+    }
     public LiveData<List<RealEstateWithPhotos>> getRealEstatesWithPhotos(){ return this.mRealEstateDao.getRealEstateWithPhotos(); }
 
     // --- CREATE ---

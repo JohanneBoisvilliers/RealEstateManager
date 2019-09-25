@@ -21,6 +21,10 @@ public interface RealEstateDao {
     @Query("SELECT * FROM RealEstate WHERE id = :realEstateId")
     LiveData<RealEstateWithPhotos> getSpecificRealEstate(long realEstateId);
 
+    @Query("SELECT * FROM RealEstate" +
+            " WHERE RealEstate.category = :category")
+    LiveData<List<RealEstateWithPhotos>> getResultSearch(String category);
+
     @Query("SELECT * FROM RealEstate")
     LiveData<List<RealEstateWithPhotos>> getRealEstateWithPhotos();
 
@@ -33,4 +37,3 @@ public interface RealEstateDao {
     @Query("DELETE FROM RealEstate WHERE id = :realEstateId")
     int deleteItem(long realEstateId);
 }
-

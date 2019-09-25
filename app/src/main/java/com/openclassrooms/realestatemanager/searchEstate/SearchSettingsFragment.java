@@ -5,17 +5,18 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.databinding.FragmentSearchSettingsBinding;
-import com.openclassrooms.realestatemanager.injections.Injections;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
 import butterknife.BindView;
@@ -25,8 +26,10 @@ public class SearchSettingsFragment extends Fragment {
 
     @BindView(R.id.search_type_spinner)
     Spinner mSpinner;
+    @BindView(R.id.search_btn)
+    Button mSubmitButton;
 
-    private String mRealEstateType;
+    private String mRealEstateType = "Loft";
     private RealEstateViewModel mRealEstateViewModel;
 
     public SearchSettingsFragment() {
@@ -46,6 +49,7 @@ public class SearchSettingsFragment extends Fragment {
         binding.setViewmodel(mRealEstateViewModel);
         this.configureSpinner();
         this.spinnerListener();
+        this.btnSubmitListener();
 
         return view;
     }
@@ -56,6 +60,16 @@ public class SearchSettingsFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.type_list, R.layout.custom_item_spinner_search);
         mSpinner.setAdapter(adapter);
+    }
+
+    //replace search fragment with result fragment to show all real estate after filtering
+    private void swapFragment() {
+        RealEstateListFragment resultSearchFragment = new RealEstateListFragment();
+        FragmentTransaction fragmentTransaction =
+                getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.search_fragment_container, resultSearchFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     // ---------------------------------- LISTENERS ----------------------------------
@@ -74,11 +88,17 @@ public class SearchSettingsFragment extends Fragment {
         });
     }
 
+    private void btnSubmitListener() {
+        mSubmitButton.setOnClickListener(v -> {
+            mRealEstateViewModel.category.set(mRealEstateType);
+            swapFragment();
+        });
+    }
+
     // ------------------------------------ DATA ------------------------------------
 
     private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(getContext());
-        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
+        this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
 
     // ----------------------------------- UTILS -----------------------------------

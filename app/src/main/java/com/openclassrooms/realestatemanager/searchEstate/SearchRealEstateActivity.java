@@ -1,10 +1,14 @@
 package com.openclassrooms.realestatemanager.searchEstate;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.injections.Injections;
+import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,12 +19,14 @@ public class SearchRealEstateActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private SearchSettingsFragment mSearchSettingsFragment;
+    private RealEstateViewModel mRealEstateViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_real_estate);
         ButterKnife.bind(this);
+        this.configureViewModel();
         this.configureToolbar();
         this.configureSearchSettingsFragment();
     }
@@ -43,6 +49,14 @@ public class SearchRealEstateActivity extends AppCompatActivity {
                     .replace(R.id.search_fragment_container, mSearchSettingsFragment)
                     .commit();
         }
+    }
+
+    // ------------------------------------ DATA ------------------------------------
+
+    //configure viewmodel for requests
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injections.provideViewModelFactory(this);
+        this.mRealEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel.class);
     }
 
 }

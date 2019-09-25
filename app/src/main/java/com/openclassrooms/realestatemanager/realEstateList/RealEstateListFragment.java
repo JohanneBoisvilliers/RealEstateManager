@@ -162,6 +162,10 @@ public class RealEstateListFragment extends Fragment {
 
     //request all real estates from database and put an observer to update list if there is any change
     private void getRealEstatesWithPhotos(){
-        this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
+        if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
+            this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
+        } else {
+            this.mRealEstateViewModel.getResultSearch(mRealEstateViewModel.category.get()).observe(this, this::updateItemsList);
+        }
     }
 }
