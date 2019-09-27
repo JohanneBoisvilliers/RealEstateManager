@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.realEstateList;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.db.SimpleSQLiteQuery;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -83,6 +84,34 @@ public class RealEstateListFragment extends Fragment {
         this.mRealEstateViewModel = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
     }
 
+    //fetch all addresses of real estate for markers on map
+    private LinkedHashMap<Long, String> fetchRealEstateAddress(List<RealEstateWithPhotos> realEstateList) {
+        LinkedHashMap<Long, String> tempList = new LinkedHashMap<>();
+        for (int i = 0; i < realEstateList.size(); i++) {
+            tempList.put(realEstateList.get(i).getRealEstate().getId(),
+                    realEstateList.get(i).getRealEstate().getAddress());
+        }
+        return tempList;
+    }
+
+    private String fetchEndPriceForSearch() {
+        if (mRealEstateViewModel.endPrice.get() == 0) {
+            return "(SELECT MAX(price) FROM RealEstate)";
+        } else {
+            return String.valueOf(mRealEstateViewModel.endPrice.get());
+        }
+    }
+
+    //fetch data from view model to construct query to search estate
+    private String[] fetchDatasForQuery() {
+        return new String[]{mRealEstateViewModel.category.get(),
+                String.valueOf(mRealEstateViewModel.startPrice.get()),
+                fetchEndPriceForSearch(),
+                String.valueOf(mRealEstateViewModel.rooms.get()),
+                String.valueOf(mRealEstateViewModel.surfacestart.get()),
+                String.valueOf(mRealEstateViewModel.surfaceEnd.get())};
+    }
+
     // ----------------------------------- UTILS -----------------------------------
 
     private void configureRecyclerView() {
@@ -132,7 +161,6 @@ public class RealEstateListFragment extends Fragment {
                     });
         }
     }
-
     private int getPositionOfRealEstate(Long realEstateId) {
         int position = 0;
         for (int i = 0; i < mRealEstateList.size(); i++) {
@@ -148,16 +176,6 @@ public class RealEstateListFragment extends Fragment {
         return view == null;
     }
 
-    //fetch all addresses of real estate for markers on map
-    private LinkedHashMap<Long, String> fetchRealEstateAddress(List<RealEstateWithPhotos> realEstateList) {
-        LinkedHashMap<Long, String> tempList = new LinkedHashMap<>();
-        for (int i = 0; i < realEstateList.size(); i++) {
-            tempList.put(realEstateList.get(i).getRealEstate().getId(),
-                    realEstateList.get(i).getRealEstate().getAddress());
-        }
-        return tempList;
-    }
-
     // ----------------------------------- ASYNC -----------------------------------
 
     //request all real estates from database and put an observer to update list if there is any change
@@ -165,7 +183,13 @@ public class RealEstateListFragment extends Fragment {
         if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
             this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
         } else {
-            this.mRealEstateViewModel.getResultSearch(mRealEstateViewModel.category.get()).observe(this, this::updateItemsList);
+            SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * FROM RealEstate" +
+                    " WHERE RealEstate.category = ?" +
+                    " AND RealEstate.price BETWEEN ? AND ?" +
+                    " AND RealEstate.nbreOfRoom >= ?" +
+                    " AND RealEstate.surface BETWEEN ? AND ?",
+                    fetchDatasForQuery());
+            this.mRealEstateViewModel.getResultSearchRaw(query).observe(this, this::updateItemsList);
         }
     }
 }

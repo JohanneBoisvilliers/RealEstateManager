@@ -6,12 +6,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.openclassrooms.realestatemanager.R;
@@ -21,15 +23,29 @@ import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 
 public class SearchSettingsFragment extends Fragment {
 
     @BindView(R.id.search_type_spinner)
     Spinner mSpinner;
+    @BindView(R.id.input_from)
+    EditText mStartValue;
     @BindView(R.id.search_btn)
     Button mSubmitButton;
+    @BindView(R.id.input_room_search)
+    EditText mNumberOfRoomInput;
+    @BindView(R.id.input_size_search_from)
+    EditText mSizeFromInput;
+    @BindView(R.id.input_size_search_to)
+    EditText mSizeToInput;
 
     private String mRealEstateType = "Loft";
+    private int mRealEstateStartPrice = 0;
+    private int mRealEstateEndPrice = 0;
+    private int mNumberOfRoom = 1;
+    private int mSurfaceStart = 0;
+    private int mSurfaceEnd = 0;
     private RealEstateViewModel mRealEstateViewModel;
 
     public SearchSettingsFragment() {
@@ -91,8 +107,58 @@ public class SearchSettingsFragment extends Fragment {
     private void btnSubmitListener() {
         mSubmitButton.setOnClickListener(v -> {
             mRealEstateViewModel.category.set(mRealEstateType);
+            mRealEstateViewModel.startPrice.set(mRealEstateStartPrice);
+            mRealEstateViewModel.endPrice.set(mRealEstateEndPrice);
+            mRealEstateViewModel.rooms.set(mNumberOfRoom);
+            mRealEstateViewModel.surfacestart.set(mSurfaceStart);
+            mRealEstateViewModel.surfaceEnd.set(mSurfaceEnd);
             swapFragment();
         });
+    }
+
+    @OnTextChanged(value = R.id.input_from, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void startValueChanged(CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            mRealEstateStartPrice = 0;
+        } else {
+            mRealEstateStartPrice = Integer.parseInt(text.toString());
+        }
+    }
+
+    @OnTextChanged(value = R.id.input_to, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void EndValueChanged(CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            mRealEstateEndPrice = 0;
+        } else {
+            mRealEstateEndPrice = Integer.parseInt(text.toString());
+        }
+    }
+
+    @OnTextChanged(value = R.id.input_room_search, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void roomValueChanged(CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            mNumberOfRoom = 0;
+        } else {
+            mNumberOfRoom = Integer.parseInt(text.toString());
+        }
+    }
+
+    @OnTextChanged(value = R.id.input_size_search_from, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void sizeFromValueChanged(CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            mSurfaceStart = 0;
+        } else {
+            mSurfaceStart = Integer.parseInt(text.toString());
+        }
+    }
+
+    @OnTextChanged(value = R.id.input_size_search_to, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void sizeToValueChanged(CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            mSurfaceEnd = 0;
+        } else {
+            mSurfaceEnd = Integer.parseInt(text.toString());
+        }
     }
 
     // ------------------------------------ DATA ------------------------------------

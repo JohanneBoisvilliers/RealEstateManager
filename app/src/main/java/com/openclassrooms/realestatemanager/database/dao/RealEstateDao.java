@@ -1,10 +1,12 @@
 package com.openclassrooms.realestatemanager.database.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SimpleSQLiteQuery;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RawQuery;
 import android.arch.persistence.room.Update;
 
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Dao
 public interface RealEstateDao {
+
     @Query("SELECT * FROM RealEstate" +
             " LEFT JOIN User ON User.id = RealEstate.userId ")
     LiveData<List<RealEstate>> getRealEstates();
@@ -21,9 +24,9 @@ public interface RealEstateDao {
     @Query("SELECT * FROM RealEstate WHERE id = :realEstateId")
     LiveData<RealEstateWithPhotos> getSpecificRealEstate(long realEstateId);
 
-    @Query("SELECT * FROM RealEstate" +
-            " WHERE RealEstate.category = :category")
-    LiveData<List<RealEstateWithPhotos>> getResultSearch(String category);
+    @RawQuery
+    LiveData<List<RealEstateWithPhotos>> getResultSearchRaw(SimpleSQLiteQuery query);
+
 
     @Query("SELECT * FROM RealEstate")
     LiveData<List<RealEstateWithPhotos>> getRealEstateWithPhotos();

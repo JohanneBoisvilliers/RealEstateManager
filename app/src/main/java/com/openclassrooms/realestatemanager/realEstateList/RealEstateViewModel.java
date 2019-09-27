@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.realEstateList;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.db.SimpleSQLiteQuery;
 import android.databinding.ObservableField;
 
 import com.openclassrooms.realestatemanager.models.Photo;
@@ -36,9 +37,13 @@ public class RealEstateViewModel extends ViewModel {
     private final MutableLiveData<boolean[]> mActualState = new MutableLiveData<>();
     private RealEstate mRealEstate;
     public final ObservableField<Integer> price = new ObservableField<>();
+    public final ObservableField<Integer> startPrice = new ObservableField<>();
+    public final ObservableField<Integer> endPrice = new ObservableField<>();
     public final ObservableField<Integer> rooms = new ObservableField<>();
     public final ObservableField<Integer> spinnerPos = new ObservableField<>();
     public final ObservableField<Integer> surface = new ObservableField<>();
+    public final ObservableField<Integer> surfacestart = new ObservableField<>();
+    public final ObservableField<Integer> surfaceEnd = new ObservableField<>();
     public final ObservableField<Integer> selectedItemPos = new ObservableField<>();
     public final ObservableField<String> category = new ObservableField<>();
     public final ObservableField<String> description = new ObservableField<>();
@@ -76,8 +81,8 @@ public class RealEstateViewModel extends ViewModel {
         return mRealEstateDataSource.getSpecificRealEstate(id);
     }
 
-    public LiveData<List<RealEstateWithPhotos>> getResultSearch(String category) {
-        return mRealEstateDataSource.getResultSearch(category);
+    public LiveData<List<RealEstateWithPhotos>> getResultSearchRaw(SimpleSQLiteQuery query) {
+        return mRealEstateDataSource.getResultSearchRaw(query);
     }
     public void updateRealEstate(RealEstate realEstate) {
         executor.execute(() -> mRealEstateDataSource.updateRealEstate(realEstate));
