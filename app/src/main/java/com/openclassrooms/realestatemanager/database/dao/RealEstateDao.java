@@ -8,6 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.RawQuery;
 import android.arch.persistence.room.Update;
+import android.database.Cursor;
 
 import com.openclassrooms.realestatemanager.models.RealEstate;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Dao
 public interface RealEstateDao {
+
+    @Query("SELECT * FROM RealEstate WHERE userId = :userId")
+    Cursor getItemsWithCursor(long userId);
 
     @Query("SELECT * FROM RealEstate" +
             " LEFT JOIN User ON User.id = RealEstate.userId ")

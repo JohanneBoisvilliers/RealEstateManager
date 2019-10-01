@@ -54,6 +54,11 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <provider
+            android:name="com.openclassrooms.realestatemanager.provider.RealEstateProvider"
+            android:authorities="com.openclassrooms.realestatemanager"
+            android:exported="true" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
