@@ -1,12 +1,16 @@
 package com.openclassrooms.realestatemanager.login;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity {
 
     public static final int REGISTER_REQUEST = 1;
+    public static final int REQUEST_CODE_ONE = 0x03;
     @BindView(R.id.signup_btn)Button mSignUpButton;
     @BindView(R.id.login_btn)
     Button mSignInButton;
@@ -35,10 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        //TODO gerer les permissions ici
-        this.checkLastUserLogged();
-        this.listenerForSignUpButton();
-        this.listenerForSignInButton();
+        this.checkPermissions();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -84,11 +86,40 @@ public class LoginActivity extends AppCompatActivity {
     private void launchSignInActivity() {
         startActivity(new Intent(this, SignInActivity.class));
     }
-
     private void launchMainActivity(Long userId) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userId", userId);
         startActivity(intent);
+    }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            this.checkLastUserLogged();
+            this.listenerForSignUpButton();
+            this.listenerForSignInButton();
+        } else {
+            ActivityCompat.requestPermissions(LoginActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_ONE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ONE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.checkLastUserLogged();
+                    this.listenerForSignUpButton();
+                    this.listenerForSignInButton();
+                } else {
+                    ActivityCompat.requestPermissions(LoginActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_CODE_ONE);
+                }
+                return;
+            }
+        }
     }
 
     // ------------------------------------ DATA ------------------------------------

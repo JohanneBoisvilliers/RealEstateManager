@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Stetho.initializeWithDefaults(this);
 
+        this.requestWritePermission();
         this.configureViewModel();
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureNavHeader();
         this.getCurrentUser(getUserId());
-        this.requestWritePermission();
         this.setFragments(savedInstanceState);
     }
     @Override
@@ -309,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void requestWritePermission(){
+    private Boolean requestWritePermission() {
+        Boolean isOk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] PERMISSIONS = {
                     android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -319,8 +320,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if (!this.hasPermissions(this, PERMISSIONS)) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+                isOk = false;
+            } else {
+                isOk = true;
             }
         }
+        return isOk;
     }
 
     public boolean hasPermissions(Context context, String... permissions) {
