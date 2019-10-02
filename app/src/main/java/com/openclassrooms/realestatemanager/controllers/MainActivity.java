@@ -1,14 +1,18 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -48,14 +52,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
-    private static final int WRITE_PERMISSION = 0x01;
+    private static final int REQUEST_CODE_THREE = 0x01;
     public static final String TAG = "DEBUG";
-    private static final int PERMISSION_ALL = 0x02;
     private UserViewModel mUserViewModel;
     private RealEstateViewModel mRealEstateViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
-    private Bundle mBundle;
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.activity_main_drawer_around:
-                this.startRealEstateOnMapActivity();
+                this.checkPermissions();
                 break;
             case R.id.activity_main_drawer_settings:
                 this.startPreferencesActivity();
@@ -228,6 +230,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("addresses", serializedList);
             startActivity(intent);
         });
+    }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            this.startRealEstateOnMapActivity();
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_THREE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_THREE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.startRealEstateOnMapActivity();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_CODE_THREE);
+                }
+                return;
+            }
+        }
     }
 
     // ------------------------------------ UI ------------------------------------
