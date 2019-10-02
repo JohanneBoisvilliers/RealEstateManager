@@ -1,17 +1,13 @@
 package com.openclassrooms.realestatemanager.controllers;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -71,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Stetho.initializeWithDefaults(this);
 
-        this.requestWritePermission();
         this.configureViewModel();
         this.configureToolbar();
         this.configureDrawerLayout();
@@ -296,46 +291,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
         Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
         SingletonSession.Instance().setUser(user);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if(requestCode == WRITE_PERMISSION){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                configureRealEstateListFragment(null);
-            } else {
-                requestWritePermission();
-            }
-        }
-    }
-
-    private Boolean requestWritePermission() {
-        Boolean isOk = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String[] PERMISSIONS = {
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
-            };
-
-            if (!this.hasPermissions(this, PERMISSIONS)) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-                isOk = false;
-            } else {
-                isOk = true;
-            }
-        }
-        return isOk;
-    }
-
-    public boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

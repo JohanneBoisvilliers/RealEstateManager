@@ -1,10 +1,12 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -15,6 +17,8 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -94,6 +98,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_GALLARY = 2;
+    public static final int REQUEST_CODE_TWO = 0x05;
     private List<String> mImageEncodedList = new ArrayList<>();
     private List<String> mGalleryPhotos = new ArrayList<>();
     private List<String> mCameraPhotos = new ArrayList<>();
@@ -364,20 +369,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (captureIntent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        Log.e(TAG, "onClick: ", ex);
-                    }
-                    if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(getContext(), "com.openclassrooms.realestatemanager.provider", photoFile);
-                        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(captureIntent, PICK_FROM_CAMERA);
-                    }
-                }
+                checkPermissions();
             }
         });
     }
@@ -517,5 +509,57 @@ public class AddARealEstateActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (captureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Log.e(TAG, "onClick: ", ex);
+                }
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getContext(), "com.openclassrooms.realestatemanager.provider", photoFile);
+                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(captureIntent, PICK_FROM_CAMERA);
+                }
+            }
+        } else {
+            ActivityCompat.requestPermissions(AddARealEstateActivity.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CODE_TWO);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_TWO: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (captureIntent.resolveActivity(getPackageManager()) != null) {
+                        File photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            Log.e(TAG, "onClick: ", ex);
+                        }
+                        if (photoFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(getContext(), "com.openclassrooms.realestatemanager.provider", photoFile);
+                            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(captureIntent, PICK_FROM_CAMERA);
+                        }
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(AddARealEstateActivity.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            REQUEST_CODE_TWO);
+                }
+                return;
+            }
+        }
     }
 }
