@@ -18,17 +18,17 @@ public class Connectivity {
         return (info != null && info.isConnected());
     }
     // check if wifi is on
-    public static boolean isConnectedWifi(Context context){
+    public boolean isConnectedWifi(Context context) {
         NetworkInfo info = Connectivity.getNetworkInfo(context);
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
     // check if connected to mobile connection
-    public static boolean isConnectedMobile(Context context){
+    public boolean isConnectedMobile(Context context) {
         NetworkInfo info = Connectivity.getNetworkInfo(context);
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
     // check connection state
-    public static boolean isConnectedFast(Context context){
+    public boolean isConnectedFast(Context context) {
         NetworkInfo info = Connectivity.getNetworkInfo(context);
         return (info != null && info.isConnected() && Connectivity.isConnectionFast(info.getType(),info.getSubtype()));
     }

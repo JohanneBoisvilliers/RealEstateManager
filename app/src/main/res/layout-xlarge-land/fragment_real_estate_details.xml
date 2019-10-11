@@ -107,7 +107,7 @@
                         android:layout_height="75dp"
                         android:layout_weight="1"
                         android:background="@color/colorPrimary"
-                        android:drawableTop="@drawable/baseline_add_24"
+                        android:drawableTop="@drawable/loan"
                         android:padding="10dp"
                         android:text="@string/simul_button"
                         android:textColor="@color/primaryTextColor" />
@@ -202,30 +202,8 @@
                             android:fontFamily="sans-serif"
                             android:textSize="@dimen/text_description"
                             android:textColor="@color/colorPrimary"/>
-                        <com.openclassrooms.realestatemanager.utils.FadingTextView
-                            android:id="@+id/real_estate_description_fade"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="10dp"
-                            android:maxLines="3"
-                            android:fontFamily="sans-serif"
-                            android:textSize="@dimen/text_description"
-                            android:background="@android:color/transparent"
-                            android:textColor="@color/colorPrimary" />
                     </FrameLayout>
 
-                    <Button
-                        android:id="@+id/btShowmore"
-                        android:layout_width="match_parent"
-                        android:layout_height="21dp"
-                        android:text="@string/button_more"
-                        android:textAllCaps="false"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="5dp"
-                        android:gravity="top|end"
-                        android:textColor="@color/colorAccentDark"
-                        android:background="@android:color/transparent"
-                        android:visibility="invisible"/>
                 </LinearLayout>
                 <!--container details -->
                 <LinearLayout

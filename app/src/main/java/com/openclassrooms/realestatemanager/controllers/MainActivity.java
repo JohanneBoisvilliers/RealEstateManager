@@ -21,7 +21,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.activity_main_toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
+    @BindView(R.id.bottom_image_navdrawer)
+    ImageView mBottomImageNavDrawer;
 
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
@@ -270,6 +274,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.secondaryTextColor));
         toggle.syncState();
+        Glide.with(this)
+                .load(this.getResources().getDrawable(R.drawable.background_start))
+                .fitCenter()
+                .into(mBottomImageNavDrawer);
     }
     //load image into header with glide
     private void configureNavHeader() {

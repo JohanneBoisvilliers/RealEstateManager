@@ -69,4 +69,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.0'
     //Gson
     implementation 'com.google.code.gson:gson:2.8.5'
+    //Mockito
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    androidTestImplementation 'org.mockito:mockito-android:2.7.22'
+
 }

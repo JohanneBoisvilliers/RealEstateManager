@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Default NavigationView Header height -->
+    <!-- Navigation view -->
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="user_photo_nav">75dp</dimen>
+    <dimen name="base_logo_height">175dp</dimen>
     <!--Fragment Details-->
     <!--_DESIGN_-->
     <dimen name="FAB_elevation_55">55dp</dimen>
@@ -14,7 +15,6 @@
     <dimen name="description_viewpager_background_height">25dp</dimen>
     <dimen name="space_between_interest_and_map">8dp</dimen>
     <dimen name="map_height">200dp</dimen>
-
 
     <!--_TEXT_-->
     <dimen name="text_description">16sp</dimen>
@@ -69,4 +69,5 @@
     <!--Search real estate-->
     <!--TEXT-->
     <dimen name="fields_text_size">20sp</dimen>
+    <dimen name="logo_size">20dp</dimen>
 </resources>

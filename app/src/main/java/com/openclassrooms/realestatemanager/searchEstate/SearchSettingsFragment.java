@@ -43,7 +43,7 @@ public class SearchSettingsFragment extends Fragment {
     private String mRealEstateType = "Loft";
     private int mRealEstateStartPrice = 0;
     private int mRealEstateEndPrice = 0;
-    private int mNumberOfRoom = 1;
+    private int mNumberOfRoom = 0;
     private int mSurfaceStart = 0;
     private int mSurfaceEnd = 0;
     private RealEstateViewModel mRealEstateViewModel;

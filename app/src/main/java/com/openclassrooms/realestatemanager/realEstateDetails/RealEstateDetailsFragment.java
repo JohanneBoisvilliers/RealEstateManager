@@ -51,8 +51,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.real_estate_category) TextView mRealEstateCategory;
     @BindView(R.id.real_estate_price) TextView mRealEstatePrice;
     @BindView(R.id.real_estate_description) TextView mRealEstateDescription;
-    @BindView(R.id.real_estate_description_fade) TextView mRealEstateDescriptionFade;
-    @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
     @Nullable
     @BindView(R.id.modify_button_tablet_mode)
@@ -129,7 +127,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             this.configureModifyButton();
         }
         this.configureFABCreditSimutlator();
-        this.configureExpandDescription();
         this.configureExpandLocation();
         return view;
     }
@@ -194,7 +191,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
             setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
-            mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
             mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
                     realEstate.getRealEstate().getNbreOfRoom()));
@@ -218,32 +214,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         mStatusFAB.animate().translationY(0);
         mModifyEstate.animate().translationY(0);
         mCreditSimulator.animate().translationY(0);
-    }
-    //add a button to open description when it's longer than 3 lines
-    private void configureExpandDescription() {
-        mRealEstateDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                mNumberOfLine = mRealEstateDescription.getLineCount();
-                if (mNumberOfLine >= 2) {
-                    mButtonMoreDescription.setVisibility(View.VISIBLE);
-                    mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mButtonMoreDescription.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
-                                mRealEstateDescription.setMaxLines(Integer.MAX_VALUE);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_close));
-                            } else {
-                                mRealEstateDescription.setMaxLines(2);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_more));
-                            }
-                        }
-                    });
-                } else {
-                    mButtonMoreDescription.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
     }
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate) {

@@ -40,8 +40,27 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:backgroundTint="@color/colorPrimaryLight"
         app:headerLayout="@layout/activity_main_nav_header"
         app:menu="@menu/activity_main_menu_drawer"
-        app:itemTextColor="@color/colorAccentDark"/>
+        app:itemTextColor="@color/primaryTextColor"
+        app:itemIconTint="@color/primaryTextColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/bottom_image_navdrawer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_logo_height"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_to_border" />
+
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

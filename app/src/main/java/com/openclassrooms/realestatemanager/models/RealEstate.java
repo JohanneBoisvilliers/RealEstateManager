@@ -27,6 +27,11 @@ public class RealEstate {
     public RealEstate() {
     }
 
+    public RealEstate(long id, long userId) {
+        this.id = id;
+        this.userId = userId;
+    }
+
     // -- GETTERS
     public long getId() {
         return id;

@@ -49,7 +49,7 @@
     <string name="hint_interest">Make your choice</string>
     <string name="snack_bar_no_photo">You\'ve didn\'t picked any photos</string>
     <string name="number_of_photo">%s photo(s) picked</string>
-    <string name="no_photo">You\'ve didn\'t take photo</string>
+    <string name="no_photo">Wrong input</string>
     <string name="conditions">At least one photo and a description needed</string>
     <string name="text_add_realestate">Welcome %s ! You can add or modify a real estate in
         database by choosing at least one photo and a description.</string>
@@ -115,7 +115,7 @@
     <string name="cost_to">to :</string>
     <string name="hint_input_from">Start Value</string>
     <string name="hint_input_to">End Value</string>
-    <string name="rooms_input">Minimum number of rooms :</string>
+    <string name="rooms_input">Number of rooms :</string>
     <string name="hint_input_rooms">Min rooms</string>
     <string name="area_input_from">Area from:</string>
     <string name="area_input_to">to:</string>

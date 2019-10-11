@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.realEstateDetails;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
 
@@ -72,8 +72,10 @@ public class photoViewpagerFragment extends Fragment {
         String photoDescription = (String)getArguments().get(KEY_DESCRIPTION);
         mPhotoId = (long) getArguments().get(KEY_ID);
         this.configureViewModel();
-
-        mPhotoContainer.setImageBitmap(BitmapFactory.decodeFile(photoUrl));
+        Glide.with(this)
+                .load(photoUrl)
+                .centerCrop()
+                .into(mPhotoContainer);
         mPhotoDescription.setText(photoDescription);
         this.listenerOnPhotoDescription();
 

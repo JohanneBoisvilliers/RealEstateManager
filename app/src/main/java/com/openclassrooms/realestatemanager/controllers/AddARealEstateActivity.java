@@ -333,7 +333,6 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     //finish();
                 } else {
                     Utils.showSnackBar(mCoordinator,
-                            //TODO modifier phrase de contrainte
                             getResources().getString(R.string.no_photo),
                             BaseTransientBottomBar.LENGTH_LONG);
                 }

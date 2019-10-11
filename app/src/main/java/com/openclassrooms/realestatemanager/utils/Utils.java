@@ -17,8 +17,6 @@ import java.util.Date;
 public class Utils {
 
     // ----------------------------------- UTILS -----------------------------------
-
-    //TODO pourquoi pas essayer d'utiliser une api pour taux actuel
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -47,12 +45,13 @@ public class Utils {
      * @param
      * @return
      */
-    public static boolean isOnline() {
+    public boolean isOnline() {
         Context context = MyApp.getContext();
-        if (Connectivity.isConnectedWifi(context)) {
+        Connectivity connectivity = new Connectivity();
+        if (connectivity.isConnectedWifi(context)) {
             return true;
         }else{
-            return Connectivity.isConnectedMobile(context) && Connectivity.isConnectedFast(context);
+            return connectivity.isConnectedMobile(context) && connectivity.isConnectedFast(context);
         }
     }
 
@@ -66,7 +65,7 @@ public class Utils {
     //load background image into header with glide
     public static void configureImageHeader(Context context, ImageView view) {
         Glide.with(context)
-                .load(context.getResources().getDrawable(R.drawable.gradient_bleu))
+                .load(context.getResources().getDrawable(R.drawable.color_gradient))
                 .centerCrop()
                 .into(view);
     }
