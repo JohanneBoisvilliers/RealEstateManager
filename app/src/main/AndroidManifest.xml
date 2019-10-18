@@ -2,18 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.openclassrooms.realestatemanager">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
     <application
         android:name=".utils.MyApp"
         android:allowBackup="false"
@@ -22,12 +10,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".controllers.CreditSimulatorActivity"></activity>
         <activity android:name=".controllers.PreferencesActivity" />
+
+        <activity
+            android:name=".controllers.AddARealEstateActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity android:name=".controllers.RealEstateOnMapActivity" />
+
+        <activity android:name=".controllers.MainActivity" />
+        <activity
+            android:name=".searchEstate.SearchRealEstateActivity"
+            android:parentActivityName=".controllers.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.MainActivity" />
+        </activity>
+        <activity android:name=".login.SignInActivity" />
+        <activity android:name=".login.RegisterActivity" />
+        <activity android:name=".login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/APIKEY" />
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.openclassrooms.realestatemanager.provider"
@@ -40,25 +54,27 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".controllers.AddARealEstateActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".controllers.RealEstateOnMapActivity" />
-        <activity android:name=".controllers.MainActivity" />
-        <activity android:name=".controllers.SearchRealEstateActivity" />
-        <activity android:name=".login.SignInActivity" />
-        <activity android:name=".login.RegisterActivity" />
-        <activity android:name=".login.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <provider
+            android:name="com.openclassrooms.realestatemanager.provider.RealEstateProvider"
+            android:authorities="com.openclassrooms.realestatemanager"
+            android:exported="true" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
 </manifest>

@@ -118,43 +118,16 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/title_desciption" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
 
                         <TextView
                             android:id="@+id/real_estate_description"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:maxLines="2"
                             android:text="description du bien"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_description" />
 
-                        <com.openclassrooms.realestatemanager.utils.FadingTextView
-                            android:id="@+id/real_estate_description_fade"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="3"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/text_description" />
-                    </FrameLayout>
-
-                    <Button
-                        android:id="@+id/btShowmore"
-                        android:layout_width="match_parent"
-                        android:layout_height="21dp"
-                        android:background="@android:color/transparent"
-                        android:gravity="top|end"
-                        android:paddingTop="5dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/button_more"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorAccentDark"
-                        android:visibility="invisible"/>
                 </LinearLayout>
                 <!--surface informations-->
                 <LinearLayout
@@ -368,7 +341,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_photo_fab"
+                android:id="@+id/credit_simulator"
                 android:layout_width="@dimen/big_FAB_min_menu"
                 android:layout_height="@dimen/big_FAB_min_menu"
                 app:fabCustomSize="40dp"
@@ -379,7 +352,7 @@
                 android:tint="@color/primaryTextColor"
                 app:layout_anchor="@id/real_estate_photo"
                 app:layout_anchorGravity="bottom|right|end"
-                android:src="@drawable/baseline_add_a_photo_black_24"
+                android:src="@drawable/loan"
                 android:focusable="true" />
 
             <android.support.design.widget.FloatingActionButton

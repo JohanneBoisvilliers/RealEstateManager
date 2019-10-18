@@ -184,6 +184,7 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
 
     }
 
+    //build google api client
     public void setGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -219,6 +220,7 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
         this.mLatLngsAddresses = latLngArrayList;
     }
 
+    //send informations to mainactivity to open the clicked real estate
     @Override
     public boolean onMarkerClick(Marker marker) {
         Intent intent = new Intent(this, MainActivity.class);

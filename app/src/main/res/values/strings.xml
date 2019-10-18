@@ -15,21 +15,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- REAL ESTATE DETAILS -->
-    <string-array name="type_list">
-        <item>Loft</item>
-        <item>House</item>
-        <item>Castle</item>
-        <item>Appartement</item>
-    </string-array>
-    <string-array name="interest_list">
-        <item>School</item>
-        <item>Shops</item>
-        <item>Parking</item>
-        <item>Gas station</item>
-        <item>Mall</item>
-        <item>Town hall</item>
-        <item>Play area</item>
-    </string-array>
     <string name="description_detail">Description</string>
     <string name="button_more">Show address</string>
     <string name="button_close">..close</string>
@@ -47,10 +32,10 @@
     <string name="modify_button">Update</string>
     <string name="sold_button">Status</string>
     <string name="simul_button">Simulation</string>
-
-    <!-- ADD REAL ESTATE ACTIVITY -->
     <string name="type_button">TYPE</string>
     <string name="price_button">PRICE</string>
+
+    <!-- ADD REAL ESTATE ACTIVITY -->
     <string name="surface_button">SURFACE</string>
     <string name="rooms_button">ROOMS</string>
     <string name="location_button">LOCATION</string>
@@ -64,39 +49,76 @@
     <string name="hint_interest">Make your choice</string>
     <string name="snack_bar_no_photo">You\'ve didn\'t picked any photos</string>
     <string name="number_of_photo">%s photo(s) picked</string>
-    <string name="no_photo">You\'ve didn\'t take photo</string>
+    <string name="no_photo">Wrong input</string>
     <string name="conditions">At least one photo and a description needed</string>
     <string name="text_add_realestate">Welcome %s ! You can add or modify a real estate in
         database by choosing at least one photo and a description.</string>
-
-    <!-- LOGIN ACTIVITY -->
     <string name="sign_up">SIGNUP</string>
     <string name="login">LOGIN</string>
+
+    <!-- LOGIN ACTIVITY -->
     <string name="cancel_registration">Registration has been canceled</string>
     <string name="registration_success">Registration succeeded, you can now log in</string>
-
-    <!-- SIGNIN ACTIVITY -->
     <string name="sign_in">SIGN IN</string>
     <string name="error">Wrong user !</string>
 
-    <!-- REGISTER ACTIVITY -->
+    <!-- SIGNIN ACTIVITY -->
     <string name="register">REGISTER</string>
     <string name="hint_username">USERNAME</string>
+
+    <!-- REGISTER ACTIVITY -->
     <string name="hint_email">EMAIL ADDRESS</string>
     <string name="hint_password">PASSWORD</string>
     <string name="hint_photo">CHOOSE A PHOTO</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="credit_title">LOAN SIMULATOR</string>
 
     <!-- PREFERENCES ACTIVITY -->
+    <string name="credit_real_estate_cost">Real Estate price :</string>
+    <string name="contribution">Contribution :</string>
+    <string name="rate">Rate :</string>
+    <string name="years">Years :</string>
+    <string name="btn_submit">SUBMIT</string>
+
+    <!-- CREDIT SIMULATOR -->
+    <string name="result_loan_simulator">Total cost : %s, monthly : %s</string>
+    <string name="fields_error">Please fill all fields !</string>
+    <string name="toolbar_title_search">Search Real Estate</string>
+
     <string-array name="listArray">
         <item>Dollars</item>
         <item>Euros</item>
     </string-array>
-
     <string-array name="listValues">
         <item>1</item>
         <item>2</item>
     </string-array>
+    <string-array name="type_list">
+        <item>Loft</item>
+        <item>House</item>
+        <item>Castle</item>
+        <item>Appartement</item>
+    </string-array>
+    <string-array name="interest_list">
+        <item>School</item>
+        <item>Shops</item>
+        <item>Parking</item>
+        <item>Gas station</item>
+        <item>Mall</item>
+        <item>Town hall</item>
+        <item>Play area</item>
+    </string-array>
 
+    <!--SEARCH ACTIVITY-->
+    <string name="type_list">Type :</string>
+    <string name="cost_from">Price from :</string>
+    <string name="cost_to">to :</string>
+    <string name="hint_input_from">Start Value</string>
+    <string name="hint_input_to">End Value</string>
+    <string name="rooms_input">Number of rooms :</string>
+    <string name="hint_input_rooms">Min rooms</string>
+    <string name="area_input_from">Area from:</string>
+    <string name="area_input_to">to:</string>
+    <string name="hint_area">Area</string>
 
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

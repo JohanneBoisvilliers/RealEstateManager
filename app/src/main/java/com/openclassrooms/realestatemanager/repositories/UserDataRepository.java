@@ -11,8 +11,9 @@ public class UserDataRepository {
     public UserDataRepository(UserDao userDao) {
         mUserDao = userDao;
     }
+
     // --- CREATE ---
-    public long createUser(User user){
+    public long createUser(User user) {
         return mUserDao.insertUser(user);
     }
 

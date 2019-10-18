@@ -4,12 +4,15 @@
     tools:showIn="navigation_view">
 
     <item
+        android:icon="@drawable/earth"
         android:id="@+id/activity_main_drawer_around"
         android:title="@string/real_estate_around" />
     <item
+        android:icon="@drawable/settings"
         android:id="@+id/activity_main_drawer_settings"
         android:title="@string/settings" />
     <item
+        android:icon="@drawable/logout_sign"
         android:id="@+id/activity_main_drawer_disconnect"
         android:title="@string/disconnect" />
 

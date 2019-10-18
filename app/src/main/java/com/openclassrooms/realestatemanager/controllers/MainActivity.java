@@ -1,18 +1,18 @@
 package com.openclassrooms.realestatemanager.controllers;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,7 +21,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
@@ -33,6 +35,7 @@ import com.openclassrooms.realestatemanager.models.User;
 import com.openclassrooms.realestatemanager.realEstateDetails.RealEstateDetailsFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.realEstateList.RealEstateViewModel;
+import com.openclassrooms.realestatemanager.searchEstate.SearchRealEstateActivity;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 import com.openclassrooms.realestatemanager.utils.SingletonSession;
 import com.openclassrooms.realestatemanager.utils.Utils;
@@ -48,17 +51,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.activity_main_toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
+    @BindView(R.id.bottom_image_navdrawer)
+    ImageView mBottomImageNavDrawer;
 
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
-    private static final int WRITE_PERMISSION = 0x01;
+    private static final int REQUEST_CODE_THREE = 0x01;
     public static final String TAG = "DEBUG";
-    private static final int PERMISSION_ALL = 0x02;
     private UserViewModel mUserViewModel;
     private RealEstateViewModel mRealEstateViewModel;
     private View mNavHeader;
     private HeaderViewHolder mHeaderViewHolder;
-    private Bundle mBundle;
 
     // -------------------------------- LIFE CYCLE --------------------------------
 
@@ -76,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureNavigationView();
         this.configureNavHeader();
         this.getCurrentUser(getUserId());
-        this.requestWritePermission();
         this.setFragments(savedInstanceState);
     }
     @Override
@@ -136,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //return the ID write in shared preferences to know who is connected
     private Long checkLastUser() {
         Long Userid;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return Userid;
     }
 
+    //clear shared preferences when user is log out
     public void clearUserConnected() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putLong("userId", 0).commit();
@@ -157,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.activity_main_drawer_around:
-                this.startRealEstateOnMapActivity();
+                this.checkPermissions();
                 break;
             case R.id.activity_main_drawer_settings:
                 this.startPreferencesActivity();
@@ -176,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //2 - Inflate the menu and add it to the Toolbar
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
 
         for(int i = 0; i < menu.size(); i++){
@@ -195,6 +198,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_activity_main_add_realestate:
                 this.startAddRealEstateActivity();
                 return true;
+            case R.id.menu_activity_main_search_realestate:
+                this.startSearchRealEstateActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -204,6 +210,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAddRealEstateActivity(){
         startActivity(new Intent(this, AddARealEstateActivity.class));
+    }
+
+    private void startSearchRealEstateActivity() {
+        startActivity(new Intent(this, SearchRealEstateActivity.class));
     }
 
     private void startLoginActivity() {
@@ -227,6 +237,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            this.startRealEstateOnMapActivity();
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_THREE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_THREE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.startRealEstateOnMapActivity();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_CODE_THREE);
+                }
+                return;
+            }
+        }
+    }
+
     // ------------------------------------ UI ------------------------------------
 
     private void configureToolbar() {
@@ -239,6 +275,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.secondaryTextColor));
         toggle.syncState();
+        Glide.with(this)
+                .load(this.getResources().getDrawable(R.drawable.background_start))
+                .fitCenter()
+                .into(mBottomImageNavDrawer);
     }
     //load image into header with glide
     private void configureNavHeader() {
@@ -288,41 +328,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mHeaderViewHolder.getUserEmailTxt().setText(user.getEmail());
         Utils.configureUserPhoto(user.getPhotoUrl(), getApplicationContext(), mHeaderViewHolder.getUserPhoto());
         SingletonSession.Instance().setUser(user);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if(requestCode == WRITE_PERMISSION){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                configureRealEstateListFragment(null);
-            } else {
-                requestWritePermission();
-            }
-        }
-    }
-
-    private void requestWritePermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String[] PERMISSIONS = {
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
-            };
-
-            if (!this.hasPermissions(this, PERMISSIONS)) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-            }
-        }
-    }
-
-    public boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Default NavigationView Header height -->
-    <dimen name="nav_header_height">176dp</dimen>
-    <!--Fragment Details-->
-        <!--_DESIGN_-->
-    <dimen name="FAB_elevation_55">55dp</dimen>
-    <dimen name="FAB_elevation_105">105dp</dimen>
-    <dimen name="FAB_elevation_155">155dp</dimen>
-    <dimen name="big_FAB">56dp</dimen>
-    <dimen name="big_FAB_min_menu">40dp</dimen>
+  <!-- Default NavigationView Header height -->
+  <dimen name="nav_header_height">176dp</dimen>
+  <!--Fragment Details-->
+  <!--_DESIGN_-->
+  <dimen name="FAB_elevation_55">55dp</dimen>
+  <dimen name="FAB_elevation_105">105dp</dimen>
+  <dimen name="FAB_elevation_155">155dp</dimen>
+  <dimen name="big_FAB">56dp</dimen>
+  <dimen name="big_FAB_min_menu">40dp</dimen>
+  <!--_TEXT_-->
+  <dimen name="text_description">14sp</dimen>
+  <dimen name="title_desciption">18sp</dimen>
+  <dimen name="text_informations">14sp</dimen>
+  <dimen name="text_type">20sp</dimen>
+  <!--Add RealEstate Activity-->
+  <!--_DESIGN_-->
+  <dimen name="image_header_height">200dp</dimen>
+  <dimen name="user_photo_size">100dp</dimen>
+  <dimen name="button_padding">10dp</dimen>
+  <dimen name="icon_size">24dp</dimen>
+  <dimen name="textview_margin">5dp</dimen>
+  <dimen name="spinner_margin_top">3dp</dimen>
+  <!--_TEXT_-->
+  <dimen name="text_in_spinner">12sp</dimen>
+  <dimen name="text_info">12sp</dimen>
+  <dimen name="margin_to_border">16dp</dimen>
+  <!--CardView-->
+  <!--_DESIGN_-->
+  <dimen name="line_footer">280dp</dimen>
+  <dimen name="header_height">220dp</dimen>
+  <!--_TEXT_-->
+  <dimen name="type_line">18sp</dimen>
+  <dimen name="price_line">14sp</dimen>
 
-        <!--_TEXT_-->
-    <dimen name="text_description">14sp</dimen>
-    <dimen name="title_desciption">18sp</dimen>
-    <dimen name="text_informations">14sp</dimen>
-    <dimen name="text_type">20sp</dimen>
-
-    <!--CardView-->
-        <!--_DESIGN_-->
-    <dimen name="line_footer">280dp</dimen>
-    <dimen name="header_height">220dp</dimen>
-
-        <!--_TEXT_-->
-    <dimen name="type_line">18sp</dimen>
-    <dimen name="price_line">14sp</dimen>
-
+  <!--Search real estate-->
+  <!--TEXT-->
+  <dimen name="fields_text_size">20sp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.repositories;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SimpleSQLiteQuery;
 
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -18,6 +19,11 @@ public class RealEstateDataRepository {
 
     public LiveData<RealEstateWithPhotos> getSpecificRealEstate(long id) {
         return this.mRealEstateDao.getSpecificRealEstate(id);
+    }
+
+    public LiveData<List<RealEstateWithPhotos>> getResultSearchRaw(SimpleSQLiteQuery query) {
+        return this.mRealEstateDao.getResultSearchRaw(query)
+                ;
     }
     public LiveData<List<RealEstateWithPhotos>> getRealEstatesWithPhotos(){ return this.mRealEstateDao.getRealEstateWithPhotos(); }
 

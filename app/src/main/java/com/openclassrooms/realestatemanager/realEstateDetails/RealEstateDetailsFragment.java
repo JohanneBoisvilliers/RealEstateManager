@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.AddARealEstateActivity;
+import com.openclassrooms.realestatemanager.controllers.CreditSimulatorActivity;
 import com.openclassrooms.realestatemanager.login.RegisterActivity;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.RealEstate;
@@ -50,8 +51,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.real_estate_category) TextView mRealEstateCategory;
     @BindView(R.id.real_estate_price) TextView mRealEstatePrice;
     @BindView(R.id.real_estate_description) TextView mRealEstateDescription;
-    @BindView(R.id.real_estate_description_fade) TextView mRealEstateDescriptionFade;
-    @BindView(R.id.btShowmore) Button mButtonMoreDescription;
     @BindView(R.id.btnLocationMore) Button mButtonMoreLocation;
     @Nullable
     @BindView(R.id.modify_button_tablet_mode)
@@ -77,7 +76,8 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     @BindView(R.id.main_fab) FloatingActionButton mMainFAB;
     @BindView(R.id.status_fab) FloatingActionButton mStatusFAB;
     @BindView(R.id.modify_real_estate_fab) FloatingActionButton mModifyEstate;
-    @BindView(R.id.add_photo_fab) FloatingActionButton mAddPhoto;
+    @BindView(R.id.credit_simulator)
+    FloatingActionButton mCreditSimulator;
     @BindView(R.id.recyclerView_details_tablet) RecyclerView mRecyclerViewForPhotos;
     @Nullable
     @BindView(R.id.real_estate_recycler_view) RecyclerView mRealEstateRecyclerView;
@@ -126,7 +126,7 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             this.configureFABMenu();
             this.configureModifyButton();
         }
-        this.configureExpandDescription();
+        this.configureFABCreditSimutlator();
         this.configureExpandLocation();
         return view;
     }
@@ -191,7 +191,6 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
             mRealEstateCategory.setText(realEstate.getRealEstate().getCategory());
             setRealEstatePrice(realEstate, mRealEstatePrice);
             mRealEstateDescription.setText(realEstate.getRealEstate().getDescription());
-            mRealEstateDescriptionFade.setText(realEstate.getRealEstate().getDescription());
             mInformationSurface.setText(getResources().getString((R.string.real_estate_surface), realEstate.getRealEstate().getSurface()));
             mInformationRoom.setText(getResources().getString((R.string.real_estate_room),
                     realEstate.getRealEstate().getNbreOfRoom()));
@@ -207,40 +206,14 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
         isFABOpen = true;
         mStatusFAB.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_55));
         mModifyEstate.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_105));
-        mAddPhoto.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
+        mCreditSimulator.animate().translationY(-getResources().getDimension(R.dimen.FAB_elevation_155));
     }
     //hide FAB menu
     private void closeFABMenu() {
         isFABOpen = false;
         mStatusFAB.animate().translationY(0);
         mModifyEstate.animate().translationY(0);
-        mAddPhoto.animate().translationY(0);
-    }
-    //add a button to open description when it's longer than 3 lines
-    private void configureExpandDescription() {
-        mRealEstateDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                mNumberOfLine = mRealEstateDescription.getLineCount();
-                if (mNumberOfLine >= 2) {
-                    mButtonMoreDescription.setVisibility(View.VISIBLE);
-                    mButtonMoreDescription.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mButtonMoreDescription.getText().toString().equalsIgnoreCase(getResources().getString(R.string.button_more))) {
-                                mRealEstateDescription.setMaxLines(Integer.MAX_VALUE);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_close));
-                            } else {
-                                mRealEstateDescription.setMaxLines(2);
-                                mButtonMoreDescription.setText(getResources().getString(R.string.button_more));
-                            }
-                        }
-                    });
-                } else {
-                    mButtonMoreDescription.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        mCreditSimulator.animate().translationY(0);
     }
     //Hide or show sold out img depending sold state
     private void setSoldState(RealEstate realEstate) {
@@ -273,6 +246,15 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void configureFABchangeStatus(){
         mStatusFAB.setOnClickListener(view -> changeRealEstateStatus());
     }
+
+    private void configureFABCreditSimutlator() {
+        mCreditSimulator.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), CreditSimulatorActivity.class);
+            intent.putExtra("realEstatePrice", mRealEstate.getRealEstate().getPrice());
+            startActivity(intent);
+        });
+
+    }
     //configure button to expand real estate location
     private void configureExpandLocation() {
         mButtonMoreLocation.setOnClickListener(v -> {
@@ -301,6 +283,11 @@ public class RealEstateDetailsFragment extends Fragment implements getPrice {
     private void configureSimulTabletMode() {
         DrawableCompat.setTint(mSimulTabletMode.getCompoundDrawables()[1],
                 ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
+        mSimulTabletMode.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), CreditSimulatorActivity.class);
+            intent.putExtra("realEstatePrice", mRealEstate.getRealEstate().getPrice());
+            startActivity(intent);
+        });
     }
 
     // ------------------------------------ DATA ------------------------------------
