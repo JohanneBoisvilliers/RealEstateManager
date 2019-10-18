@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //return the ID write in shared preferences to know who is connected
     private Long checkLastUser() {
         Long Userid;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return Userid;
     }
 
+    //clear shared preferences when user is log out
     public void clearUserConnected() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putLong("userId", 0).commit();
@@ -178,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //2 - Inflate the menu and add it to the Toolbar
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
 
         for(int i = 0; i < menu.size(); i++){

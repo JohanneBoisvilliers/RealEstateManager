@@ -96,6 +96,7 @@ public class RealEstateListFragment extends Fragment {
         return tempList;
     }
 
+    //check if user add max price in field to know what to write in request
     private String fetchEndPriceForSearch() {
         if (mRealEstateViewModel.endPrice.get() == 0) {
             return "(SELECT MAX(price) FROM RealEstate)";
@@ -104,6 +105,7 @@ public class RealEstateListFragment extends Fragment {
         }
     }
 
+    //check if user add max area in field to know what to write in request
     private String fetchEndAreaForSearch() {
         if (mRealEstateViewModel.endPrice.get() == 0) {
             return "(SELECT MAX(surface) FROM RealEstate)";

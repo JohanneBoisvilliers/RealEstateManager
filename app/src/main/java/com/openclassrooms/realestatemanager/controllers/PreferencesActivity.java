@@ -41,6 +41,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
         }
 
+        //set the currency preference
         private void getValueForCurrency(String newValue) {
             String currency;
             if (((CharSequence) newValue).equals("1")) {

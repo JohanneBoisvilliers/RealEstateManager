@@ -72,6 +72,7 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         return this.mRealEstateList.get(position);
     }
 
+    //notify recyclerview when real estates are fetch
     public void updateData(List<RealEstateWithPhotos> realEstateList){
         this.mRealEstateList.clear();
         this.mRealEstateList.addAll(realEstateList);
@@ -97,6 +98,7 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         notifyItemChanged(pos);
     }
 
+    //highlight the selected element in two panes layouts
     private void setColorOfSelectedItem(RealEstateViewHolder holder, int backgroundColor,
                                         int colorAccent) {
         holder.mTransparentBackground.setBackgroundColor(backgroundColor);

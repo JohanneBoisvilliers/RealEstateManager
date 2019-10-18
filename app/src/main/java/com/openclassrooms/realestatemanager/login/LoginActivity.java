@@ -61,21 +61,11 @@ public class LoginActivity extends AppCompatActivity {
 
     //launch activity to register a new user
     private void listenerForSignUpButton(){
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchSignUpActivity();
-            }
-        });
+        mSignUpButton.setOnClickListener(v -> launchSignUpActivity());
     }
     //launch activity for login
     private void listenerForSignInButton() {
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchSignInActivity();
-            }
-        });
+        mSignInButton.setOnClickListener(v -> launchSignInActivity());
     }
 
     // ----------------------------------- UTILS -----------------------------------
