@@ -11,6 +11,8 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.RealEstateWithPhotos;
 import com.openclassrooms.realestatemanager.utils.getPrice;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,7 +36,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements get
 
     public void updateRealEstateCardView(RealEstateWithPhotos realEstate){
         Glide.with(mRealEstatePhoto.getContext())
-                .load(realEstate.getPhotoList().get(0).getUrl())
+                .load(new File(realEstate.getPhotoList().get(0).getUrl()))
                 .centerCrop()
                 .into(mRealEstatePhoto);
         this.mRealEstateType.setText(realEstate.getRealEstate().getCategory());

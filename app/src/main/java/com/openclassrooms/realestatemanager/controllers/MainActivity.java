@@ -2,11 +2,14 @@ package com.openclassrooms.realestatemanager.controllers;
 
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -16,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RealEstateListFragment mRealEstateListFragment;
     private RealEstateDetailsFragment mRealEstateDetailsFragment;
-    private static final int REQUEST_CODE_THREE = 0x01;
+    private static final int REQUEST_CODE_LOCATION = 0x01;
+    private static final int REQUEST_CODE_WRITE = 0x02;
     public static final String TAG = "DEBUG";
     private UserViewModel mUserViewModel;
     private RealEstateViewModel mRealEstateViewModel;
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.activity_main_drawer_around:
-                this.checkPermissions();
+                this.checkLocationPermissions();
                 break;
             case R.id.activity_main_drawer_settings:
                 this.startPreferencesActivity();
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle actions on menu items
         switch (item.getItemId()) {
             case R.id.menu_activity_main_add_realestate:
-                this.startAddRealEstateActivity();
+                this.checkWritePermissions();
                 return true;
             case R.id.menu_activity_main_search_realestate:
                 this.startSearchRealEstateActivity();
@@ -237,29 +242,72 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            this.startRealEstateOnMapActivity();
+    private void checkLocationPermissions() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            this.checkGpsOn();
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                this.startRealEstateOnMapActivity();
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_CODE_LOCATION);
+            }
+        }
+    }
+
+    private void checkWritePermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            this.startAddRealEstateActivity();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_THREE);
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_LOCATION);
         }
+    }
+
+    private void checkGpsOn() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_THREE: {
+            case REQUEST_CODE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     this.startRealEstateOnMapActivity();
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_CODE_THREE);
+                            REQUEST_CODE_LOCATION);
                 }
-                return;
             }
+            case REQUEST_CODE_WRITE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.startAddRealEstateActivity();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_CODE_WRITE);
+                }
+            }
+
         }
     }
 

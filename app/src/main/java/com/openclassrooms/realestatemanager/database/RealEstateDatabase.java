@@ -2,10 +2,8 @@ package com.openclassrooms.realestatemanager.database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -49,33 +47,33 @@ public abstract class RealEstateDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                ContentValues realEstateTest = new ContentValues();
-                realEstateTest.put("category", "Loft");
-                realEstateTest.put("price",200000);
-                realEstateTest.put("description","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-                realEstateTest.put("surface",120);
-                realEstateTest.put("nbreOfRoom",10);
-                realEstateTest.put("userId",1);
-                realEstateTest.put("address", "931, chemin du Sapin vert,38890, Saint-chef");
-                realEstateTest.put("isSold",false);
-                realEstateTest.put("pointsOfInterest", "Mall, School, Play area");
-                realEstateTest.put("upForSale", "12/07/2019");
-                db.insert("RealEstate", OnConflictStrategy.IGNORE, realEstateTest);
+                //ContentValues realEstateTest = new ContentValues();
+                //realEstateTest.put("category", "Loft");
+                //realEstateTest.put("price",200000);
+                //realEstateTest.put("description","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+                //realEstateTest.put("surface",120);
+                //realEstateTest.put("nbreOfRoom",10);
+                //realEstateTest.put("userId",1);
+                //realEstateTest.put("address", "931, chemin du Sapin vert,38890, Saint-chef");
+                //realEstateTest.put("isSold",false);
+                //realEstateTest.put("pointsOfInterest", "Mall, School, Play area");
+                //realEstateTest.put("upForSale", "12/07/2019");
+                //db.insert("RealEstate", OnConflictStrategy.IGNORE, realEstateTest);
 
-                ContentValues userTest = new ContentValues();
-                userTest.put("id",1);
-                userTest.put("username","Johanne Boisvilliers");
-                userTest.put("password","utilisateurDeBase");
-                userTest.put("email", "johanne@gmail.test");
-                userTest.put("photo_url", "https://lh3.googleusercontent.com/-rjxuHqimryE/T2jiue0PaOI/AAAAAAAAASs/2PoSywcEdqY5Jp2h6TwDXfYv9guL69BqwCEwYBhgL/w140-h139-p/IMGP0846.jpg");
-                db.insert("User",OnConflictStrategy.IGNORE, userTest);
+                //ContentValues userTest = new ContentValues();
+                //userTest.put("id",1);
+                //userTest.put("username","John Doe");
+                //userTest.put("password","password");
+                //userTest.put("email", "johndoe@gmail.com");
+                //userTest.put("photo_url", "https://lh3.googleusercontent.com/-rjxuHqimryE/T2jiue0PaOI/AAAAAAAAASs/2PoSywcEdqY5Jp2h6TwDXfYv9guL69BqwCEwYBhgL/w140-h139-p/IMGP0846.jpg");
+                //db.insert("User",OnConflictStrategy.IGNORE, userTest);
 
-                ContentValues photoTest = new ContentValues();
-                photoTest.put("id",1);
-                photoTest.put("realEstateId",1);
-                photoTest.put("description","salon");
-                photoTest.put("url","/storage/emulated/0/DCIM/bien_1_1.jpg");
-                db.insert("Photo",OnConflictStrategy.IGNORE, photoTest);
+                //ContentValues photoTest = new ContentValues();
+                //photoTest.put("id",1);
+                //photoTest.put("realEstateId",1);
+                //photoTest.put("description","salon");
+                //photoTest.put("url","/storage/emulated/0/DCIM/bien_1_1.jpg");
+                //db.insert("Photo",OnConflictStrategy.IGNORE, photoTest);
             }
         };
     }

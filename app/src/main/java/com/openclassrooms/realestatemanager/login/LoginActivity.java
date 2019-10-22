@@ -83,13 +83,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             this.checkLastUserLogged();
             this.listenerForSignUpButton();
             this.listenerForSignInButton();
         } else {
             ActivityCompat.requestPermissions(LoginActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_CODE_ONE);
         }
     }
@@ -104,10 +104,9 @@ public class LoginActivity extends AppCompatActivity {
                     this.listenerForSignInButton();
                 } else {
                     ActivityCompat.requestPermissions(LoginActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             REQUEST_CODE_ONE);
                 }
-                return;
             }
         }
     }
