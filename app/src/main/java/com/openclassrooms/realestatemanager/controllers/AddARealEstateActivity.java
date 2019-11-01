@@ -12,7 +12,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -234,13 +233,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
-        String fileId = DocumentsContract.getDocumentId(uri);
-        String id = fileId.split(":")[1];
-        String[] column = {MediaStore.Images.Media.DATA};
-        String selector = MediaStore.Images.Media._ID + "=?";
-        Cursor cursor = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, selector, new String[]{id}, null);
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        Cursor cursor = getContext().getContentResolver().query(uri, filePathColumn, null, null, null);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
             mGalleryPhotos.add(imageEncoded);
