@@ -95,7 +95,10 @@ public class SignInActivity extends AppCompatActivity implements AgentAsyncTask.
     public void startMainActivity(Long requestResult) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("userId", requestResult);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     // ------------------------------------ DATA ------------------------------------

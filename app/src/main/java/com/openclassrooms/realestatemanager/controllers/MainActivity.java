@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("isTwoPanes", true);
             }
             intent.putExtra("addresses", serializedList);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
     }

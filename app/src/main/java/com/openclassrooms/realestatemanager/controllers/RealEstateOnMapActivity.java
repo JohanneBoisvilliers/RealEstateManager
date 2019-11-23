@@ -59,6 +59,11 @@ public class RealEstateOnMapActivity extends AppCompatActivity implements OnMapR
     private List<Marker> mMarkerList = new ArrayList<>();
 
     @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_real_estate_on_map);

@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -142,7 +143,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
         String imageEncoded = "";
         switch (requestCode) {
             case PICK_FROM_GALLARY:
@@ -164,6 +165,8 @@ public class AddARealEstateActivity extends AppCompatActivity {
                     mImageEncodedList.clear();
                     mImageEncodedList.addAll(mCameraPhotos);
                     mImageEncodedList.addAll(mGalleryPhotos);
+                    Log.d(TAG, "onActivityResult: " + mImageEncodedList.size());
+                    Log.d(TAG, "onActivityResult: " + mImageEncodedList.toString());
                     mRealEstateViewModel.numberOfPhoto.set(getResources().getString((R.string.number_of_photo), String.valueOf(mImageEncodedList.size())));
                     mRealEstateViewModel.selecturlList(mImageEncodedList);
                 } else {
@@ -219,6 +222,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
     private void setPhotoForRealEstate(List<String> urlList) {
         ArrayList<Photo> listPhoto = new ArrayList<>();
         for (String url : urlList) {
+            Log.d(TAG, "setPhotoForRealEstate: " + url);
             Photo photo = new Photo();
             photo.setUrl(url);
             listPhoto.add(photo);
@@ -233,14 +237,21 @@ public class AddARealEstateActivity extends AppCompatActivity {
     }
     //access to gallery app
     private void extrudeUrlFromGallery(String[] filePathColumn, String imageEncoded, Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(uri, filePathColumn, null, null, null);
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        String fileId = DocumentsContract.getDocumentId(uri);
+        String id = fileId.split(":")[1];
+        String[] column = {MediaStore.Images.Media.DATA};
+        String selector = MediaStore.Images.Media._ID + "=?";
+        Cursor cursor = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, selector, new String[]{id}, null);
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         if (cursor.moveToFirst()) {
             imageEncoded = cursor.getString(columnIndex);
             mGalleryPhotos.add(imageEncoded);
         }
         cursor.close();
+
     }
+
     //when user came to this activity for modify a real estate, we get this real estate in database and set UI
     private void getRealEstateForModifyFunction(String comeFrom, Bundle bundle) {
         if (!TextUtils.isEmpty(comeFrom)) {
@@ -353,6 +364,7 @@ public class AddARealEstateActivity extends AppCompatActivity {
                 galleryIntent.setType("image/*");
                 galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), PICK_FROM_GALLARY);
             }
         });

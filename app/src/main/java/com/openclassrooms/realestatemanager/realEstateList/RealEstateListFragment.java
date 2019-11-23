@@ -79,6 +79,15 @@ public class RealEstateListFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
+    //if one pane layout, change list fragment for a detail fragment
+    private void swapFromSearchFragment() {
+        RealEstateDetailsFragment realEstateDetailsFragment = new RealEstateDetailsFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.search_fragment_container, realEstateDetailsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     // ------------------------------------ DATA ------------------------------------
 
     //configure viewmodel for requests
@@ -107,7 +116,7 @@ public class RealEstateListFragment extends Fragment {
 
     //check if user add max area in field to know what to write in request
     private String fetchEndAreaForSearch() {
-        if (mRealEstateViewModel.endPrice.get() == 0) {
+        if (mRealEstateViewModel.surfaceEnd.get() == 0) {
             return "(SELECT MAX(surface) FROM RealEstate)";
         } else {
             return String.valueOf(mRealEstateViewModel.surfaceEnd.get());
@@ -135,11 +144,16 @@ public class RealEstateListFragment extends Fragment {
                 .setOnItemClickListener((recyclerView1, position, v) -> {
                     this.mRealEstateViewModel.select(this.mRealEstateAdapter.getRealEstate(position));
                     this.mRealEstateViewModel.selectedItemPos.set(position);
-                    if (isOnePaneLayout()) {//phone mode
-                        this.swapFragment();
-                    } else {//tablet mode
-                        mRealEstateAdapter.selectedListItem(position);
+                    if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
+                        if (isOnePaneLayout()) {//phone mode
+                            this.swapFragment();
+                        } else {//tablet mode
+                            mRealEstateAdapter.selectedListItem(position);
+                        }
+                    } else {
+                        this.swapFromSearchFragment();
                     }
+
                 });
 
     }
@@ -202,6 +216,7 @@ public class RealEstateListFragment extends Fragment {
                     " AND RealEstate.nbreOfRoom >= ?" +
                     " AND RealEstate.surface BETWEEN ? AND ?",
                     fetchDatasForQuery());
+            Log.d(TAG, "getRealEstatesWithPhotos: " + query.getArgCount());
             this.mRealEstateViewModel.getResultSearchRaw(query).observe(this, this::updateItemsList);
         }
     }
