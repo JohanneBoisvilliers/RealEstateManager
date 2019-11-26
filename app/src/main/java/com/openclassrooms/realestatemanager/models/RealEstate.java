@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.ContentValues;
 
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
@@ -66,7 +67,6 @@ public class RealEstate {
     public String getUpForSale() {
         return upForSale;
     }
-
     public String getSoldSince() {
         return soldSince;
     }
@@ -108,5 +108,23 @@ public class RealEstate {
 
     public void setSoldSince(String soldSince) {
         this.soldSince = soldSince;
+    }
+
+    public static RealEstate fromContentValues(ContentValues values) {
+        final RealEstate item = new RealEstate();
+        if (values.containsKey("userId")) item.setUserId(values.getAsLong("userId"));
+        if (values.containsKey("id")) item.setId(values.getAsLong("id"));
+        if (values.containsKey("userId")) item.setUserId(values.getAsLong("userId"));
+        if (values.containsKey("category")) item.setCategory(values.getAsString("category"));
+        if (values.containsKey("price")) item.setPrice(values.getAsInteger("price"));
+        if (values.containsKey("isSold")) item.setSold(values.getAsBoolean("isSold"));
+        if (values.containsKey("surface")) item.setSurface(values.getAsInteger("surface"));
+        if (values.containsKey("nbreOfRoom")) item.setNbreOfRoom(values.getAsInteger("nbreOfRoom"));
+        if (values.containsKey("description")) item.setDescription(values.getAsString("description"));
+        if (values.containsKey("address")) item.setAddress(values.getAsString("address"));
+        if (values.containsKey("pointsOfInterest")) item.setPointsOfInterest(values.getAsString("pointsOfInterest"));
+        if (values.containsKey("upForSale")) item.setUpForSale(values.getAsString("upForSale"));
+        if (values.containsKey("soldSince")) item.setSoldSince(values.getAsString("soldSince"));
+        return item;
     }
 }

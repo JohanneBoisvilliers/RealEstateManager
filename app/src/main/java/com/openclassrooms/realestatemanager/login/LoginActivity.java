@@ -12,6 +12,7 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.Button;
 
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         this.checkPermissions();
     }
     @Override

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.utils.MyApp;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -209,14 +207,12 @@ public class RealEstateListFragment extends Fragment {
         if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
             this.mRealEstateViewModel.getRealEstatewithPhotos().observe(this, this::updateItemsList);
         } else {
-            Log.d(TAG, "getRealEstatesWithPhotos: " + Arrays.toString(fetchDatasForQuery()));
             SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * FROM RealEstate" +
                     " WHERE RealEstate.category = ?" +
                     " AND RealEstate.price BETWEEN ? AND ?" +
                     " AND RealEstate.nbreOfRoom >= ?" +
                     " AND RealEstate.surface BETWEEN ? AND ?",
                     fetchDatasForQuery());
-            Log.d(TAG, "getRealEstatesWithPhotos: " + query.getArgCount());
             this.mRealEstateViewModel.getResultSearchRaw(query).observe(this, this::updateItemsList);
         }
     }

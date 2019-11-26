@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -92,7 +93,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.mDrawerLayout.closeDrawer(GravityCompat.START);
         }
-        super.onBackPressed();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_real_estate_recycler_view);
+        if (fragment instanceof RealEstateListFragment) {
+            return;
+        } else {
+            super.onBackPressed();
+        }
+
         MyApp.isInit = false;
     }
 
@@ -222,7 +229,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void startLoginActivity() {
-        startActivity(new Intent(this, LoginActivity.class));
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void startPreferencesActivity() {
@@ -240,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("addresses", serializedList);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         });
     }
 
